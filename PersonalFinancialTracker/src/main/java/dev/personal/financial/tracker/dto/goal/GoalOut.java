@@ -1,4 +1,4 @@
-package dto.goal;
+package dev.personal.financial.tracker.dto.goal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

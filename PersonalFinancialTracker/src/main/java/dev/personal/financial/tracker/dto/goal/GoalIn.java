@@ -1,13 +1,12 @@
-package model;
+package dev.personal.financial.tracker.dto.goal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Goal {
+public class GoalIn {
     private String userId;
     private String goalName;
     private double goalAmount;
-    private double currentAmount;
 }

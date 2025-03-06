@@ -1,4 +1,4 @@
-package model;
+package dev.personal.financial.tracker.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
