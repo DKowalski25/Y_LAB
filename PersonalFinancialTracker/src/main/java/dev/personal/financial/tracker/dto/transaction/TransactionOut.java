@@ -1,4 +1,4 @@
-package model;
+package dev.personal.financial.tracker.dto.transaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class Transaction {
+public class TransactionOut {
     private String id;
     private String userId;
     private double amount;
