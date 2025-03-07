@@ -46,6 +46,7 @@ public class Main {
 
         ConsoleInterface consoleInterface = new ConsoleInterface(
                 userController,
+                userRepository,
                 transactionController,
                 goalController,
                 budgetController
