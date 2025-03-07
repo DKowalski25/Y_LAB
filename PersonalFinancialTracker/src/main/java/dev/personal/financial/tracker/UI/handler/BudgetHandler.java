@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.UI.handler;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.dto.budget.BudgetIn;
 import dev.personal.financial.tracker.dto.budget.BudgetOut;
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class BudgetHandler {
     private final BudgetController budgetController;
     private final Scanner sc;
 
-    public void setBudget(User user) {
+    public void setBudget(UserOut user) {
         if (user == null) {
             System.out.println("Пользователь не авторизован.");
             return;
@@ -32,7 +33,7 @@ public class BudgetHandler {
         System.out.println("Бюджет успешно установлен.");
     }
 
-    public void viewBudget(User user) {
+    public void viewBudget(UserOut user) {
         if (user == null) {
             System.out.println("Ошибка: пользователь не авторизован.");
             return;
