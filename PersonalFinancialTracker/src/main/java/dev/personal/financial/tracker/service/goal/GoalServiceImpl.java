@@ -1,29 +1,50 @@
 package dev.personal.financial.tracker.service.goal;
 
+import dev.personal.financial.tracker.dto.goal.GoalIn;
+import dev.personal.financial.tracker.dto.goal.GoalMapper;
+import dev.personal.financial.tracker.dto.goal.GoalOut;
 import dev.personal.financial.tracker.model.Goal;
 import dev.personal.financial.tracker.repository.goal.GoalRepository;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
 
     @Override
-    public void addGoal(Goal goal) {
+    public void addGoal(GoalIn goalIn) {
+        Goal goal = GoalMapper.toEntity(goalIn);
         goalRepository.save(goal);
     }
 
     @Override
-    public List<Goal> getGoalsByUserId(String userId) {
-        return goalRepository.findByUserId(userId);
+    public GoalOut getGoalById(String id) {
+        Goal goal = goalRepository.findById(id);
+        if (goal != null) {
+            return GoalMapper.toDto(goal);
+        }
+        return null;
     }
 
     @Override
-    public void updateGoal(Goal goal) {
-        goalRepository.update(goal);
+    public List<GoalOut> getGoalsByUserId(String userId) {
+        List<Goal> goals = goalRepository.findByUserId(userId);
+        return goals.stream()
+                .map(GoalMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateGoal(GoalIn goalIn) {
+        Goal goal = goalRepository.findById(goalIn.getUserId());
+        if (goal != null) {
+            GoalMapper.updateEntity(goal, goalIn);
+            goalRepository.update(goal);
+        }
     }
 
     @Override

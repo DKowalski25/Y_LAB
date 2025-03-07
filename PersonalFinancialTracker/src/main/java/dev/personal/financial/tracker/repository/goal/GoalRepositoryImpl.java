@@ -16,6 +16,11 @@ public class GoalRepositoryImpl implements GoalRepository {
     }
 
     @Override
+    public Goal findById(String id) {
+        return goals.get(id);
+    }
+
+    @Override
     public List<Goal> findByUserId(String userId) {
         return goals.values().stream()
                 .filter(g -> g.getUserId().equals(userId))
