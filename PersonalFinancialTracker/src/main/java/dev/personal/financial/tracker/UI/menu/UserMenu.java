@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.UI.menu;
 import dev.personal.financial.tracker.UI.handler.BudgetHandler;
 import dev.personal.financial.tracker.UI.handler.GoalHandler;
 import dev.personal.financial.tracker.UI.handler.TransactionHandler;
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class UserMenu {
     private final BudgetHandler budgetHandler;
     private final Scanner sc;
 
-    public void run(User user) {
+    public void run(UserOut userOut) {
         while (true) {
             System.out.println("\nМеню пользователя:");
             System.out.println("1. Добавить транзакцию");
@@ -31,22 +32,22 @@ public class UserMenu {
 
             switch (choice) {
                 case 1:
-                    transactionHandler.addTransaction(user);
+                    transactionHandler.addTransaction(userOut);
                     break;
                 case 2:
-                    transactionHandler.viewTransactions(user);
+                    transactionHandler.viewTransactions(userOut);
                     break;
                 case 3:
-                    goalHandler.addGoal(user);
+                    goalHandler.addGoal(userOut);
                     break;
                 case 4:
-                    goalHandler.viewGoals(user);
+                    goalHandler.viewGoals(userOut);
                     break;
                 case 5:
-                    budgetHandler.setBudget(user);
+                    budgetHandler.setBudget(userOut);
                     break;
                 case 6:
-                    budgetHandler.viewBudget(user);
+                    budgetHandler.viewBudget(userOut);
                     break;
                 case 7:
                     System.out.println("Вы успешно вышли из аккаунта.");
