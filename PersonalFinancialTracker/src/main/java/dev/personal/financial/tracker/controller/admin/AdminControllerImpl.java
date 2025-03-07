@@ -1,5 +1,6 @@
 package dev.personal.financial.tracker.controller.admin;
 
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 import dev.personal.financial.tracker.service.admin.AdminService;
 
@@ -12,7 +13,7 @@ public class AdminControllerImpl implements AdminController {
     private final AdminService adminService;
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserOut> getAllUsers() {
         return adminService.getAllUsers();
     }
 

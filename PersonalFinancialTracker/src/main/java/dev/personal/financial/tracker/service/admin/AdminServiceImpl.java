@@ -1,5 +1,7 @@
 package dev.personal.financial.tracker.service.admin;
 
+import dev.personal.financial.tracker.dto.user.UserMapper;
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 import dev.personal.financial.tracker.repository.admin.AdminRepository;
 
@@ -12,8 +14,11 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
 
     @Override
-    public List<User> getAllUsers() {
-        return adminRepository.getAllUsers();
+    public List<UserOut> getAllUsers() {
+        List<User> users = adminRepository.getAllUsers();
+        return users.stream()
+                .map(UserMapper::toDto)
+                .toList();
     }
 
     @Override
