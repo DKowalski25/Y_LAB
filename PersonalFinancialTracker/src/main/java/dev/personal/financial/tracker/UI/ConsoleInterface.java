@@ -10,7 +10,9 @@ import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.controller.user.UserController;
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
+import dev.personal.financial.tracker.repository.user.UserRepository;
 
 import java.util.Scanner;
 
@@ -20,12 +22,13 @@ public class ConsoleInterface {
 
     public ConsoleInterface(
             UserController userController,
+            UserRepository userRepository,
             TransactionController transactionController,
             GoalController goalController,
             BudgetController budgetController
     ) {
         Scanner sc = new Scanner(System.in);
-        UserHandler userHandler = new UserHandler(userController, sc);
+        UserHandler userHandler = new UserHandler(userController, sc, userRepository);
         TransactionHandler transactionHandler = new TransactionHandler(transactionController, sc);
         GoalHandler goalHandler = new GoalHandler(goalController, sc);
         BudgetHandler budgetHandler = new BudgetHandler(budgetController, sc);
@@ -36,9 +39,9 @@ public class ConsoleInterface {
 
     public void run() {
         while (true) {
-            User user = mainMenu.run();
-            if (user != null) {
-                userMenu.run(user);
+            UserOut userOut = mainMenu.run();
+            if (userOut != null) {
+                userMenu.run(userOut);
             }
         }
     }
