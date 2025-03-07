@@ -2,6 +2,9 @@ package dev.personal.financial.tracker.UI.handler;
 
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 
+import dev.personal.financial.tracker.dto.transaction.TransactionIn;
+import dev.personal.financial.tracker.dto.transaction.TransactionOut;
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.Transaction;
 import dev.personal.financial.tracker.model.User;
 
@@ -17,7 +20,7 @@ public class TransactionHandler {
     private final TransactionController transactionController;
     private final Scanner sc;
 
-    public void addTransaction(User user) {
+    public void addTransaction(UserOut user) {
         if (user == null) {
             System.out.println("Пользователь не авторизован.");
             return;
@@ -38,8 +41,7 @@ public class TransactionHandler {
         String id = UUID.randomUUID().toString();
         LocalDate date = LocalDate.now();
 
-        Transaction transaction = new Transaction(
-                id,
+        TransactionIn transactionIn = new TransactionIn(
                 user.getId(),
                 amount,
                 category,
@@ -48,22 +50,22 @@ public class TransactionHandler {
                 isIncome
         );
 
-        transactionController.addTransaction(transaction);
-        System.out.println("Транзакция успешно добавлена.");
+        transactionController.addTransaction(transactionIn);
+        System.out.println("Транзакция успешно добавлена." + user.getId());
     }
 
-    public void viewTransactions(User user) {
+    public void viewTransactions(UserOut user) {
         if (user == null) {
             System.out.println("Ошибка: пользователь не авторизован.");
             return;
         }
 
-        List<Transaction> transactions = transactionController.getTransactionsByUserId(user.getId());
+        List<TransactionOut> transactions = transactionController.getTransactionsByUserId(user.getId());
         if (transactions.isEmpty()) {
             System.out.println("Транзакции не найдены.");
         } else {
             System.out.println("Список транзакций:");
-            for (Transaction transaction : transactions) {
+            for (TransactionOut transaction : transactions) {
                 System.out.println(transaction);
             }
         }
