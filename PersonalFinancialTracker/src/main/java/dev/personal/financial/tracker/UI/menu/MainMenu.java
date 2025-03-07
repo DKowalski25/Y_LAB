@@ -1,6 +1,7 @@
 package dev.personal.financial.tracker.UI.menu;
 
 import dev.personal.financial.tracker.UI.handler.UserHandler;
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ public class MainMenu {
     private final UserHandler userHandler;
     private final Scanner sc;
 
-    public User run() {
+    public UserOut run() {
         while (true) {
             System.out.println("\nВыберите действие:");
             System.out.println("1. Регистрация");
