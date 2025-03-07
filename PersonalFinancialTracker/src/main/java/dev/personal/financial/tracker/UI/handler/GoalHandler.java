@@ -5,6 +5,7 @@ import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.dto.goal.GoalIn;
 import dev.personal.financial.tracker.dto.goal.GoalOut;
 
+import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class GoalHandler {
     private final GoalController goalController;
     private final Scanner sc;
 
-    public void addGoal(User user) {
+    public void addGoal(UserOut user) {
         if (user == null) {
             System.out.println("Пользователь не авторизован.");
             return;
@@ -37,7 +38,7 @@ public class GoalHandler {
         System.out.println("Цель успешно добавлена.");
     }
 
-    public void viewGoals(User user) {
+    public void viewGoals(UserOut user) {
         if (user == null) {
             System.out.println("Пользователь не авторизован.");
             return;
