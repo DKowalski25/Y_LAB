@@ -15,4 +15,5 @@ public interface TransactionService {
     List<TransactionOut> getTransactionsByUserIdAndCategory(String userId, String category);
     List<TransactionOut> getTransactionsByUserIdAndDate(String userId, LocalDate date);
     List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean isIncome);
+    double getTotalExpensesForCurrentMonth(String userId);
 }

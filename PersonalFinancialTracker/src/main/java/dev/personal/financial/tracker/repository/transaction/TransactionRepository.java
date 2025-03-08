@@ -14,4 +14,5 @@ public interface TransactionRepository {
     List<Transaction> findByUserIdAndCategory(String userId, String category);
     List<Transaction> findByUserIdAndDate(String userId, LocalDate date);
     List<Transaction> findByUserIdAndType(String userId, boolean isIncome);
+    double getTotalExpensesForCurrentMonth(String userId);
 }

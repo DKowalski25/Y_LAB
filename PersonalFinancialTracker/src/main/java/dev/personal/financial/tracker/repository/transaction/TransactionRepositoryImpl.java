@@ -64,4 +64,16 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 .collect(Collectors.toList()
         );
     }
+
+    @Override
+    public double getTotalExpensesForCurrentMonth(String userId) {
+        LocalDate now = LocalDate.now();
+        return transactions.values().stream()
+                .filter(transaction -> transaction.getUserId().equals(userId))
+                .filter(transaction -> !transaction.isIncome())
+                .filter(transaction -> transaction.getDate().getMonth() == now.getMonth()
+                        && transaction.getDate().getYear() == now.getYear())
+                .mapToDouble(Transaction::getAmount)
+                .sum();
+    }
 }

@@ -74,4 +74,9 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(TransactionMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public double getTotalExpensesForCurrentMonth(String userId) {
+        return transactionRepository.getTotalExpensesForCurrentMonth(userId);
+    }
 }

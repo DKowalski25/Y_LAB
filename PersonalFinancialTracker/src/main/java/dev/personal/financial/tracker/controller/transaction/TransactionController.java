@@ -15,4 +15,5 @@ public interface TransactionController {
     List<TransactionOut> getTransactionsByUserIdAndCategory(String userId, String category);
     List<TransactionOut> getTransactionsByUserIdAndDate(String userId, LocalDate date);
     List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean type);
+    double getTotalExpensesForCurrentMonth(String userId);
 }

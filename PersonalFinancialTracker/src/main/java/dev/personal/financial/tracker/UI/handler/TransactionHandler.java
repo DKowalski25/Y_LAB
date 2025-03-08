@@ -1,5 +1,7 @@
 package dev.personal.financial.tracker.UI.handler;
 
+import dev.personal.financial.tracker.controller.budget.BudgetController;
+import dev.personal.financial.tracker.dto.budget.BudgetOut;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionHandler {
     private final TransactionController transactionController;
+    private final BudgetController budgetController;
     private final ConsolePrinter printer;
 
     public void addTransaction(UserOut user) {
@@ -27,6 +30,17 @@ public class TransactionHandler {
         String category = printer.readNonEmptyString("Введите категорию транзакции:");
         String description = printer.readNonEmptyString("Введите описание транзакции:");
         boolean isIncome = printer.readBoolean("Это доход?");
+
+        if (!isIncome) {
+            BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
+            if (budgetOut != null) {
+                double totalExpenses = transactionController.getTotalExpensesForCurrentMonth(user.getId());
+                if (totalExpenses + amount > budgetOut.getMonthlyBudget()) {
+                    printer.printInfo("Вы превысили месячный бюджета.");
+                    return;
+                }
+            }
+        }
 
         TransactionIn transactionIn = new TransactionIn(
                 user.getId(),

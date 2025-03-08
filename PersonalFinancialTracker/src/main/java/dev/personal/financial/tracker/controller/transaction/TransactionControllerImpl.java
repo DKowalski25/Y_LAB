@@ -61,4 +61,9 @@ public class TransactionControllerImpl implements TransactionController {
     public List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean type) {
         return transactionService.getTransactionsByUserIdAndType(userId, type);
     }
+
+    @Override
+    public double getTotalExpensesForCurrentMonth(String userId) {
+        return transactionService.getTotalExpensesForCurrentMonth(userId);
+    }
 }
