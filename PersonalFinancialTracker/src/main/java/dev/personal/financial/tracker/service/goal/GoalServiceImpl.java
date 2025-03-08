@@ -8,9 +8,6 @@ import dev.personal.financial.tracker.repository.goal.GoalRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
@@ -31,11 +28,9 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public List<GoalOut> getGoalsByUserId(String userId) {
-        List<Goal> goals = goalRepository.findByUserId(userId);
-        return goals.stream()
-                .map(GoalMapper::toDto)
-                .collect(Collectors.toList());
+    public GoalOut getGoalsByUserId(String userId) {
+        Goal goal = goalRepository.findByUserId(userId);
+        return goal != null ? GoalMapper.toDto(goal) : null;
     }
 
     @Override

@@ -2,12 +2,9 @@ package dev.personal.financial.tracker.controller.goal;
 
 import dev.personal.financial.tracker.dto.goal.GoalIn;
 import dev.personal.financial.tracker.dto.goal.GoalOut;
-import dev.personal.financial.tracker.model.Goal;
 import dev.personal.financial.tracker.service.goal.GoalService;
 
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 public class GoalControllerImpl implements GoalController {
@@ -19,7 +16,7 @@ public class GoalControllerImpl implements GoalController {
     }
 
     @Override
-    public List<GoalOut> getGoalsByUserId(String userId) {
+    public GoalOut getGoalsByUserId(String userId) {
         return goalService.getGoalsByUserId(userId);
     }
 
