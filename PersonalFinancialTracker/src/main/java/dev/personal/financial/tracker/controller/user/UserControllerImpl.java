@@ -5,15 +5,22 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
 import dev.personal.financial.tracker.service.user.UserService;
 
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
     private final UserService userService;
+    private final ConsolePrinter printer;
 
     @Override
     public void registerUser(UserIn userIn) {
-        userService.registerUser(userIn);
+        try {
+            userService.registerUser(userIn);
+        } catch (IllegalArgumentException e) {
+            printer.printError(e.getMessage());
+        }
+
     }
 
     @Override
