@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.util;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -101,6 +102,18 @@ public class ConsolePrinter {
             } else {
                 printError("Неверный формат логического значения. Пожалуйста, введите true или false.");
                 sc.next();
+            }
+        }
+    }
+
+    public LocalDate readDate(String prompt) {
+        while (true) {
+            printPrompt(prompt);
+            String input = sc.nextLine();
+            try {
+                return LocalDate.parse(input);
+            } catch (Exception e) {
+                printError("Неверный формат даты. Пожалуйста, введите дату в формате гггг-мм-дд.");
             }
         }
     }
