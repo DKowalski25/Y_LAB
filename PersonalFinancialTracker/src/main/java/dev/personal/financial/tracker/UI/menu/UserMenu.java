@@ -75,7 +75,7 @@ public class UserMenu {
                     transactionHandler.deleteTransaction(userOut);
                     break;
                 case 5:
-                    return; // Возврат в главное меню
+                    return;
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
@@ -87,7 +87,8 @@ public class UserMenu {
             printer.printWithDivider("\nМеню целей:");
             printer.printPrompt("1. Установить цель");
             printer.printPrompt("2. Просмотреть цели");
-            printer.printPrompt("3. Вернуться в главное меню");
+            printer.printPrompt("3. Удалить цель");
+            printer.printPrompt("4. Вернуться в главное меню");
 
             int choice = printer.readInt("Выберите действие:");
 
@@ -99,7 +100,9 @@ public class UserMenu {
                     goalHandler.viewGoals(userOut);
                     break;
                 case 3:
-                    return; // Возврат в главное меню
+                    goalHandler.deleteGoal(userOut);
+                case 4:
+                    return;
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
@@ -123,7 +126,7 @@ public class UserMenu {
                     budgetHandler.viewBudget(userOut);
                     break;
                 case 3:
-                    return; // Возврат в главное меню
+                    return;
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
@@ -145,9 +148,9 @@ public class UserMenu {
                     break;
                 case 2:
                     userHandler.deleteAccount(userOut.getEmail());
-                    return; // Выход из меню после удаления аккаунта
+                    return;
                 case 3:
-                    return; // Возврат в главное меню
+                    return;
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
