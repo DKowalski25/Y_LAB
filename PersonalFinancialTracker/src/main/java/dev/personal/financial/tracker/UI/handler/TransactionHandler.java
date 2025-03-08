@@ -167,7 +167,7 @@ public class TransactionHandler {
 
     public void deleteTransaction(UserOut user) {
         if (user == null) {
-            printer.printError("Пользователь не авторизован.");
+            printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
 
