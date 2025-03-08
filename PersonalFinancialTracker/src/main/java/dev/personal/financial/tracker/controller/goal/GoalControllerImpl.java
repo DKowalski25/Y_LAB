@@ -32,4 +32,14 @@ public class GoalControllerImpl implements GoalController {
     public void deleteGoal(String userId) {
         goalService.deleteGoal(userId);
     }
+
+    @Override
+    public void updateSavedAmount(String goalId, double amount) {
+        goalService.updateSavedAmount(goalId, amount);
+    }
+
+    @Override
+    public double getProgress(String goalId) {
+        return goalService.getProgress(goalId);
+    }
 }
