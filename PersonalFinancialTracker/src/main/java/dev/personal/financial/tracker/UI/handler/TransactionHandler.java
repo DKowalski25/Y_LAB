@@ -175,4 +175,16 @@ public class TransactionHandler {
         transactionController.deleteTransaction(transactionId);
         printer.printSuccess("Транзакция успешно удалена.");
     }
+
+    private void notifyProgress(GoalOut goal, double progress) {
+        if (progress >= 25 && progress < 50) {
+            printer.printInfo("Вы достигли 25% цели '" + goal.getGoalName() + "'!");
+        } else if (progress >= 50 && progress < 75) {
+            printer.printInfo("Вы достигли 50% цели '" + goal.getGoalName() + "'!");
+        } else if (progress >= 75 && progress < 95) {
+            printer.printInfo("Вы достигли 75% цели '" + goal.getGoalName() + "'!");
+        } else if (progress >= 95 && progress < 100) {
+            printer.printInfo("Вы почти достигли цели '" + goal.getGoalName() + "'! Осталось совсем немного.");
+        }
+    }
 }
