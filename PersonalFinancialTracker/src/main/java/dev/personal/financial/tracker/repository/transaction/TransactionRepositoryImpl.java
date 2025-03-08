@@ -27,6 +27,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         return transactions.get(id);
     }
 
+    @Override
+    public void update(Transaction transaction) {
+        if (transactions.containsKey(transaction.getId())) {
+            transactions.put(transaction.getId(), transaction);
+        }
+    }
 
     @Override
     public void delete(String id) {

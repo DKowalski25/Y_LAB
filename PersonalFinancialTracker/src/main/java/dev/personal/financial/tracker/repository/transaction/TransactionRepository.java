@@ -8,5 +8,6 @@ public interface TransactionRepository {
     void save (Transaction transaction);
     List<Transaction> findByUserId(String userId);
     Transaction findById(String id);
+    void update(Transaction transaction);
     void delete(String id);
 }
