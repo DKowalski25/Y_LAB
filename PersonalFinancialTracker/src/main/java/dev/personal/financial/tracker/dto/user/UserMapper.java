@@ -10,7 +10,8 @@ public class UserMapper {
                 userIn.getName(),
                 userIn.getEmail(),
                 userIn.getPassword(),
-                userIn.getRole()
+                userIn.getRole(),
+                false
         );
     }
 
@@ -19,7 +20,8 @@ public class UserMapper {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getRole()
+                user.getRole(),
+                user.getIsBlocked()
         );
     }
 
