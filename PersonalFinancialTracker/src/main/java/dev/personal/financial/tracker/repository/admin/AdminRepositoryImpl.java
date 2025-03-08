@@ -21,7 +21,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     public void blockUser(String userId) {
         User user = userRepository.findById(userId);
         if (user != null) {
-            user.setRole(UserRole.BLOCKED);
+            user.setIsBlocked(true);
             userRepository.save(user);
         }
     }
