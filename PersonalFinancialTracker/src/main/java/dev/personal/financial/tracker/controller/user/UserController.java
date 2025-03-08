@@ -8,5 +8,6 @@ public interface UserController {
     void registerUser(UserIn userIn);
     UserOut getUserById(String id);
     UserOut getUserByEmail(String email);
-    void deleteUser(String id);
+    void updateUser(String email, UserIn userIn);
+    void deleteUserByEmail(String email);
 }

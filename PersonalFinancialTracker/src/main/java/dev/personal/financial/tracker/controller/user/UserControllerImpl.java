@@ -2,7 +2,6 @@ package dev.personal.financial.tracker.controller.user;
 
 import dev.personal.financial.tracker.dto.user.UserIn;
 import dev.personal.financial.tracker.dto.user.UserOut;
-import dev.personal.financial.tracker.model.User;
 import dev.personal.financial.tracker.service.user.UserService;
 
 import dev.personal.financial.tracker.util.ConsolePrinter;
@@ -34,7 +33,22 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public void deleteUser(String id) {
-        userService.deleteUser(id);
+    public void updateUser(String email, UserIn userIn) {
+        try {
+            userService.updateUser(email, userIn);
+            printer.printSuccess("Профиль успешно обновлен.");
+        } catch (IllegalArgumentException e) {
+            printer.printError(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteUserByEmail(String email) {
+        try {
+            userService.deleteUserEmail(email);
+            printer.printSuccess("Аккаунт успешно удален.");
+        } catch (IllegalArgumentException e) {
+            printer.printError(e.getMessage());
+        }
     }
 }

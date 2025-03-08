@@ -34,7 +34,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String id) {
-        userRepository.delete(id);
+    public void updateUser(String email, UserIn userIn) {
+        User existingUser = userRepository.getByEmail(email);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("Пользователь с email " + email + " не найден");
+        }
+        UserMapper.updateEntity(existingUser, userIn);
+        userRepository.update(existingUser);
+    }
+
+    @Override
+    public void deleteUserEmail(String email) {
+        User user = userRepository.getByEmail(email);
+        if (user != null) {
+            userRepository.delete(user.getId());
+        } else {
+            throw new IllegalArgumentException("Пользователь с email " + email + " не найден");
+        }
+
     }
 }
