@@ -70,26 +70,30 @@ public class TransactionHandler {
             return;
         }
 
-        List<TransactionOut> transactions = transactionController.getTransactionsByUserId(user.getId());
-        if (transactions.isEmpty()) {
-            printer.printInfo("Транзакции не найдены.");
-        } else {
-            printer.printWithDivider("Список транзакций:");
-            for (TransactionOut transaction : transactions) {
-                System.out.println(transaction);
-            }
-        }
-    }
+        printer.printWithDivider("Выберите тип просмотра транзакций:");
+        printer.printPrompt("1. Показать все транзакции");
+        printer.printPrompt("2. Показать отфильтрованные транзакции");
 
-    public void deleteTransaction(UserOut user) {
-        if (user == null) {
-            printer.printError("Ошибка: пользователь не авторизован.");
-            return;
-        }
+        int choice = printer.readInt("Выберите действие:");
 
-        String transactionId = printer.readNonEmptyString("Введите id транзакции:");
-        transactionController.deleteTransaction(transactionId);
-        printer.printSuccess("Транзакция успешно удалена.");
+        switch (choice) {
+            case 1:
+                List<TransactionOut> allTransactions = transactionController.getTransactionsByUserId(user.getId());
+                if (allTransactions.isEmpty()) {
+                    printer.printInfo("Транзакции не найдены.");
+                } else {
+                    printer.printWithDivider("Список всех транзакций:");
+                    for (TransactionOut transaction : allTransactions) {
+                        System.out.println(transaction);
+                    }
+                }
+                break;
+            case 2:
+                viewFilterTransactions(user);
+                break;
+            default:
+                printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
+        }
     }
 
     public void viewFilterTransactions(UserOut user) {
@@ -132,5 +136,16 @@ public class TransactionHandler {
                 System.out.println(transaction);
             }
         }
+    }
+
+    public void deleteTransaction(UserOut user) {
+        if (user == null) {
+            printer.printError("Пользователь не авторизован.");
+            return;
+        }
+
+        String transactionId = printer.readNonEmptyString("Введите ID транзакции для удаления:");
+        transactionController.deleteTransaction(transactionId);
+        printer.printSuccess("Транзакция успешно удалена.");
     }
 }
