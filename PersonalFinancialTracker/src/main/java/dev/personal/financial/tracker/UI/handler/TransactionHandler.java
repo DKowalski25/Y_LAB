@@ -1,7 +1,9 @@
 package dev.personal.financial.tracker.UI.handler;
 
 import dev.personal.financial.tracker.controller.budget.BudgetController;
+import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.dto.budget.BudgetOut;
+import dev.personal.financial.tracker.dto.goal.GoalOut;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class TransactionHandler {
     private final TransactionController transactionController;
     private final BudgetController budgetController;
+    private final GoalController goalController;
     private final ConsolePrinter printer;
 
     public void addTransaction(UserOut user) {
@@ -39,6 +42,16 @@ public class TransactionHandler {
                     printer.printInfo("Вы превысили месячный бюджета.");
                     return;
                 }
+            }
+        }
+
+        if (isIncome) {
+            List<GoalOut> goals = goalController.getGoalsByUserId(user.getId());
+            for (GoalOut goal : goals) {
+                goalController.updateSavedAmount(goal.getId(), amount);
+
+                double progress = goalController.getProgress(goal.getId());
+                notifyProgress(goal, progress);
             }
         }
 
