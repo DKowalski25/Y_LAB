@@ -70,5 +70,9 @@ public class GoalHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
+
+        goalController.deleteGoalByUserId(userOut.getId());
+        printer.printSuccess("Цель успешно удалена.");
+
     }
 }
