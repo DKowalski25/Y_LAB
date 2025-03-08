@@ -34,6 +34,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public void update(User user) {
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+        }
+    }
+
+    @Override
     public boolean existsByEmail(String email) {
         return users.values().stream()
                 .anyMatch(user -> user.getEmail().equals(email));
