@@ -2,13 +2,13 @@ package dev.personal.financial.tracker.controller.transaction;
 
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
-import dev.personal.financial.tracker.model.Transaction;
 
 import dev.personal.financial.tracker.service.transaction.TransactionService;
 
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -45,5 +45,20 @@ public class TransactionControllerImpl implements TransactionController {
     @Override
     public void deleteTransaction(String id) {
         transactionService.deleteTransaction(id);
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndCategory(String userId, String category) {
+        return transactionService.getTransactionsByUserIdAndCategory(userId, category);
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndDate(String userId, LocalDate date) {
+        return transactionService.getTransactionsByUserIdAndDate(userId, date);
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean type) {
+        return transactionService.getTransactionsByUserIdAndType(userId, type);
     }
 }

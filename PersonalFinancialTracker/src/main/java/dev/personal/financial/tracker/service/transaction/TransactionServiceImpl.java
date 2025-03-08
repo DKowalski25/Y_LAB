@@ -8,6 +8,7 @@ import dev.personal.financial.tracker.repository.transaction.TransactionReposito
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,5 +49,29 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void deleteTransaction(String id) {
         transactionRepository.delete(id);
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndCategory(String userId, String category) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndCategory(userId, category);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndDate(String userId, LocalDate date) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndDate(userId, date);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean isIncome) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndType(userId, isIncome);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
