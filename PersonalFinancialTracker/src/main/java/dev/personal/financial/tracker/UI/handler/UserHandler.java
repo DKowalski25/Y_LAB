@@ -58,4 +58,23 @@ public class UserHandler {
         }
         return null;
     }
+
+    public void updateProfile(String email) {
+        String name = printer.readNonEmptyString("Введите имя:");
+        String newEmail = printer.readEmail("Введите email:");
+        String password = printer.readPassword("Введите пароль:");
+
+        UserIn user = new UserIn(
+                null,
+                name,
+                newEmail,
+                password,
+                UserRole.USER
+        );
+        userController.updateUser(email, user);
+    }
+
+    public void deleteAccount(String email) {
+        userController.deleteUserByEmail(email);
+    }
 }
