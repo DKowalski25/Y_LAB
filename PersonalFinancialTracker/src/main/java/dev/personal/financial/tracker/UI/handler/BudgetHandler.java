@@ -1,49 +1,51 @@
 package dev.personal.financial.tracker.UI.handler;
 
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.dto.budget.BudgetIn;
 import dev.personal.financial.tracker.dto.budget.BudgetOut;
 import dev.personal.financial.tracker.dto.user.UserOut;
-import dev.personal.financial.tracker.model.User;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.Scanner;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 public class BudgetHandler {
     private final BudgetController budgetController;
-    private final Scanner sc;
+    private final ConsolePrinter printer;
 
     public void setBudget(UserOut user) {
         if (user == null) {
-            System.out.println("Пользователь не авторизован.");
+            printer.printError("Пользователь не авторизован.");
             return;
         }
 
-        System.out.println("Введите месячный бюджет:");
-        double monthlyBudget = sc.nextDouble();
-//        sc.nextLine(); // Очистка буфера
+        double monthlyBudget = printer.readDouble("Введите месячный бюджет:");
 
         String id = UUID.randomUUID().toString();
 
-        BudgetIn budgetIn = new BudgetIn(id, user.getId(), monthlyBudget);
+        BudgetIn budgetIn = new BudgetIn(
+                id,
+                user.getId(),
+                monthlyBudget
+        );
+
         budgetController.setBudget(budgetIn);
-        System.out.println("Бюджет успешно установлен.");
+        printer.printSuccess("Бюджет успешно установлен.");
     }
 
     public void viewBudget(UserOut user) {
         if (user == null) {
-            System.out.println("Ошибка: пользователь не авторизован.");
+            printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
 
         BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
         if (budgetOut == null) {
-            System.out.println("Бюджет не установлен.");
+            printer.printInfo("Бюджет не установлен.");
         } else {
-            System.out.println("Ваш месячный бюджет: " + budgetOut.getMonthlyBudget());
+            printer.printWithDivider("Ваш месячный бюджет: " + budgetOut.getMonthlyBudget());
         }
     }
 }

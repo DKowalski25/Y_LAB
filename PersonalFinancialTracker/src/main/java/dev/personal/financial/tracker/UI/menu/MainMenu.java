@@ -2,38 +2,34 @@ package dev.personal.financial.tracker.UI.menu;
 
 import dev.personal.financial.tracker.UI.handler.AdminHandler;
 import dev.personal.financial.tracker.UI.handler.UserHandler;
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.dto.user.UserOut;
-import dev.personal.financial.tracker.model.User;
-
 import dev.personal.financial.tracker.model.UserRole;
-import lombok.RequiredArgsConstructor;
 
-import java.util.Scanner;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class MainMenu {
     private final UserHandler userHandler;
     private final AdminHandler adminHandler;
-    private final Scanner sc;
+    private final ConsolePrinter printer;
     private final AdminMenu adminMenu;
 
-
-    public MainMenu(UserHandler userHandler, AdminHandler adminHandler,Scanner sc) {
+    public MainMenu(UserHandler userHandler, AdminHandler adminHandler, ConsolePrinter printer) {
         this.userHandler = userHandler;
         this.adminHandler = adminHandler;
-        this.sc = sc;
-        this.adminMenu = new AdminMenu(adminHandler, sc);
+        this.printer = printer;
+        this.adminMenu = new AdminMenu(adminHandler, printer);
     }
 
     public UserOut run() {
         while (true) {
-            System.out.println("\nВыберите действие:");
-            System.out.println("1. Регистрация");
-            System.out.println("2. Вход");
-            System.out.println("3. Выход");
+            printer.printWithDivider("\nВыберите действие:");
+            printer.printPrompt("1. Регистрация");
+            printer.printPrompt("2. Вход");
+            printer.printPrompt("3. Выход");
 
-            int choice = sc.nextInt();
-//            sc.nextInt();
+            int choice = printer.readInt("Выберите номер действие:");
 
             switch (choice) {
                 case 1:
@@ -49,10 +45,11 @@ public class MainMenu {
                         }
                     }
                 case 3:
+                    printer.printInfo("Программа завершена.");
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("Неверный выбор. Пожалуйста, выберите действие из списка.");
+                    printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
         }
     }

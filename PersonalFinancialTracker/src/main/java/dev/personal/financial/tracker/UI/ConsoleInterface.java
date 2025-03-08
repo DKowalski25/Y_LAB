@@ -4,6 +4,7 @@ import dev.personal.financial.tracker.UI.handler.*;
 import dev.personal.financial.tracker.UI.menu.AdminMenu;
 import dev.personal.financial.tracker.UI.menu.MainMenu;
 import dev.personal.financial.tracker.UI.menu.UserMenu;
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.admin.AdminController;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.controller.goal.GoalController;
@@ -29,15 +30,16 @@ public class ConsoleInterface {
             AdminController adminController
     ) {
         Scanner sc = new Scanner(System.in);
-        UserHandler userHandler = new UserHandler(userController, sc, userRepository);
-        TransactionHandler transactionHandler = new TransactionHandler(transactionController, sc);
-        GoalHandler goalHandler = new GoalHandler(goalController, sc);
-        BudgetHandler budgetHandler = new BudgetHandler(budgetController, sc);
-        AdminHandler adminHandler = new AdminHandler(adminController, sc);
+        ConsolePrinter printer = new ConsolePrinter(sc);
+        UserHandler userHandler = new UserHandler(userController, userRepository, printer);
+        TransactionHandler transactionHandler = new TransactionHandler(transactionController, printer);
+        GoalHandler goalHandler = new GoalHandler(goalController, printer);
+        BudgetHandler budgetHandler = new BudgetHandler(budgetController, printer);
+        AdminHandler adminHandler = new AdminHandler(adminController, printer);
 
-        this.mainMenu = new MainMenu(userHandler, adminHandler, sc);
-        this.userMenu = new UserMenu(transactionHandler, goalHandler, budgetHandler, sc);
-        this.adminMenu = new AdminMenu(adminHandler, sc);
+        this.mainMenu = new MainMenu(userHandler, adminHandler, printer);
+        this.userMenu = new UserMenu(transactionHandler, goalHandler, budgetHandler, printer);
+        this.adminMenu = new AdminMenu(adminHandler, printer);
     }
 
     public void run() {
