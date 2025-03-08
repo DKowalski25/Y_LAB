@@ -51,19 +51,24 @@ public class GoalHandler {
             return;
         }
 
-        List<GoalOut> goals = goalController.getGoalsByUserId(user.getId());
-        if (goals.isEmpty()) {
-            printer.printInfo("Цели не найдены.");
+        GoalOut goal = goalController.getGoalsByUserId(user.getId());
+        if (goal == null) {
+            printer.printInfo("Цель не установлена.");
         } else {
-            printer.printWithDivider("Список целей:");
-            for (GoalOut goal : goals) {
-                double progress = goalController.getProgress(goal.getId());
-                printer.printInfo("Цель: " + goal.getGoalName());
-                printer.printInfo("Целевая сумма: " + goal.getGoalAmount());
-                printer.printInfo("Накоплено: " + goal.getSavedAmount());
-                printer.printInfo("Прогресс: " + progress + "%");
-                printer.printWithDivider("");
-            }
+            printer.printWithDivider("Ваша цель:");
+            double progress = goalController.getProgress(goal.getId());
+            printer.printInfo("Цель: " + goal.getGoalName());
+            printer.printInfo("Целевая сумма: " + goal.getGoalAmount());
+            printer.printInfo("Накоплено: " + goal.getSavedAmount());
+            printer.printInfo("Прогресс: " + progress + "%");
+            printer.printWithDivider("");
+        }
+    }
+
+    public void deleteGoal(UserOut userOut) {
+        if (userOut == null) {
+            printer.printError("Ошибка: пользователь не авторизован.");
+            return;
         }
     }
 }
