@@ -9,7 +9,7 @@ import java.util.Scanner;
 @RequiredArgsConstructor
 public class AdminHandler {
     private final AdminController adminController;
-    private Scanner sc;
+    private final Scanner sc;
 
     public void viewUsers() {
         adminController.getAllUsers().forEach(System.out::println);
@@ -19,12 +19,14 @@ public class AdminHandler {
         System.out.println("Введите id пользователя, которого хотите заблокировать:");
         String userId = sc.next();
         adminController.blockUser(userId);
+        System.out.println("Пользователь заблокирован");
     }
 
     public void deleteUser() {
         System.out.println("Введите id пользователя, которого хотите удалить:");
         String userId = sc.next();
         adminController.deleteUser(userId);
+        System.out.println("Пользователь удален");
     }
 
 }
