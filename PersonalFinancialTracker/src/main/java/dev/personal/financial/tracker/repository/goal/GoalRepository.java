@@ -10,4 +10,6 @@ public interface GoalRepository {
     List<Goal> findByUserId(String userId);
     void update(Goal goal);
     void delete(String userId);
+    void updateSavedAmount(String goalId, double amount);
+    double getSavedAmount(String goalId);
 }

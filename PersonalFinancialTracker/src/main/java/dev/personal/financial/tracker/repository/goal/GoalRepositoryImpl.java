@@ -36,4 +36,19 @@ public class GoalRepositoryImpl implements GoalRepository {
     public void delete(String userId) {
         goals.remove(userId);
     }
+
+    @Override
+    public void updateSavedAmount(String goalId, double amount) {
+        Goal goal = goals.get(goalId);
+        if (goal != null) {
+            goal.setSavedAmount(goal.getSavedAmount() + amount);
+            update(goal);
+        }
+    }
+
+    @Override
+    public double getSavedAmount(String goalId) {
+        Goal goal = goals.get(goalId);
+        return goal != null ? goal.getSavedAmount() : 0.0;
+    }
 }
