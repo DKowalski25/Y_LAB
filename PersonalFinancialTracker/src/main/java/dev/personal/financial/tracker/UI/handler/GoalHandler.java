@@ -10,7 +10,6 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -21,6 +20,12 @@ public class GoalHandler {
     public void addGoal(UserOut user) {
         if (user == null) {
             printer.printError("Ошибка: пользователь не авторизован.");
+            return;
+        }
+
+        GoalOut existingGoal = goalController.getGoalsByUserId(user.getId());
+        if (existingGoal != null) {
+            printer.printError("У вас уже есть цель. Сначала удалите текущую цель.");
             return;
         }
 
