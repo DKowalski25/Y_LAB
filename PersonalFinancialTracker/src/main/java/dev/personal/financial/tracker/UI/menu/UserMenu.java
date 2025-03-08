@@ -19,18 +19,47 @@ public class UserMenu {
 
     public void run(UserOut userOut) {
         while (true) {
-            printer.printWithDivider("\nМеню пользователя:");
+            printer.printWithDivider("\nГлавное меню:");
+            printer.printPrompt("1. Транзакции");
+            printer.printPrompt("2. Цели");
+            printer.printPrompt("3. Бюджет");
+            printer.printPrompt("4. Профиль");
+            printer.printPrompt("5. Выйти из аккаунта");
+
+            int choice = printer.readInt("Выберите категорию:");
+
+            switch (choice) {
+                case 1:
+                    runTransactionMenu(userOut);
+                    break;
+                case 2:
+                    runGoalMenu(userOut);
+                    break;
+                case 3:
+                    runBudgetMenu(userOut);
+                    break;
+                case 4:
+                    runProfileMenu(userOut);
+                    break;
+                case 5:
+                    printer.printInfo("Вы вышли из аккаунта.");
+                    return;
+                default:
+                    printer.printError("Неверный выбор. Пожалуйста, выберите категорию из списка.");
+            }
+        }
+    }
+
+    private void runTransactionMenu(UserOut userOut) {
+        while (true) {
+            printer.printWithDivider("\nМеню транзакций:");
             printer.printPrompt("1. Добавить транзакцию");
             printer.printPrompt("2. Просмотреть транзакции");
-            printer.printPrompt("3. Установить цель");
-            printer.printPrompt("4. Просмотреть цели");
-            printer.printPrompt("5. Установить бюджет");
-            printer.printPrompt("6. Просмотреть бюджет");
-            printer.printPrompt("7. Редактировать профиль");
-            printer.printPrompt("8. Удалить аккаунт");
-            printer.printPrompt("9. Выйти из аккаунта");
+            printer.printPrompt("3. Редактировать транзакцию");
+            printer.printPrompt("4. Удалить транзакцию");
+            printer.printPrompt("5. Вернуться в главное меню");
 
-            int choice = printer.readInt("Выберите номер действие:");
+            int choice = printer.readInt("Выберите действие:");
 
             switch (choice) {
                 case 1:
@@ -40,26 +69,85 @@ public class UserMenu {
                     transactionHandler.viewTransactions(userOut);
                     break;
                 case 3:
-                    goalHandler.addGoal(userOut);
+                    transactionHandler.editTransaction(userOut);
                     break;
                 case 4:
-                    goalHandler.viewGoals(userOut);
+                    transactionHandler.deleteTransaction(userOut);
                     break;
                 case 5:
+                    return; // Возврат в главное меню
+                default:
+                    printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
+            }
+        }
+    }
+
+    private void runGoalMenu(UserOut userOut) {
+        while (true) {
+            printer.printWithDivider("\nМеню целей:");
+            printer.printPrompt("1. Установить цель");
+            printer.printPrompt("2. Просмотреть цели");
+            printer.printPrompt("3. Вернуться в главное меню");
+
+            int choice = printer.readInt("Выберите действие:");
+
+            switch (choice) {
+                case 1:
+                    goalHandler.addGoal(userOut);
+                    break;
+                case 2:
+                    goalHandler.viewGoals(userOut);
+                    break;
+                case 3:
+                    return; // Возврат в главное меню
+                default:
+                    printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
+            }
+        }
+    }
+
+    private void runBudgetMenu(UserOut userOut) {
+        while (true) {
+            printer.printWithDivider("\nМеню бюджета:");
+            printer.printPrompt("1. Установить бюджет");
+            printer.printPrompt("2. Просмотреть бюджет");
+            printer.printPrompt("3. Вернуться в главное меню");
+
+            int choice = printer.readInt("Выберите действие:");
+
+            switch (choice) {
+                case 1:
                     budgetHandler.setBudget(userOut);
                     break;
-                case 6:
+                case 2:
                     budgetHandler.viewBudget(userOut);
                     break;
-                case 7:
+                case 3:
+                    return; // Возврат в главное меню
+                default:
+                    printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
+            }
+        }
+    }
+
+    private void runProfileMenu(UserOut userOut) {
+        while (true) {
+            printer.printWithDivider("\nМеню профиля:");
+            printer.printPrompt("1. Редактировать профиль");
+            printer.printPrompt("2. Удалить аккаунт");
+            printer.printPrompt("3. Вернуться в главное меню");
+
+            int choice = printer.readInt("Выберите действие:");
+
+            switch (choice) {
+                case 1:
                     userHandler.updateProfile(userOut.getEmail());
                     break;
-                case 8:
+                case 2:
                     userHandler.deleteAccount(userOut.getEmail());
-                    return;
-                case 9:
-                    printer.printInfo("Вы вышли из аккаунта.");
-                    return;
+                    return; // Выход из меню после удаления аккаунта
+                case 3:
+                    return; // Возврат в главное меню
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
