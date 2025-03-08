@@ -7,7 +7,7 @@ public interface GoalRepository {
     Goal findById(String id);
     Goal findByUserId(String userId);
     void update(Goal goal);
-    void delete(String userId);
+    void deleteByUserId(String userId);
     void updateSavedAmount(String goalId, double amount);
     double getSavedAmount(String goalId);
 }

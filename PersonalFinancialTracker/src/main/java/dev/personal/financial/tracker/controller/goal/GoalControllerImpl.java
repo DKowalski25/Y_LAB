@@ -26,8 +26,8 @@ public class GoalControllerImpl implements GoalController {
     }
 
     @Override
-    public void deleteGoal(String userId) {
-        goalService.deleteGoal(userId);
+    public void deleteGoalByUserId(String userId) {
+        goalService.deleteGoalByUserId(userId);
     }
 
     @Override

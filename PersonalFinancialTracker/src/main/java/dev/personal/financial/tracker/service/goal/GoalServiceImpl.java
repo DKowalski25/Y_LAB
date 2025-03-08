@@ -43,8 +43,8 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void deleteGoal(String userId) {
-        goalRepository.delete(userId);
+    public void deleteGoalByUserId(String userId) {
+        goalRepository.deleteByUserId(userId);
     }
 
     @Override

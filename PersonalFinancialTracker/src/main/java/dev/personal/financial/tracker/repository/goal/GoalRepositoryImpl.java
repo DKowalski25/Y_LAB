@@ -32,8 +32,8 @@ public class GoalRepositoryImpl implements GoalRepository {
     }
 
     @Override
-    public void delete(String userId) {
-        goals.remove(userId);
+    public void deleteByUserId(String userId) {
+        goals.values().removeIf(goal -> goal.getUserId().equals(userId));
     }
 
     @Override
