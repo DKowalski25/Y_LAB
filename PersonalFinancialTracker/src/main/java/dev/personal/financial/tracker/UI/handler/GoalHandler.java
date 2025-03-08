@@ -52,7 +52,12 @@ public class GoalHandler {
         } else {
             printer.printWithDivider("Список целей:");
             for (GoalOut goal : goals) {
-                System.out.println(goal);
+                double progress = goalController.getProgress(goal.getId());
+                printer.printInfo("Цель: " + goal.getGoalName());
+                printer.printInfo("Целевая сумма: " + goal.getGoalAmount());
+                printer.printInfo("Накоплено: " + goal.getSavedAmount());
+                printer.printInfo("Прогресс: " + progress + "%");
+                printer.printWithDivider("");
             }
         }
     }
