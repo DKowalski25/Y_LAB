@@ -20,7 +20,7 @@ public class GoalHandler {
 
     public void addGoal(UserOut user) {
         if (user == null) {
-            printer.printError("Пользователь не авторизован.");
+            printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
 
