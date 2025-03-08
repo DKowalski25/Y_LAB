@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface GoalRepository {
     void save(Goal goal);
+    Goal findById(String id);
     List<Goal> findByUserId(String userId);
     void update(Goal goal);
     void delete(String userId);

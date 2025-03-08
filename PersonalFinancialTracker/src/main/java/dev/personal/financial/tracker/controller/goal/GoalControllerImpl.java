@@ -1,5 +1,7 @@
 package dev.personal.financial.tracker.controller.goal;
 
+import dev.personal.financial.tracker.dto.goal.GoalIn;
+import dev.personal.financial.tracker.dto.goal.GoalOut;
 import dev.personal.financial.tracker.model.Goal;
 import dev.personal.financial.tracker.service.goal.GoalService;
 
@@ -12,17 +14,17 @@ public class GoalControllerImpl implements GoalController {
     private final GoalService goalService;
 
     @Override
-    public void addGoal(Goal goal) {
-        goalService.addGoal(goal);
+    public void addGoal(GoalIn goalIn) {
+        goalService.addGoal(goalIn);
     }
 
     @Override
-    public List<Goal> getGoalsByUserId(String userId) {
+    public List<GoalOut> getGoalsByUserId(String userId) {
         return goalService.getGoalsByUserId(userId);
     }
 
     @Override
-    public void updateGoal(Goal goal) {
+    public void updateGoal(GoalIn goal) {
         goalService.updateGoal(goal);
     }
 

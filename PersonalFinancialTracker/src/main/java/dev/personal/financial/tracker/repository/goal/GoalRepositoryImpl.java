@@ -12,7 +12,12 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public void save(Goal goal) {
-        goals.put(goal.getUserId(), goal);
+        goals.put(goal.getId(), goal);
+    }
+
+    @Override
+    public Goal findById(String id) {
+        return goals.get(id);
     }
 
     @Override

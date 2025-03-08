@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GoalOut {
+    private String id;
     private String userId;
     private String goalName;
     private double goalAmount;

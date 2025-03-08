@@ -1,5 +1,7 @@
 package dev.personal.financial.tracker.controller.transaction;
 
+import dev.personal.financial.tracker.dto.transaction.TransactionIn;
+import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.model.Transaction;
 
 import dev.personal.financial.tracker.service.transaction.TransactionService;
@@ -13,17 +15,17 @@ public class TransactionControllerImpl implements TransactionController {
     private final TransactionService transactionService;
 
     @Override
-    public void addTransaction(Transaction transaction) {
-        transactionService.addTransaction(transaction);
+    public void addTransaction(TransactionIn transactionIn) {
+        transactionService.addTransaction(transactionIn);
     }
 
     @Override
-    public Transaction getTransaction(String id) {
+    public TransactionOut getTransaction(String id) {
         return transactionService.getTransactionById(id);
     }
 
     @Override
-    public List<Transaction> getTransactionsByUserId(String userId) {
+    public List<TransactionOut> getTransactionsByUserId(String userId) {
         return transactionService.getTransactionsByUserId(userId);
     }
 

@@ -1,6 +1,7 @@
 package dev.personal.financial.tracker.repository.admin;
 
 import dev.personal.financial.tracker.model.User;
+import dev.personal.financial.tracker.model.UserRole;
 import dev.personal.financial.tracker.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     public void blockUser(String userId) {
         User user = userRepository.findById(userId);
         if (user != null) {
-            user.setRole("BLOCKED");
+            user.setIsBlocked(true);
             userRepository.save(user);
         }
     }
