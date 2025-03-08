@@ -6,6 +6,7 @@ import dev.personal.financial.tracker.model.Transaction;
 
 import dev.personal.financial.tracker.service.transaction.TransactionService;
 
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionControllerImpl implements TransactionController {
     private final TransactionService transactionService;
+    private final ConsolePrinter printer;
 
     @Override
     public void addTransaction(TransactionIn transactionIn) {
@@ -27,6 +29,17 @@ public class TransactionControllerImpl implements TransactionController {
     @Override
     public List<TransactionOut> getTransactionsByUserId(String userId) {
         return transactionService.getTransactionsByUserId(userId);
+    }
+
+    @Override
+    public void updateTransaction(String id, TransactionIn transactionIn) {
+        try {
+            transactionService.updateTransaction(id, transactionIn);
+            printer.printSuccess("Транзакция успешно обновлена.");
+        } catch (IllegalArgumentException e) {
+            printer.printError(e.getMessage());
+        }
+
     }
 
     @Override

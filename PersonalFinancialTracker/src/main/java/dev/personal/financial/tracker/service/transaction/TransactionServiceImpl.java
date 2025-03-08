@@ -36,6 +36,16 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public void updateTransaction(String id, TransactionIn transactionIn) {
+        Transaction existingTransaction = transactionRepository.findById(id);
+        if (existingTransaction == null) {
+            throw new IllegalArgumentException("Транзакция с id " + id + " не найдена");
+        }
+        TransactionMapper.updateTransaction(existingTransaction, transactionIn);
+        transactionRepository.save(existingTransaction);
+    }
+
+    @Override
     public void deleteTransaction(String id) {
         transactionRepository.delete(id);
     }
