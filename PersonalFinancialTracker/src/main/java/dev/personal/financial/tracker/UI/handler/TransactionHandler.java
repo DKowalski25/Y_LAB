@@ -46,15 +46,11 @@ public class TransactionHandler {
         }
 
         if (isIncome) {
-            List<GoalOut> goals = goalController.getGoalsByUserId(user.getId());
-            for (GoalOut goal : goals) {
-                goalController.updateSavedAmount(goal.getId(), amount);
-
-                double progress = goalController.getProgress(goal.getId());
-                notifyProgress(goal, progress);
-            }
+            GoalOut goal = goalController.getGoalsByUserId(user.getId());
+            goalController.updateSavedAmount(goal.getId(), amount);
+            double progress = goalController.getProgress(goal.getId());
+            notifyProgress(goal, progress);
         }
-
         TransactionIn transactionIn = new TransactionIn(
                 user.getId(),
                 amount,
