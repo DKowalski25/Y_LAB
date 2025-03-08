@@ -55,8 +55,12 @@ public class UserHandler {
         UserOut userOut = userController.getUserByEmail(email);
 
         if (user != null && user.getPassword().equals(password)) {
-            System.out.println("Пользователь успешно авторизован.");
-            return userOut;
+            if (user.getIsBlocked()) {
+                System.out.println("Пользователь заблокирован.");
+            } else {
+                System.out.println("Пользователь успешно авторизован.");
+                return userOut;
+            }
         } else if (user == null){
             System.out.println("Пользователь с таким email не найден.");
         } else {
