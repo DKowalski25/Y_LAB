@@ -152,7 +152,7 @@ class TransactionServiceImplTest {
         transactionService.updateTransaction(transactionId, transactionIn);
 
         verify(transactionRepository, times(1)).findById(transactionId);
-        verify(transactionRepository, times(1)).save(argThat(transaction ->
+        verify(transactionRepository, times(1)).update(argThat(transaction ->
                 transaction.getAmount() == 200.0 &&
                         transaction.getDescription().equals("Dinner")
         ));
