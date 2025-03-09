@@ -114,7 +114,8 @@ public class UserMenu {
             printer.printWithDivider("\nМеню бюджета:");
             printer.printPrompt("1. Установить бюджет");
             printer.printPrompt("2. Просмотреть бюджет");
-            printer.printPrompt("3. Вернуться в главное меню");
+            printer.printPrompt("3. Статистика бюджета");
+            printer.printPrompt("4. Вернуться в главное меню");
 
             int choice = printer.readInt("Выберите действие:");
 
