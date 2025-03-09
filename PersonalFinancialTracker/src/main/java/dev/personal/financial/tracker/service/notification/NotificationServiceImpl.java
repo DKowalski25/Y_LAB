@@ -3,6 +3,8 @@ package dev.personal.financial.tracker.service.notification;
 import dev.personal.financial.tracker.dto.notification.NotificationIn;
 import dev.personal.financial.tracker.dto.notification.NotificationMapper;
 import dev.personal.financial.tracker.dto.notification.NotificationOut;
+import dev.personal.financial.tracker.exception.notification.NotificationAlreadyExistsException;
+import dev.personal.financial.tracker.exception.notification.NotificationNotFoundException;
 import dev.personal.financial.tracker.model.Notification;
 import dev.personal.financial.tracker.repository.notification.NotificationRepository;
 
@@ -11,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация интерфейса {@link NotificationService}.
+ * Обрабатывает бизнес-логику, связанную с уведомлениями.
+ */
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepository notificationRepository;
@@ -19,7 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendNotification(NotificationIn notificationIn) {
         Notification notification = NotificationMapper.toEntity(notificationIn);
         notificationRepository.save(notification);
-        // Здесь добавиться логика отправки уведомления когда приложение перейдет в вэб
+        // Здесь добавится логика отправки уведомления, когда приложение перейдет в веб
     }
 
     @Override

@@ -8,6 +8,10 @@ import dev.personal.financial.tracker.repository.budget.BudgetRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Реализация интерфейса {@link BudgetService}.
+ * Обрабатывает бизнес-логику, связанную с бюджетами.
+ */
 @RequiredArgsConstructor
 public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
@@ -21,16 +25,14 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public BudgetOut getBudgetByUserId(String userId) {
         Budget budget = budgetRepository.findByUserId(userId);
-        return budget != null ? BudgetMapper.toDto(budget) : null;
+        return BudgetMapper.toDto(budget);
     }
 
     @Override
     public void updateBudget(BudgetIn budgetIn) {
         Budget budget = budgetRepository.findByUserId(budgetIn.getUserId());
-        if (budget != null) {
-            BudgetMapper.updateEntity(budget, budgetIn);
-            budgetRepository.update(budget);
-        }
+        BudgetMapper.updateEntity(budget, budgetIn);
+        budgetRepository.update(budget);
     }
 
     @Override

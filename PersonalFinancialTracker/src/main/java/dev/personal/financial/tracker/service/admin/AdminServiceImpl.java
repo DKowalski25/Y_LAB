@@ -8,7 +8,12 @@ import dev.personal.financial.tracker.repository.admin.AdminRepository;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * Реализация интерфейса {@link AdminService}.
+ * Обрабатывает бизнес-логику, связанную с административными функциями.
+ */
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
@@ -18,7 +23,7 @@ public class AdminServiceImpl implements AdminService {
         List<User> users = adminRepository.getAllUsers();
         return users.stream()
                 .map(UserMapper::toDto)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
