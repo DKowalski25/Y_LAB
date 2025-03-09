@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.service.goal;
 
 import dev.personal.financial.tracker.dto.goal.GoalIn;
 import dev.personal.financial.tracker.dto.goal.GoalOut;
+import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.model.Goal;
 import dev.personal.financial.tracker.repository.goal.GoalRepository;
 
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class GoalServiceImplTest {
@@ -86,13 +88,14 @@ class GoalServiceImplTest {
     }
 
     @Test
-    void getGoalById_ShouldReturnNull_WhenGoalDoesNotExist() {
+    void getGoalById_ShouldThrowException_WhenGoalDoesNotExist() {
         String goalId = "1";
-        when(goalRepository.findById(goalId)).thenReturn(null);
+        when(goalRepository.findById(goalId)).thenThrow(new GoalNotFoundException(goalId));
 
-        GoalOut result = goalService.getGoalById(goalId);
+        assertThatThrownBy(() -> goalService.getGoalById(goalId))
+                .isInstanceOf(GoalNotFoundException.class)
+                .hasMessage("Цель с id " + goalId + " не найдена.");
 
-        assertThat(result).isNull();
         verify(goalRepository, times(1)).findById(goalId);
     }
 
@@ -121,13 +124,14 @@ class GoalServiceImplTest {
     }
 
     @Test
-    void getGoalsByUserId_ShouldReturnNull_WhenGoalDoesNotExist() {
+    void getGoalsByUserId_ShouldThrowException_WhenGoalDoesNotExist() {
         String userId = "user1";
-        when(goalRepository.findByUserId(userId)).thenReturn(null);
+        when(goalRepository.findByUserId(userId)).thenThrow(new GoalNotFoundException(userId));
 
-        GoalOut result = goalService.getGoalsByUserId(userId);
+        assertThatThrownBy(() -> goalService.getGoalsByUserId(userId))
+                .isInstanceOf(GoalNotFoundException.class)
+                .hasMessage("Цель с id " + userId + " не найдена.");
 
-        assertThat(result).isNull();
         verify(goalRepository, times(1)).findByUserId(userId);
     }
 
@@ -160,7 +164,7 @@ class GoalServiceImplTest {
     }
 
     @Test
-    void updateGoal_ShouldDoNothing_WhenGoalDoesNotExist() {
+    void updateGoal_ShouldThrowException_WhenGoalDoesNotExist() {
         GoalIn goalIn = new GoalIn(
                 "1",
                 "user1",
@@ -168,9 +172,11 @@ class GoalServiceImplTest {
                 200000.0
         );
 
-        when(goalRepository.findById("1")).thenReturn(null);
+        when(goalRepository.findById("1")).thenThrow(new GoalNotFoundException("1"));
 
-        goalService.updateGoal(goalIn);
+        assertThatThrownBy(() -> goalService.updateGoal(goalIn))
+                .isInstanceOf(GoalNotFoundException.class)
+                .hasMessage("Цель с id 1 не найдена.");
 
         verify(goalRepository, times(1)).findById("1");
         verify(goalRepository, never()).update(any(Goal.class));
@@ -217,13 +223,14 @@ class GoalServiceImplTest {
     }
 
     @Test
-    void getProgress_ShouldReturnZero_WhenGoalDoesNotExist() {
-        String userId = "user1";
-        when(goalRepository.findById(userId)).thenReturn(null);
+    void getProgress_ShouldThrowException_WhenGoalDoesNotExist() {
+        String goalId = "1";
+        when(goalRepository.findById(goalId)).thenThrow(new GoalNotFoundException(goalId));
 
-        double result = goalService.getProgress(userId);
+        assertThatThrownBy(() -> goalService.getProgress(goalId))
+                .isInstanceOf(GoalNotFoundException.class)
+                .hasMessage("Цель с id " + goalId + " не найдена.");
 
-        assertThat(result).isEqualTo(0.0);
-        verify(goalRepository, times(1)).findById(userId);
+        verify(goalRepository, times(1)).findById(goalId);
     }
 }

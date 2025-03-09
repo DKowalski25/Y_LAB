@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.service.transaction;
 
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
+import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.model.Transaction;
 import dev.personal.financial.tracker.repository.transaction.TransactionRepository;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceImplTest {
@@ -52,21 +54,17 @@ class TransactionServiceImplTest {
                 "Lunch",
                 true
         );
-        Transaction transaction = new Transaction(
-                UUID.randomUUID().toString(),
-                "user1",
-                100.0,
-                "Food",
-                LocalDate.now(),
-                "Lunch",
-                true
-        );
-
-        doNothing().when(transactionRepository).save(any(Transaction.class));
 
         transactionService.addTransaction(transactionIn);
 
-        verify(transactionRepository, times(1)).save(any(Transaction.class));
+        verify(transactionRepository, times(1)).save(argThat(transaction ->
+                transaction.getUserId().equals("user1") &&
+                        transaction.getAmount() == 100.0 &&
+                        transaction.getCategory().equals("Food") &&
+                        transaction.getDate().equals(LocalDate.now()) &&
+                        transaction.getDescription().equals("Lunch") &&
+                        transaction.isIncome()
+        ));
     }
 
     @Test
@@ -92,6 +90,18 @@ class TransactionServiceImplTest {
         assertThat(result.getCategory()).isEqualTo("Food");
         assertThat(result.getDescription()).isEqualTo("Lunch");
         assertThat(result.isIncome()).isTrue();
+        verify(transactionRepository, times(1)).findById(transactionId);
+    }
+
+    @Test
+    void getTransactionById_ShouldThrowException_WhenTransactionDoesNotExist() {
+        String transactionId = UUID.randomUUID().toString();
+        when(transactionRepository.findById(transactionId)).thenThrow(new TransactionNotFoundException(transactionId));
+
+        assertThatThrownBy(() -> transactionService.getTransactionById(transactionId))
+                .isInstanceOf(TransactionNotFoundException.class)
+                .hasMessage("Транзакция с id " + transactionId + " не найдена.");
+
         verify(transactionRepository, times(1)).findById(transactionId);
     }
 
@@ -138,16 +148,14 @@ class TransactionServiceImplTest {
         );
 
         when(transactionRepository.findById(transactionId)).thenReturn(existingTransaction);
-        doNothing().when(transactionRepository).save(any(Transaction.class));
 
         transactionService.updateTransaction(transactionId, transactionIn);
 
         verify(transactionRepository, times(1)).findById(transactionId);
-        verify(transactionRepository, times(1)).save(existingTransaction);
-        assertThat(existingTransaction.getAmount()).isEqualTo(200.0);
-        assertThat(existingTransaction.getCategory()).isEqualTo("Food");
-        assertThat(existingTransaction.getDescription()).isEqualTo("Dinner");
-        assertThat(existingTransaction.isIncome()).isTrue();
+        verify(transactionRepository, times(1)).save(argThat(transaction ->
+                transaction.getAmount() == 200.0 &&
+                        transaction.getDescription().equals("Dinner")
+        ));
     }
 
     @Test
@@ -156,11 +164,11 @@ class TransactionServiceImplTest {
         TransactionIn transactionIn = new TransactionIn(
                 "user1", 200.0, "Food", LocalDate.now(), "Dinner", true);
 
-        when(transactionRepository.findById(transactionId)).thenReturn(null);
+        when(transactionRepository.findById(transactionId)).thenThrow(new TransactionNotFoundException(transactionId));
 
         assertThatThrownBy(() -> transactionService.updateTransaction(transactionId, transactionIn))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Транзакция с id " + transactionId + " не найдена");
+                .isInstanceOf(TransactionNotFoundException.class)
+                .hasMessage("Транзакция с id " + transactionId + " не найдена.");
 
         verify(transactionRepository, times(1)).findById(transactionId);
         verify(transactionRepository, never()).save(any(Transaction.class));
@@ -183,6 +191,20 @@ class TransactionServiceImplTest {
         transactionService.deleteTransaction(transactionId);
 
         verify(transactionRepository, times(1)).delete(transactionId);
+    }
+
+    @Test
+    void deleteTransaction_ShouldThrowException_WhenTransactionDoesNotExist() {
+        String transactionId = UUID.randomUUID().toString();
+        when(transactionRepository.findById(transactionId))
+                .thenThrow(new TransactionNotFoundException(transactionId));
+
+        assertThatThrownBy(() -> transactionService.deleteTransaction(transactionId))
+                .isInstanceOf(TransactionNotFoundException.class)
+                .hasMessage("Транзакция с id " + transactionId + " не найдена.");
+
+        verify(transactionRepository, times(1)).findById(transactionId);
+        verify(transactionRepository, never()).delete(anyString());
     }
 
     @Test
