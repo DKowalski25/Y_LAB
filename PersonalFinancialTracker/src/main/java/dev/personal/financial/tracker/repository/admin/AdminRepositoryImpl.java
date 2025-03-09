@@ -1,7 +1,6 @@
 package dev.personal.financial.tracker.repository.admin;
 
 import dev.personal.financial.tracker.model.User;
-import dev.personal.financial.tracker.model.UserRole;
 import dev.personal.financial.tracker.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;

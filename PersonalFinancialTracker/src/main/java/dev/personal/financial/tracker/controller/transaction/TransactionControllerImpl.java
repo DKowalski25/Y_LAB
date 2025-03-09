@@ -2,10 +2,9 @@ package dev.personal.financial.tracker.controller.transaction;
 
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
-
 import dev.personal.financial.tracker.service.transaction.TransactionService;
-
 import dev.personal.financial.tracker.util.ConsolePrinter;
+
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
