@@ -29,8 +29,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOut getUserByEmail(String email) {
-        User user = userRepository.getByEmail(email);
-        return UserMapper.toDto(user);
+        User existingUser = userRepository.getByEmail(email);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("Пользователь с email " + email + " не найден");
+        }
+        return UserMapper.toDto(existingUser);
     }
 
     @Override
