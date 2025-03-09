@@ -76,4 +76,12 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 .mapToDouble(Transaction::getAmount)
                 .sum();
     }
+
+    @Override
+    public List<Transaction> findByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate) {
+        return transactions.values().stream()
+                .filter(t -> t.getUserId().equals(userId))
+                .filter(t -> !t.getDate().isBefore(startDate) && !t.getDate().isAfter(endDate))
+                .collect(Collectors.toList());
+    }
 }
