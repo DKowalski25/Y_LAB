@@ -66,4 +66,9 @@ public class TransactionControllerImpl implements TransactionController {
     public double getTotalExpensesForCurrentMonth(String userId) {
         return transactionService.getTotalExpensesForCurrentMonth(userId);
     }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate) {
+        return transactionService.getTransactionsByUserIdAndDateRange(userId, startDate, endDate);
+    }
 }

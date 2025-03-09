@@ -79,4 +79,12 @@ public class TransactionServiceImpl implements TransactionService {
     public double getTotalExpensesForCurrentMonth(String userId) {
         return transactionRepository.getTotalExpensesForCurrentMonth(userId);
     }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndDateRange(userId, startDate, endDate);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
