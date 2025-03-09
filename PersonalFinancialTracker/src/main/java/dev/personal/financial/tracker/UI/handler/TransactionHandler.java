@@ -47,9 +47,12 @@ public class TransactionHandler {
 
         if (isIncome) {
             GoalOut goal = goalController.getGoalsByUserId(user.getId());
-            goalController.updateSavedAmount(goal.getId(), amount);
-            double progress = goalController.getProgress(goal.getId());
-            notifyProgress(goal, progress);
+            if (goal != null) {
+                goalController.updateSavedAmount(goal.getId(), amount);
+                double progress = goalController.getProgress(goal.getId());
+                notifyProgress(goal, progress);
+            }
+
         }
         TransactionIn transactionIn = new TransactionIn(
                 user.getId(),
