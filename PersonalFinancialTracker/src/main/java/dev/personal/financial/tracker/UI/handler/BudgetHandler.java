@@ -99,4 +99,26 @@ public class BudgetHandler {
         printer.printInfo("Расходы: " + totalExpenses);
         printer.printWithDivider("");
     }
+
+    public void analyzeExpensesByCategory(UserOut user) {
+        if (user == null) {
+            printer.printError("Пользователь не авторизован.");
+            return;
+        }
+
+        List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
+
+        Map<String, Double> expensesByCategory = expenses.stream()
+                .collect(Collectors.groupingBy(
+                        TransactionOut::getCategory,
+                        Collectors.summingDouble(TransactionOut::getAmount)));
+
+        printer.printWithDivider("Анализ расходов по категориям:");
+        if (expensesByCategory.isEmpty()) {
+            printer.printInfo("Расходы не найдены.");
+        } else {
+            expensesByCategory.forEach((category, amount) ->
+                    printer.printInfo(category + ": " + amount));
+        }
+    }
 }
