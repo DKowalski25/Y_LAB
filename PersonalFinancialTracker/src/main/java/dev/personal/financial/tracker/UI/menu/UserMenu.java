@@ -127,6 +127,40 @@ public class UserMenu {
                     budgetHandler.viewBudget(userOut);
                     break;
                 case 3:
+                    runStatisticsMenu(userOut);
+                case 4:
+                    return;
+                default:
+                    printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
+            }
+        }
+    }
+
+    private void runStatisticsMenu(UserOut userOut) {
+        while (true) {
+            printer.printWithDivider("\nМеню статистики и аналитики:");
+            printer.printPrompt("1. Подсчёт текущего баланса");
+            printer.printPrompt("2. Расчёт суммарного дохода и расхода за период");
+            printer.printPrompt("3. Анализ расходов по категориям");
+            printer.printPrompt("4. Формирование отчёта по финансовому состоянию");
+            printer.printPrompt("5. Вернуться в меню бюджета");
+
+            int choice = printer.readInt("Выберите действие:");
+
+            switch (choice) {
+                case 1:
+                    budgetHandler.calculateCurrentBalance(userOut);
+                    break;
+                case 2:
+                    budgetHandler.calculateIncomeAndExpenses(userOut);
+                    break;
+                case 3:
+                    budgetHandler.analyzeExpensesByCategory(userOut);
+                    break;
+                case 4:
+                    budgetHandler.generateFinancialReport(userOut);
+                    break;
+                case 5:
                     return;
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
