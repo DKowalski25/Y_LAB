@@ -34,8 +34,11 @@ public class ConsolePrinter {
 
     public String readNonEmptyString(String prompt) {
         while (true) {
-            System.out.println(prompt);
+            System.out.println(prompt + " (или введите 'q' для выхода):");
             String input = sc.nextLine();
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
             if (input != null && !input.trim().isEmpty()) {
                 return input.trim();
             } else {
@@ -47,6 +50,9 @@ public class ConsolePrinter {
     public String readEmail(String prompt) {
         while (true) {
             String email = readNonEmptyString(prompt);
+            if (email == null) {
+                return null;
+            }
             if (isValidEmail(email)) {
                 return email;
             } else {
@@ -58,6 +64,9 @@ public class ConsolePrinter {
     public String readPassword(String prompt) {
         while (true) {
             String password = readNonEmptyString(prompt);
+            if (password == null) {
+                return null;
+            }
             if (password.length() >= 6) {
                 return password;
             } else {
@@ -66,16 +75,17 @@ public class ConsolePrinter {
         }
     }
 
-    public double readDouble(String prompt) {
+    public Double readDouble(String prompt) {
         while (true) {
-            printPrompt(prompt);
-            if (sc.hasNextDouble()) {
-                double value = sc.nextDouble();
-                sc.nextLine();
-                return value;
-            } else {
+            printPrompt(prompt + " (или введите 'q' для выхода):");
+            String input = sc.nextLine();
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
+            try {
+                return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
                 printError("Неверный формат числа. Пожалуйста, введите корректное число.");
-                sc.next();
             }
         }
     }
@@ -94,22 +104,30 @@ public class ConsolePrinter {
         }
     }
 
-    public boolean readBoolean(String prompt) {
+    public Boolean readBoolean(String prompt) {
         while (true) {
-            printPrompt(prompt + "(true/false):");
-            if (sc.hasNextBoolean()) {
-                return sc.nextBoolean();
+            printPrompt(prompt + " (да/нет) (или введите 'q' для выхода):");
+            String input = sc.nextLine();
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
+            if (input.equalsIgnoreCase("да")) {
+                return true;
+            } else if (input.equalsIgnoreCase("нет")) {
+                return false;
             } else {
-                printError("Неверный формат логического значения. Пожалуйста, введите true или false.");
-                sc.next();
+                printError("Неверный ввод. Пожалуйста, введите 'да' или 'нет'.");
             }
         }
     }
 
     public LocalDate readDate(String prompt) {
         while (true) {
-            printPrompt(prompt);
+            printPrompt(prompt + " (гггг-мм-дд) (или введите 'q' для выхода):");
             String input = sc.nextLine();
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
             try {
                 return LocalDate.parse(input);
             } catch (Exception e) {
