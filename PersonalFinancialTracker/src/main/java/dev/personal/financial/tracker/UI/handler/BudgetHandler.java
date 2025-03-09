@@ -72,4 +72,31 @@ public class BudgetHandler {
         printer.printInfo("Баланс: " + balance);
     }
 
+    public void calculateIncomeAndExpenses(UserOut user) {
+        if (user == null) {
+            printer.printError("Ошибка: пользователь не авторизован.");
+            return;
+        }
+
+        LocalDate startDate = printer.readDate("Введите начальную дату (гггг-мм-дд):");
+        LocalDate endDate = printer.readDate("Введите конечную дату (гггг-мм-дд):");
+
+        List<TransactionOut> transactions = transactionController.getTransactionsByUserIdAndDateRange(
+                user.getId(), startDate, endDate);
+
+        double totalIncome = transactions.stream()
+                .filter(TransactionOut::isIncome)
+                .mapToDouble(TransactionOut::getAmount)
+                .sum();
+
+        double totalExpenses = transactions.stream()
+                .filter(t -> !t.isIncome())
+                .mapToDouble(TransactionOut::getAmount)
+                .sum();
+
+        printer.printWithDivider("Суммарные доходы и расходы за период:");
+        printer.printInfo("Доходы: " + totalIncome);
+        printer.printInfo("Расходы: " + totalExpenses);
+        printer.printWithDivider("");
+    }
 }
