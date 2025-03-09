@@ -47,7 +47,7 @@ public class TransactionServiceImpl implements TransactionService {
             throw new TransactionNotFoundException("Транзакция с id " + id + " не найдена");
         }
         TransactionMapper.updateTransaction(existingTransaction, transactionIn);
-        transactionRepository.save(existingTransaction);
+        transactionRepository.update(existingTransaction);
     }
 
     @Override
