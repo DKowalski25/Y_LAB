@@ -1,5 +1,6 @@
 plugins {
-    id("java")
+    java
+    jacoco
 }
 
 group = "org.example"
@@ -31,4 +32,14 @@ jacoco {
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
 }
