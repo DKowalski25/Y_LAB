@@ -10,6 +10,7 @@ public class GoalMapper {
                 goalIn.getUserId(),
                 goalIn.getGoalName(),
                 goalIn.getGoalAmount(),
+                0.0,
                 0.0
         );
     }
@@ -20,7 +21,8 @@ public class GoalMapper {
                 goal.getUserId(),
                 goal.getGoalName(),
                 goal.getGoalAmount(),
-                goal.getCurrentAmount()
+                goal.getCurrentAmount(),
+                goal.getSavedAmount()
         );
     }
 

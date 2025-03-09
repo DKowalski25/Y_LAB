@@ -8,9 +8,6 @@ import dev.personal.financial.tracker.repository.goal.GoalRepository;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
@@ -31,11 +28,9 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public List<GoalOut> getGoalsByUserId(String userId) {
-        List<Goal> goals = goalRepository.findByUserId(userId);
-        return goals.stream()
-                .map(GoalMapper::toDto)
-                .collect(Collectors.toList());
+    public GoalOut getGoalsByUserId(String userId) {
+        Goal goal = goalRepository.findByUserId(userId);
+        return goal != null ? GoalMapper.toDto(goal) : null;
     }
 
     @Override
@@ -48,7 +43,21 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void deleteGoal(String userId) {
-        goalRepository.delete(userId);
+    public void deleteGoalByUserId(String userId) {
+        goalRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public void updateSavedAmount(String userId, double amount) {
+        goalRepository.updateSavedAmount(userId, amount);
+    }
+
+    @Override
+    public double getProgress(String userId) {
+        Goal goal = goalRepository.findById(userId);
+        if (goal != null) {
+            return (goal.getSavedAmount() / goal.getGoalAmount()) * 100;
+        }
+        return 0;
     }
 }

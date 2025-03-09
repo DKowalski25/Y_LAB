@@ -15,6 +15,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerUser(UserIn userIn) {
         User user = UserMapper.toEntity(userIn);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Пользователь с email " + user.getEmail() + " уже существует");
+        }
         userRepository.save(user);
     }
 
@@ -26,12 +29,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOut getUserByEmail(String email) {
-        User user = userRepository.getByEmail(email);
-        return UserMapper.toDto(user);
+        User existingUser = userRepository.getByEmail(email);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("Пользователь с email " + email + " не найден");
+        }
+        return UserMapper.toDto(existingUser);
     }
 
     @Override
-    public void deleteUser(String id) {
-        userRepository.delete(id);
+    public void updateUser(String email, UserIn userIn) {
+        User existingUser = userRepository.getByEmail(email);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("Пользователь с email " + email + " не найден");
+        }
+        UserMapper.updateEntity(existingUser, userIn);
+        userRepository.update(existingUser);
+    }
+
+    @Override
+    public void deleteUserEmail(String email) {
+        User user = userRepository.getByEmail(email);
+        if (user != null) {
+            userRepository.delete(user.getId());
+        } else {
+            throw new IllegalArgumentException("Пользователь с email " + email + " не найден");
+        }
+
     }
 }

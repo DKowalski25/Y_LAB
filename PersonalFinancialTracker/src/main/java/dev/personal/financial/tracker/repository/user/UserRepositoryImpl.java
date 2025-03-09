@@ -16,6 +16,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User findById(String id) {
+        return users.get(id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return new ArrayList<>(users.values());
+    }
+
+    @Override
     public User getByEmail(String email) {
         return users.values().stream()
                 .filter(user -> user.getEmail().equals(email))
@@ -24,13 +34,16 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findById(String id) {
-        return users.get(id);
+    public void update(User user) {
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+        }
     }
 
     @Override
-    public List<User> findAll() {
-        return new ArrayList<>(users.values());
+    public boolean existsByEmail(String email) {
+        return users.values().stream()
+                .anyMatch(user -> user.getEmail().equals(email));
     }
 
     @Override

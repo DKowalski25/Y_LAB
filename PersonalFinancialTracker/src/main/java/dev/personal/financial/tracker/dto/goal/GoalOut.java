@@ -11,4 +11,5 @@ public class GoalOut {
     private String goalName;
     private double goalAmount;
     private double currentAmount;
+    private double savedAmount;
 }

@@ -41,8 +41,8 @@ public class DependencyInjector {
         return new UserServiceImpl(userRepository);
     }
 
-    public UserController createUserController(UserService userService) {
-        return new UserControllerImpl(userService);
+    public UserController createUserController(UserService userService, ConsolePrinter consolePrinter) {
+        return new UserControllerImpl(userService, consolePrinter);
     }
 
     public TransactionRepository createTransactionRepository() {
@@ -53,8 +53,8 @@ public class DependencyInjector {
         return new TransactionServiceImpl(transactionRepository);
     }
 
-    public TransactionController createTransactionController(TransactionService transactionService) {
-        return new TransactionControllerImpl(transactionService);
+    public TransactionController createTransactionController(TransactionService transactionService, ConsolePrinter consolePrinter) {
+        return new TransactionControllerImpl(transactionService, consolePrinter);
     }
 
     public GoalRepository createGoalRepository() {

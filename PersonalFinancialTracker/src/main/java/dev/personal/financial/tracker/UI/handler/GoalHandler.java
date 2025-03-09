@@ -10,7 +10,6 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -20,12 +19,27 @@ public class GoalHandler {
 
     public void addGoal(UserOut user) {
         if (user == null) {
-            printer.printError("Пользователь не авторизован.");
+            printer.printError("Ошибка: пользователь не авторизован.");
+            return;
+        }
+
+        GoalOut existingGoal = goalController.getGoalsByUserId(user.getId());
+        if (existingGoal != null) {
+            printer.printError("У вас уже есть цель. Сначала удалите текущую цель.");
             return;
         }
 
         String goalName = printer.readNonEmptyString("Введите название цели:");
-        double targetAmount = printer.readDouble("Введите требуемую сумму:");
+        if (goalName == null) {
+            printer.printInfo("Добавление цели отменено.");
+            return;
+        }
+
+        Double targetAmount = printer.readDouble("Введите требуемую сумму:");
+        if (targetAmount == null) {
+            printer.printInfo("Добавление цели отменено.");
+            return;
+        }
 
         String id = UUID.randomUUID().toString();
 
@@ -42,18 +56,32 @@ public class GoalHandler {
 
     public void viewGoals(UserOut user) {
         if (user == null) {
-            printer.printError("Пользователь не авторизован.");
+            printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
 
-        List<GoalOut> goals = goalController.getGoalsByUserId(user.getId());
-        if (goals.isEmpty()) {
-            printer.printInfo("Цели не найдены.");
+        GoalOut goal = goalController.getGoalsByUserId(user.getId());
+        if (goal == null) {
+            printer.printInfo("Цель не установлена.");
         } else {
-            printer.printWithDivider("Список целей:");
-            for (GoalOut goal : goals) {
-                System.out.println(goal);
-            }
+            printer.printWithDivider("Ваша цель:");
+            double progress = goalController.getProgress(goal.getId());
+            printer.printInfo("Цель: " + goal.getGoalName());
+            printer.printInfo("Целевая сумма: " + goal.getGoalAmount());
+            printer.printInfo("Накоплено: " + goal.getSavedAmount());
+            printer.printInfo("Прогресс: " + progress + "%");
+            printer.printWithDivider("");
         }
+    }
+
+    public void deleteGoal(UserOut userOut) {
+        if (userOut == null) {
+            printer.printError("Ошибка: пользователь не авторизован.");
+            return;
+        }
+
+        goalController.deleteGoalByUserId(userOut.getId());
+        printer.printSuccess("Цель успешно удалена.");
+
     }
 }

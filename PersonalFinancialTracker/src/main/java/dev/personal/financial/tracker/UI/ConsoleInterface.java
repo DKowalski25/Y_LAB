@@ -32,13 +32,17 @@ public class ConsoleInterface {
         Scanner sc = new Scanner(System.in);
         ConsolePrinter printer = new ConsolePrinter(sc);
         UserHandler userHandler = new UserHandler(userController, userRepository, printer);
-        TransactionHandler transactionHandler = new TransactionHandler(transactionController, printer);
+        TransactionHandler transactionHandler = new TransactionHandler(
+                transactionController,
+                budgetController,
+                goalController,
+                printer);
         GoalHandler goalHandler = new GoalHandler(goalController, printer);
-        BudgetHandler budgetHandler = new BudgetHandler(budgetController, printer);
+        BudgetHandler budgetHandler = new BudgetHandler(budgetController, transactionController,printer);
         AdminHandler adminHandler = new AdminHandler(adminController, printer);
 
-        this.mainMenu = new MainMenu(userHandler, adminHandler, printer);
-        this.userMenu = new UserMenu(transactionHandler, goalHandler, budgetHandler, printer);
+        this.mainMenu = new MainMenu(userHandler, transactionHandler, goalHandler,budgetHandler, adminHandler, printer);
+        this.userMenu = new UserMenu(transactionHandler, goalHandler, budgetHandler, userHandler, printer);
         this.adminMenu = new AdminMenu(adminHandler, printer);
     }
 

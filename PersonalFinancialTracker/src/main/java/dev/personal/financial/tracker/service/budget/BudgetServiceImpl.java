@@ -21,7 +21,7 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public BudgetOut getBudgetByUserId(String userId) {
         Budget budget = budgetRepository.findByUserId(userId);
-        return BudgetMapper.toDto(budget);
+        return budget != null ? BudgetMapper.toDto(budget) : null;
     }
 
     @Override

@@ -8,6 +8,7 @@ import dev.personal.financial.tracker.repository.transaction.TransactionReposito
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,54 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public void updateTransaction(String id, TransactionIn transactionIn) {
+        Transaction existingTransaction = transactionRepository.findById(id);
+        if (existingTransaction == null) {
+            throw new IllegalArgumentException("Транзакция с id " + id + " не найдена");
+        }
+        TransactionMapper.updateTransaction(existingTransaction, transactionIn);
+        transactionRepository.save(existingTransaction);
+    }
+
+    @Override
     public void deleteTransaction(String id) {
         transactionRepository.delete(id);
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndCategory(String userId, String category) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndCategory(userId, category);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndDate(String userId, LocalDate date) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndDate(userId, date);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean isIncome) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndType(userId, isIncome);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public double getTotalExpensesForCurrentMonth(String userId) {
+        return transactionRepository.getTotalExpensesForCurrentMonth(userId);
+    }
+
+    @Override
+    public List<TransactionOut> getTransactionsByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndDateRange(userId, startDate, endDate);
+        return transactions.stream()
+                .map(TransactionMapper::toDto)
+                .collect(Collectors.toList());
     }
 }
