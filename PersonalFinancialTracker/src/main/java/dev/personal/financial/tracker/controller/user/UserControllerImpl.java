@@ -29,7 +29,11 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public UserOut getUserByEmail(String email) {
-        return userService.getUserByEmail(email);
+        try {
+            return userService.getUserByEmail(email);
+        } catch (IllegalArgumentException e) {
+            printer.printError(e.getMessage());
+        } return null;
     }
 
     @Override
