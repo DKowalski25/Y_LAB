@@ -18,7 +18,10 @@ import dev.personal.financial.tracker.service.budget.BudgetService;
 import dev.personal.financial.tracker.service.goal.GoalService;
 import dev.personal.financial.tracker.service.transaction.TransactionService;
 import dev.personal.financial.tracker.service.user.UserService;
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.util.DependencyInjector;
+
+import java.util.Scanner;
 
 public class Application {
 
@@ -35,11 +38,11 @@ public class Application {
 
         UserRepository userRepository = injector.createUserRepository();
         UserService userService = injector.createUserService(userRepository);
-        UserController userController = injector.createUserController(userService);
+        UserController userController = injector.createUserController(userService, new ConsolePrinter(new Scanner(System.in)));
 
         TransactionRepository transactionRepository = injector.createTransactionRepository();
         TransactionService transactionService = injector.createTransactionService(transactionRepository);
-        TransactionController transactionController = injector.createTransactionController(transactionService);
+        TransactionController transactionController = injector.createTransactionController(transactionService, new ConsolePrinter(new Scanner(System.in)));
 
         GoalRepository goalRepository = injector.createGoalRepository();
         GoalService goalService = injector.createGoalService(goalRepository);
