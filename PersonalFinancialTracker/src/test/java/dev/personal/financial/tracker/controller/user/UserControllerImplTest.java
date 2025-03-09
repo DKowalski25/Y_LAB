@@ -2,6 +2,8 @@ package dev.personal.financial.tracker.controller.user;
 
 import dev.personal.financial.tracker.dto.user.UserIn;
 import dev.personal.financial.tracker.dto.user.UserOut;
+import dev.personal.financial.tracker.exception.user.UserAlreadyExistsException;
+import dev.personal.financial.tracker.exception.user.UserNotFoundException;
 import dev.personal.financial.tracker.model.UserRole;
 import dev.personal.financial.tracker.service.user.UserService;
 import dev.personal.financial.tracker.util.ConsolePrinter;
@@ -14,8 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class UserControllerImplTest {
 
@@ -54,6 +56,7 @@ class UserControllerImplTest {
         userController.registerUser(userIn);
 
         verify(userService, times(1)).registerUser(userIn);
+        verify(printer, times(1)).printSuccess("Пользователь зарегистрирован.");
     }
 
     @Test
@@ -65,11 +68,12 @@ class UserControllerImplTest {
                 "password123",
                 UserRole.USER
         );
-        doThrow(new IllegalArgumentException("Invalid user data")).when(userService).registerUser(userIn);
+        doThrow(new UserAlreadyExistsException("john@example.com"))
+                .when(userService).registerUser(userIn);
 
         userController.registerUser(userIn);
 
-        verify(printer, times(1)).printError("Invalid user data");
+        verify(printer, times(1)).printError("Пользователь с email john@example.com уже существует.");
     }
 
     @Test
@@ -86,6 +90,16 @@ class UserControllerImplTest {
         UserOut result = userController.getUserById("1");
 
         assertEquals(userOut, result);
+    }
+
+    @Test
+    void getUserById_ThrowsException() {
+        when(userService.getUserById("1")).thenThrow(new UserNotFoundException());
+
+        UserOut result = userController.getUserById("1");
+
+        assertNull(result);
+        verify(printer, times(1)).printError("Пользователь не найден.");
     }
 
     @Test
@@ -106,12 +120,12 @@ class UserControllerImplTest {
 
     @Test
     void getUserByEmail_ThrowsException() {
-        when(userService.getUserByEmail("john@example.com")).thenThrow(new IllegalArgumentException("User not found"));
+        when(userService.getUserByEmail("john@example.com")).thenThrow(new UserNotFoundException("john@example.com"));
 
         UserOut result = userController.getUserByEmail("john@example.com");
 
         assertNull(result);
-        verify(printer, times(1)).printError("User not found");
+        verify(printer, times(1)).printError("Пользователь с email john@example.com не найден.");
     }
 
     @Test
@@ -132,6 +146,22 @@ class UserControllerImplTest {
     }
 
     @Test
+    void updateUser_ThrowsException() {
+        UserIn userIn = new UserIn(
+                "1",
+                "John Doe Updated",
+                "john@example.com",
+                "newpassword123",
+                UserRole.USER
+        );
+        doThrow(new UserNotFoundException("john@example.com")).when(userService).updateUser("john@example.com", userIn);
+
+        userController.updateUser("john@example.com", userIn);
+
+        verify(printer, times(1)).printError("Пользователь с email john@example.com не найден.");
+    }
+
+    @Test
     void deleteUserByEmail_Success() {
         doNothing().when(userService).deleteUserEmail("john@example.com");
 
@@ -139,5 +169,14 @@ class UserControllerImplTest {
 
         verify(userService, times(1)).deleteUserEmail("john@example.com");
         verify(printer, times(1)).printSuccess("Аккаунт успешно удален.");
+    }
+
+    @Test
+    void deleteUserByEmail_ThrowsException() {
+        doThrow(new UserNotFoundException("john@example.com")).when(userService).deleteUserEmail("john@example.com");
+
+        userController.deleteUserByEmail("john@example.com");
+
+        verify(printer, times(1)).printError("Пользователь с email john@example.com не найден.");
     }
 }

@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.service.transaction;
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionMapper;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
+import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.model.Transaction;
 import dev.personal.financial.tracker.repository.transaction.TransactionRepository;
 
@@ -12,10 +13,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Реализация интерфейса {@link TransactionService}.
+ * Обрабатывает бизнес-логику, связанную с транзакциями.
+ */
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
-
 
     @Override
     public void addTransaction(TransactionIn transactionIn) {
@@ -40,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
     public void updateTransaction(String id, TransactionIn transactionIn) {
         Transaction existingTransaction = transactionRepository.findById(id);
         if (existingTransaction == null) {
-            throw new IllegalArgumentException("Транзакция с id " + id + " не найдена");
+            throw new TransactionNotFoundException("Транзакция с id " + id + " не найдена");
         }
         TransactionMapper.updateTransaction(existingTransaction, transactionIn);
         transactionRepository.save(existingTransaction);
@@ -48,6 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void deleteTransaction(String id) {
+        transactionRepository.findById(id);
         transactionRepository.delete(id);
     }
 

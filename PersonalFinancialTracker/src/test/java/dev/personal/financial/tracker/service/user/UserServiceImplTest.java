@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.service.user;
 
 import dev.personal.financial.tracker.dto.user.UserIn;
 import dev.personal.financial.tracker.dto.user.UserOut;
+import dev.personal.financial.tracker.exception.user.UserNotFoundException;
 import dev.personal.financial.tracker.model.User;
 import dev.personal.financial.tracker.model.UserRole;
 import dev.personal.financial.tracker.repository.user.UserRepository;
@@ -79,7 +80,7 @@ class UserServiceImplTest {
 
         assertThatThrownBy(() -> userService.registerUser(userIn))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Пользователь с email john@example.com уже существует");
+                .hasMessage("Пользователь с email john@example.com уже существует.");
 
         verify(userRepository, times(1)).existsByEmail("john@example.com");
         verify(userRepository, never()).save(any(User.class));
@@ -106,6 +107,17 @@ class UserServiceImplTest {
     }
 
     @Test
+    void getUserById_ShouldThrowException_WhenUserDoesNotExist() {
+        when(userRepository.findById("1")).thenThrow(new UserNotFoundException("1"));
+
+        assertThatThrownBy(() -> userService.getUserById("1"))
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("Пользователь с email 1 не найден.");
+
+        verify(userRepository, times(1)).findById("1");
+    }
+
+    @Test
     void getUserByEmail_ShouldReturnUserOut_WhenUserExists() {
         User user = new User(
                 "1",
@@ -127,11 +139,11 @@ class UserServiceImplTest {
 
     @Test
     void getUserByEmail_ShouldThrowException_WhenUserDoesNotExist() {
-        when(userRepository.getByEmail("john@example.com")).thenReturn(null);
+        when(userRepository.getByEmail("john@example.com")).thenThrow(new UserNotFoundException("john@example.com"));
 
         assertThatThrownBy(() -> userService.getUserByEmail("john@example.com"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Пользователь с email john@example.com не найден");
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("Пользователь с email john@example.com не найден.");
 
         verify(userRepository, times(1)).getByEmail("john@example.com");
     }
@@ -175,11 +187,11 @@ class UserServiceImplTest {
                 UserRole.ADMIN
         );
 
-        when(userRepository.getByEmail("john@example.com")).thenReturn(null);
+        when(userRepository.getByEmail("john@example.com")).thenThrow(new UserNotFoundException("john@example.com"));
 
         assertThatThrownBy(() -> userService.updateUser("john@example.com", userIn))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Пользователь с email john@example.com не найден");
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("Пользователь с email john@example.com не найден.");
 
         verify(userRepository, times(1)).getByEmail("john@example.com");
         verify(userRepository, never()).update(any(User.class));
@@ -205,11 +217,11 @@ class UserServiceImplTest {
 
     @Test
     void deleteUserEmail_ShouldThrowException_WhenUserDoesNotExist() {
-        when(userRepository.getByEmail("john@example.com")).thenReturn(null);
+        when(userRepository.getByEmail("john@example.com")).thenThrow(new UserNotFoundException("john@example.com"));
 
         assertThatThrownBy(() -> userService.deleteUserEmail("john@example.com"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Пользователь с email john@example.com не найден");
+                .isInstanceOf(UserNotFoundException.class)
+                .hasMessage("Пользователь с email john@example.com не найден.");
 
         verify(userRepository, times(1)).getByEmail("john@example.com");
         verify(userRepository, never()).delete(any(String.class));

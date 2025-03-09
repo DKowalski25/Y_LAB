@@ -4,9 +4,14 @@ import dev.personal.financial.tracker.dto.user.UserIn;
 import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.service.user.UserService;
 import dev.personal.financial.tracker.util.ConsolePrinter;
+import dev.personal.financial.tracker.exception.user.UserNotFoundException;
+import dev.personal.financial.tracker.exception.user.UserAlreadyExistsException;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Контроллер для управления пользователями.
+ */
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
     private final UserService userService;
@@ -16,24 +21,30 @@ public class UserControllerImpl implements UserController {
     public void registerUser(UserIn userIn) {
         try {
             userService.registerUser(userIn);
-        } catch (IllegalArgumentException e) {
+            printer.printSuccess("Пользователь зарегистрирован.");
+        } catch (UserAlreadyExistsException e) {
             printer.printError(e.getMessage());
         }
-
     }
 
     @Override
     public UserOut getUserById(String id) {
-        return userService.getUserById(id);
+        try {
+            return userService.getUserById(id);
+        } catch (UserNotFoundException e) {
+            printer.printError(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public UserOut getUserByEmail(String email) {
         try {
             return userService.getUserByEmail(email);
-        } catch (IllegalArgumentException e) {
+        } catch (UserNotFoundException e) {
             printer.printError(e.getMessage());
-        } return null;
+            return null;
+        }
     }
 
     @Override
@@ -41,7 +52,7 @@ public class UserControllerImpl implements UserController {
         try {
             userService.updateUser(email, userIn);
             printer.printSuccess("Профиль успешно обновлен.");
-        } catch (IllegalArgumentException e) {
+        } catch (UserNotFoundException e) {
             printer.printError(e.getMessage());
         }
     }
@@ -51,7 +62,7 @@ public class UserControllerImpl implements UserController {
         try {
             userService.deleteUserEmail(email);
             printer.printSuccess("Аккаунт успешно удален.");
-        } catch (IllegalArgumentException e) {
+        } catch (UserNotFoundException e) {
             printer.printError(e.getMessage());
         }
     }

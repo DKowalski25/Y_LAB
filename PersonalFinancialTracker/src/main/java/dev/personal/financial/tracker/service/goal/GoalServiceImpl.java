@@ -8,6 +8,10 @@ import dev.personal.financial.tracker.repository.goal.GoalRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Реализация интерфейса {@link GoalService}.
+ * Обрабатывает бизнес-логику, связанную с целями.
+ */
 @RequiredArgsConstructor
 public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
@@ -21,25 +25,20 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public GoalOut getGoalById(String id) {
         Goal goal = goalRepository.findById(id);
-        if (goal != null) {
-            return GoalMapper.toDto(goal);
-        }
-        return null;
+        return GoalMapper.toDto(goal);
     }
 
     @Override
     public GoalOut getGoalsByUserId(String userId) {
         Goal goal = goalRepository.findByUserId(userId);
-        return goal != null ? GoalMapper.toDto(goal) : null;
+        return GoalMapper.toDto(goal);
     }
 
     @Override
     public void updateGoal(GoalIn goalIn) {
         Goal goal = goalRepository.findById(goalIn.getId());
-        if (goal != null) {
-            GoalMapper.updateEntity(goal, goalIn);
-            goalRepository.update(goal);
-        }
+        GoalMapper.updateEntity(goal, goalIn);
+        goalRepository.update(goal);
     }
 
     @Override
@@ -48,16 +47,13 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public void updateSavedAmount(String userId, double amount) {
-        goalRepository.updateSavedAmount(userId, amount);
+    public void updateSavedAmount(String goalId, double amount) {
+        goalRepository.updateSavedAmount(goalId, amount);
     }
 
     @Override
-    public double getProgress(String userId) {
-        Goal goal = goalRepository.findById(userId);
-        if (goal != null) {
-            return (goal.getSavedAmount() / goal.getGoalAmount()) * 100;
-        }
-        return 0;
+    public double getProgress(String goalId) {
+        Goal goal = goalRepository.findById(goalId);
+        return (goal.getSavedAmount() / goal.getGoalAmount()) * 100;
     }
 }

@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.service.budget;
 
 import dev.personal.financial.tracker.dto.budget.BudgetIn;
 import dev.personal.financial.tracker.dto.budget.BudgetOut;
+import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
 import dev.personal.financial.tracker.model.Budget;
 import dev.personal.financial.tracker.repository.budget.BudgetRepository;
 
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class BudgetServiceImplTest {
@@ -76,13 +78,14 @@ class BudgetServiceImplTest {
     }
 
     @Test
-    void getBudgetByUserId_ShouldReturnNull_WhenBudgetDoesNotExist() {
+    void getBudgetByUserId_ShouldThrowException_WhenBudgetDoesNotExist() {
         String userId = "user1";
-        when(budgetRepository.findByUserId(userId)).thenReturn(null);
+        when(budgetRepository.findByUserId(userId)).thenThrow(new BudgetNotFoundException(userId));
 
-        BudgetOut result = budgetService.getBudgetByUserId(userId);
+        assertThatThrownBy(() -> budgetService.getBudgetByUserId(userId))
+                .isInstanceOf(BudgetNotFoundException.class)
+                .hasMessage("Бюджет для пользователя с id " + userId + " не найден.");
 
-        assertThat(result).isNull();
         verify(budgetRepository, times(1)).findByUserId(userId);
     }
 
@@ -110,12 +113,14 @@ class BudgetServiceImplTest {
     }
 
     @Test
-    void updateBudget_ShouldDoNothing_WhenBudgetDoesNotExist() {
+    void updateBudget_ShouldThrowException_WhenBudgetDoesNotExist() {
         BudgetIn budgetIn = new BudgetIn("1", "user1", 2000.0);
 
-        when(budgetRepository.findByUserId("user1")).thenReturn(null);
+        when(budgetRepository.findByUserId("user1")).thenThrow(new BudgetNotFoundException("user1"));
 
-        budgetService.updateBudget(budgetIn);
+        assertThatThrownBy(() -> budgetService.updateBudget(budgetIn))
+                .isInstanceOf(BudgetNotFoundException.class)
+                .hasMessage("Бюджет для пользователя с id user1 не найден.");
 
         verify(budgetRepository, times(1)).findByUserId("user1");
         verify(budgetRepository, never()).update(any(Budget.class));

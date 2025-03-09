@@ -2,6 +2,8 @@ package dev.personal.financial.tracker.controller.transaction;
 
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
+import dev.personal.financial.tracker.exception.transaction.TransactionAlreadyExistsException;
+import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.service.transaction.TransactionService;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 
@@ -10,6 +12,10 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Реализация интерфейса {@link TransactionController}.
+
+ */
 @RequiredArgsConstructor
 public class TransactionControllerImpl implements TransactionController {
     private final TransactionService transactionService;
@@ -17,12 +23,22 @@ public class TransactionControllerImpl implements TransactionController {
 
     @Override
     public void addTransaction(TransactionIn transactionIn) {
-        transactionService.addTransaction(transactionIn);
+        try {
+            transactionService.addTransaction(transactionIn);
+            printer.printSuccess("Транзакция успешно добавлена.");
+        } catch (TransactionAlreadyExistsException e) {
+            printer.printError("Ошибка: " + e.getMessage());
+        }
     }
 
     @Override
     public TransactionOut getTransaction(String id) {
-        return transactionService.getTransactionById(id);
+        try {
+            return transactionService.getTransactionById(id);
+        } catch (TransactionNotFoundException e) {
+            printer.printError("Ошибка: " + e.getMessage());
+            return null; // или можно выбросить другое исключение для HTTP-ответа
+        }
     }
 
     @Override
@@ -35,15 +51,19 @@ public class TransactionControllerImpl implements TransactionController {
         try {
             transactionService.updateTransaction(id, transactionIn);
             printer.printSuccess("Транзакция успешно обновлена.");
-        } catch (IllegalArgumentException e) {
-            printer.printError(e.getMessage());
+        } catch (TransactionNotFoundException e) {
+            printer.printError("Ошибка: " + e.getMessage());
         }
-
     }
 
     @Override
     public void deleteTransaction(String id) {
-        transactionService.deleteTransaction(id);
+        try {
+            transactionService.deleteTransaction(id);
+            printer.printSuccess("Транзакция успешно удалена.");
+        } catch (TransactionNotFoundException e) {
+            printer.printError("Ошибка: " + e.getMessage());
+        }
     }
 
     @Override
