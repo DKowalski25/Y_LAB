@@ -30,7 +30,16 @@ public class GoalHandler {
         }
 
         String goalName = printer.readNonEmptyString("Введите название цели:");
-        double targetAmount = printer.readDouble("Введите требуемую сумму:");
+        if (goalName == null) {
+            printer.printInfo("Добавление цели отменено.");
+            return;
+        }
+
+        Double targetAmount = printer.readDouble("Введите требуемую сумму:");
+        if (targetAmount == null) {
+            printer.printInfo("Добавление цели отменено.");
+            return;
+        }
 
         String id = UUID.randomUUID().toString();
 

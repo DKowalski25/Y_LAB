@@ -28,7 +28,11 @@ public class BudgetHandler {
             return;
         }
 
-        double monthlyBudget = printer.readDouble("Введите месячный бюджет:");
+        Double monthlyBudget = printer.readDouble("Введите месячный бюджет:");
+        if (monthlyBudget == null) {
+            printer.printInfo("Установка бюджета отменена.");
+            return;
+        }
 
         String id = UUID.randomUUID().toString();
 
@@ -79,7 +83,16 @@ public class BudgetHandler {
         }
 
         LocalDate startDate = printer.readDate("Введите начальную дату (гггг-мм-дд):");
+        if (startDate == null) {
+            printer.printInfo("Расчёт доходов и расходов отменен.");
+            return;
+        }
+
         LocalDate endDate = printer.readDate("Введите конечную дату (гггг-мм-дд):");
+        if (endDate == null) {
+            printer.printInfo("Расчёт доходов и расходов отменен.");
+            return;
+        }
 
         List<TransactionOut> transactions = transactionController.getTransactionsByUserIdAndDateRange(
                 user.getId(), startDate, endDate);

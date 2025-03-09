@@ -29,10 +29,28 @@ public class TransactionHandler {
             return;
         }
 
-        double amount = printer.readDouble("Введите сумму транзакции:");
+        Double amount = printer.readDouble("Введите сумму транзакции:");
+        if (amount == null) {
+            printer.printInfo("Добавление транзакции отменено.");
+            return;
+        }
+
         String category = printer.readNonEmptyString("Введите категорию транзакции:");
+        if (category == null) {
+            printer.printInfo("Добавление транзакции отменено.");
+            return;
+        }
+
         String description = printer.readNonEmptyString("Введите описание транзакции:");
-        boolean isIncome = printer.readBoolean("Это доход?");
+        if (description == null) {
+            printer.printInfo("Добавление транзакции отменено.");
+            return;
+        }
+        Boolean isIncome = printer.readBoolean("Это доход?");
+        if (isIncome == null) {
+            printer.printInfo("Добавление транзакции отменено.");
+            return;
+        }
 
         if (!isIncome) {
             BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
@@ -73,10 +91,34 @@ public class TransactionHandler {
         }
 
         String transactionId = printer.readNonEmptyString("Введите id транзакции:");
-        double amount = printer.readDouble("Введите сумму транзакции:");
+        if (transactionId == null) {
+            printer.printInfo("Редактирование транзакции отменено.");
+            return;
+        }
+
+        Double amount = printer.readDouble("Введите сумму транзакции:");
+        if (amount == null) {
+            printer.printInfo("Редактирование транзакции отменено.");
+            return;
+        }
+
         String category = printer.readNonEmptyString("Введите категорию транзакции:");
+        if (category == null) {
+            printer.printInfo("Редактирование транзакции отменено.");
+            return;
+        }
+
         String description = printer.readNonEmptyString("Введите описание транзакции:");
-        boolean isIncome = printer.readBoolean("Это доход?");
+        if (description == null) {
+            printer.printInfo("Редактирование транзакции отменено.");
+            return;
+        }
+
+        Boolean isIncome = printer.readBoolean("Это доход?");
+        if (isIncome == null) {
+            printer.printInfo("Редактирование транзакции отменено.");
+            return;
+        }
 
         TransactionIn transactionIn = new TransactionIn(
                 transactionId,
@@ -100,7 +142,11 @@ public class TransactionHandler {
         printer.printPrompt("1. Показать все транзакции");
         printer.printPrompt("2. Показать отфильтрованные транзакции");
 
-        int choice = printer.readInt("Выберите действие:");
+        Integer choice = printer.readInt("Выберите действие:");
+        if (choice == null) {
+            printer.printInfo("Просмотр транзакций отменен.");
+            return;
+        }
 
         switch (choice) {
             case 1:
@@ -133,20 +179,36 @@ public class TransactionHandler {
         printer.printPrompt("2. По дате");
         printer.printPrompt("3. По типу(доход/расход)");
 
-        int choice = printer.readInt("Выберите номер действие:");
+        Integer choice = printer.readInt("Выберите номер действие:");
+        if (choice == null) {
+            printer.printInfo("Фильтрация отменена.");
+            return;
+        }
 
         List<TransactionOut> transactions;
         switch (choice) {
             case 1:
                 String category = printer.readNonEmptyString("Введите категорию:");
+                if (category == null) {
+                    printer.printInfo("Фильтрация отменена.");
+                    return;
+                }
                 transactions = transactionController.getTransactionsByUserIdAndCategory(user.getId(), category);
                 break;
             case 2:
                 LocalDate date = printer.readDate("Введите дату (гггг-мм-дд):");
+                if (date == null) {
+                    printer.printInfo("Фильтрация отменена.");
+                    return;
+                }
                 transactions = transactionController.getTransactionsByUserIdAndDate(user.getId(), date);
                 break;
             case 3:
-                boolean isIncome = printer.readBoolean("Это доход?");
+                Boolean isIncome = printer.readBoolean("Это доход?");
+                if (isIncome == null) {
+                    printer.printInfo("Фильтрация отменена.");
+                    return;
+                }
                 transactions = transactionController.getTransactionsByUserIdAndType(user.getId(), isIncome);
                 break;
             default:

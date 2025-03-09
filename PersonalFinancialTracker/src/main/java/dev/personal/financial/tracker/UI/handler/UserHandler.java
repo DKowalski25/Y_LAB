@@ -20,8 +20,20 @@ public class UserHandler {
 
     public UserOut registerUser() {
         String name = printer.readNonEmptyString("Введите имя:");
+        if (name == null) {
+            printer.printInfo("Регистрация отменена.");
+            return null;
+        }
         String email = printer.readEmail("Введите email:");
+        if (email == null) {
+            printer.printInfo("Регистрация отменена.");
+            return null;
+        }
         String password = printer.readPassword("Введите пароль:");
+        if (password == null) {
+            printer.printInfo("Регистрация отменена.");
+            return null;
+        }
 
         String id = UUID.randomUUID().toString();
 
@@ -39,7 +51,16 @@ public class UserHandler {
 
     public UserOut loginUser() {
         String email = printer.readEmail("Введите email:");
+        if (email == null) {
+            printer.printInfo("Вход отменен.");
+            return null;
+        }
+
         String password = printer.readPassword("Введите пароль:");
+        if (password == null) {
+            printer.printInfo("Вход отменен.");
+            return null;
+        }
 
         User user = userRepository.getByEmail(email);
         UserOut userOut = userController.getUserByEmail(email);
@@ -59,10 +80,24 @@ public class UserHandler {
         return null;
     }
 
-    public void updateProfile(String email) {
+    public UserOut updateProfile(String email) {
         String name = printer.readNonEmptyString("Введите имя:");
+        if (name == null) {
+            printer.printInfo("Обновление отменено.");
+            return null;
+        }
+
         String newEmail = printer.readEmail("Введите email:");
+        if (newEmail == null) {
+            printer.printInfo("Обновление отменено.");
+            return null;
+        }
+
         String password = printer.readPassword("Введите пароль:");
+        if (password == null) {
+            printer.printInfo("Обновление отменено.");
+            return null;
+        }
 
         UserIn user = new UserIn(
                 null,
@@ -72,9 +107,17 @@ public class UserHandler {
                 UserRole.USER
         );
         userController.updateUser(email, user);
+        return userController.getUserByEmail(newEmail);
     }
 
-    public void deleteAccount(String email) {
+    public boolean deleteAccount(String email) {
+        Boolean confirm = printer.readBoolean("Вы уверены, что хотите удалить аккаунт? ");
+        if (confirm == null || !confirm) {
+            printer.printInfo("Удаление аккаунта отменено.");
+            return false;
+        }
+
         userController.deleteUserByEmail(email);
+        return true;
     }
 }

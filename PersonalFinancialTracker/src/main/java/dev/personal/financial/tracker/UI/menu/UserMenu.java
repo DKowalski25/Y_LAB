@@ -39,7 +39,10 @@ public class UserMenu {
                     runBudgetMenu(userOut);
                     break;
                 case 4:
-                    runProfileMenu(userOut);
+                    boolean isAccountDeleted = runProfileMenu(userOut);
+                    if (isAccountDeleted) {
+                        return;
+                    }
                     break;
                 case 5:
                     printer.printInfo("Вы вышли из аккаунта.");
@@ -168,7 +171,7 @@ public class UserMenu {
         }
     }
 
-    private void runProfileMenu(UserOut userOut) {
+    private boolean runProfileMenu(UserOut userOut) {
         while (true) {
             printer.printWithDivider("\nМеню профиля:");
             printer.printPrompt("1. Редактировать профиль");
@@ -179,13 +182,19 @@ public class UserMenu {
 
             switch (choice) {
                 case 1:
-                    userHandler.updateProfile(userOut.getEmail());
+                    UserOut updatedUser = userHandler.updateProfile(userOut.getEmail());
+                    if (updatedUser != null) {
+                        userOut = updatedUser;
+                    }
                     break;
                 case 2:
-                    userHandler.deleteAccount(userOut.getEmail());
-                    return;
+                    boolean isDeleted = userHandler.deleteAccount(userOut.getEmail());
+                    if (isDeleted) {
+                        return true;
+                    }
+                    break;
                 case 3:
-                    return;
+                    return false;
                 default:
                     printer.printError("Неверный выбор. Пожалуйста, выберите действие из списка.");
             }
