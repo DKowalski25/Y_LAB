@@ -1,5 +1,7 @@
 package dev.personal.financial.tracker.UI.handler;
 
+import dev.personal.financial.tracker.controller.transaction.TransactionController;
+import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.dto.budget.BudgetIn;
@@ -8,16 +10,21 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class BudgetHandler {
     private final BudgetController budgetController;
+    private final TransactionController transactionController;
     private final ConsolePrinter printer;
 
     public void setBudget(UserOut user) {
         if (user == null) {
-            printer.printError("Пользователь не авторизован.");
+            printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
 
@@ -48,4 +55,21 @@ public class BudgetHandler {
             printer.printWithDivider("Ваш месячный бюджет: " + budgetOut.getMonthlyBudget());
         }
     }
+
+    public void calculateCurrentBalance(UserOut user) {
+        if (user == null) {
+            printer.printError("Ошибка: пользователь не авторизован.");
+            return;
+        }
+
+        List<TransactionOut> transactions = transactionController.getTransactionsByUserId(user.getId());
+
+        double balance = transactions.stream()
+                .mapToDouble(t -> t.isIncome() ? t.getAmount() : -t.getAmount())
+                .sum();
+
+        printer.printWithDivider("Текущий баланс:");
+        printer.printInfo("Баланс: " + balance);
+    }
+
 }
