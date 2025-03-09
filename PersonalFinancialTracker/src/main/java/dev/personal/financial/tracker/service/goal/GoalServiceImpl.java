@@ -35,7 +35,7 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public void updateGoal(GoalIn goalIn) {
-        Goal goal = goalRepository.findById(goalIn.getUserId());
+        Goal goal = goalRepository.findById(goalIn.getId());
         if (goal != null) {
             GoalMapper.updateEntity(goal, goalIn);
             goalRepository.update(goal);
