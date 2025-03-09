@@ -1,5 +1,6 @@
 plugins {
-    id("java")
+    java
+    jacoco
 }
 
 group = "org.example"
@@ -18,8 +19,27 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok:1.18.30")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+
+    testImplementation ("org.mockito:mockito-core:5.5.0")
+
+    testImplementation ("org.assertj:assertj-core:3.24.2")
+}
+
+jacoco {
+    toolVersion = "0.8.12"
+    reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
 }
 
 tasks.test {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
 }

@@ -28,6 +28,6 @@ public class GoalMapper {
 
     public static void updateEntity(Goal goal, GoalIn goalIn) {
         goal.setGoalName(goalIn.getGoalName());
-        goal.setGoalAmount(goal.getGoalAmount());
+        goal.setGoalAmount(goalIn.getGoalAmount());
     }
 }

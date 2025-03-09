@@ -27,8 +27,10 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public void updateBudget(BudgetIn budgetIn) {
         Budget budget = budgetRepository.findByUserId(budgetIn.getUserId());
-        BudgetMapper.updateEntity(budget, budgetIn);
-        budgetRepository.update(budget);
+        if (budget != null) {
+            BudgetMapper.updateEntity(budget, budgetIn);
+            budgetRepository.update(budget);
+        }
     }
 
     @Override
