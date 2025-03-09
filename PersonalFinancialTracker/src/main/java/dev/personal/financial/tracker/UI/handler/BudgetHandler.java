@@ -121,4 +121,41 @@ public class BudgetHandler {
                     printer.printInfo(category + ": " + amount));
         }
     }
+
+    public void generateFinancialReport(UserOut user) {
+        if (user == null) {
+            printer.printError("Ошибка: пользователь не авторизован.");
+            return;
+        }
+
+        double balance = transactionController.getTransactionsByUserId(user.getId()).stream()
+                .mapToDouble(t -> t.isIncome() ? t.getAmount() : -t.getAmount())
+                .sum();
+
+        BudgetOut budget = budgetController.getBudgetByUserId(user.getId());
+
+        List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
+        Map<String, Double> expensesByCategory = expenses.stream()
+                .collect(Collectors.groupingBy(
+                        TransactionOut::getCategory,
+                        Collectors.summingDouble(TransactionOut::getAmount)
+                ));
+
+        printer.printWithDivider("Финансовый отчёт:");
+        printer.printInfo("Текущий баланс: " + balance);
+
+        if (budget != null) {
+            printer.printInfo("Месячный бюджет: " + budget.getMonthlyBudget());
+        } else {
+            printer.printInfo("Месячный бюджет не установлен.");
+        }
+
+        printer.printInfo("Расходы по категориям:");
+        if (expensesByCategory.isEmpty()) {
+            printer.printInfo("Расходы не найдены.");
+        } else {
+            expensesByCategory.forEach((category, amount) ->
+                    printer.printInfo(category + ": " + amount));
+        }
+    }
 }
