@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserOut {
-    private String id;
+    private int id;
     private String name;
     private String email;
     private UserRole role;

@@ -46,15 +46,15 @@ public class Application {
 
         GoalRepository goalRepository = injector.createGoalRepository();
         GoalService goalService = injector.createGoalService(goalRepository);
-        GoalController goalController = injector.createGoalController(goalService);
+        GoalController goalController = injector.createGoalController(goalService, new ConsolePrinter(new Scanner(System.in)));
 
         BudgetRepository budgetRepository = injector.createBudgetRepository();
         BudgetService budgetService = injector.createBudgetService(budgetRepository);
-        BudgetController budgetController = injector.createBudgetController(budgetService);
+        BudgetController budgetController = injector.createBudgetController(budgetService, new ConsolePrinter(new Scanner(System.in)));
 
         AdminRepository adminRepository = injector.createAdminRepository(userRepository);
         AdminService adminService = injector.createAdminService(adminRepository);
-        AdminController adminController = injector.createAdminController(adminService);
+        AdminController adminController = injector.createAdminController(adminService, new ConsolePrinter(new Scanner(System.in)));
 
         ConsoleInterface consoleInterface = new ConsoleInterface(
                 userController,
@@ -66,7 +66,7 @@ public class Application {
         );
 
         User admin = new User(
-                "admin",
+                9999,
                 "Admin",
                 "a@admin.com",
                 "123456",

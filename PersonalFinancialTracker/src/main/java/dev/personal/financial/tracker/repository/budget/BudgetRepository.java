@@ -25,13 +25,12 @@ public interface BudgetRepository {
      * @return найденный бюджет
      * @throws BudgetNotFoundException если бюджет не найден
      */
-    Budget findByUserId(String userId);
+    Budget findByUserId(int userId);
 
     /**
      * Обновляет существующий бюджет.
      *
      * @param budget обновленный бюджет
-     * @throws BudgetNotFoundException если бюджет не найден
      */
     void update(Budget budget);
 
@@ -39,7 +38,6 @@ public interface BudgetRepository {
      * Удаляет бюджет по ID пользователя.
      *
      * @param userId ID пользователя
-     * @throws BudgetNotFoundException если бюджет не найден
      */
-    void delete(String userId);
+    void delete(int userId);
 }

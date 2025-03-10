@@ -26,7 +26,7 @@ public interface NotificationService {
      * @param userId ID пользователя
      * @return список уведомлений
      */
-    List<NotificationOut> getNotificationsByUserId(String userId);
+    List<NotificationOut> getNotificationsByUserId(int userId);
 
     /**
      * Удаляет уведомление по ID.
@@ -34,7 +34,7 @@ public interface NotificationService {
      * @param id ID уведомления
      * @throws NotificationNotFoundException если уведомление не найдено
      */
-    void deleteNotification(String id);
+    void deleteNotification(int id);
 
     /**
      * Отправляет email-уведомление. // пока что мок

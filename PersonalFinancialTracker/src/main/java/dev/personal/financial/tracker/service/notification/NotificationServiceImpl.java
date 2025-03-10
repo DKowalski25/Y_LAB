@@ -3,8 +3,6 @@ package dev.personal.financial.tracker.service.notification;
 import dev.personal.financial.tracker.dto.notification.NotificationIn;
 import dev.personal.financial.tracker.dto.notification.NotificationMapper;
 import dev.personal.financial.tracker.dto.notification.NotificationOut;
-import dev.personal.financial.tracker.exception.notification.NotificationAlreadyExistsException;
-import dev.personal.financial.tracker.exception.notification.NotificationNotFoundException;
 import dev.personal.financial.tracker.model.Notification;
 import dev.personal.financial.tracker.repository.notification.NotificationRepository;
 
@@ -29,14 +27,14 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public List<NotificationOut> getNotificationsByUserId(String userId) {
+    public List<NotificationOut> getNotificationsByUserId(int userId) {
         return notificationRepository.findByUserId(userId).stream()
                 .map(NotificationMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteNotification(String id) {
+    public void deleteNotification(int id) {
         notificationRepository.delete(id);
     }
 

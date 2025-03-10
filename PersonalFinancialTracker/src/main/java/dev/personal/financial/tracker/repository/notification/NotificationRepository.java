@@ -25,7 +25,7 @@ public interface NotificationRepository {
      * @param userId ID пользователя
      * @return список уведомлений
      */
-    List<Notification> findByUserId(String userId);
+    List<Notification> findByUserId(int userId);
 
     /**
      * Удаляет уведомление по ID.
@@ -33,5 +33,5 @@ public interface NotificationRepository {
      * @param id ID уведомления
      * @throws NotificationNotFoundException если уведомление не найдено
      */
-    void delete(String id);
+    void delete(int id);
 }

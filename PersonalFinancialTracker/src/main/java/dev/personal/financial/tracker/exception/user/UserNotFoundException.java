@@ -5,7 +5,11 @@ package dev.personal.financial.tracker.exception.user;
  */
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String email) {
-        super("Пользователь с email " + email + " не найден.");
+        super("Пользователь с email: " + email + " не найден.");
+    }
+
+    public UserNotFoundException(int id) {
+        super("Пользователь с id: " + id + " не найден.");
     }
 
     public UserNotFoundException() {

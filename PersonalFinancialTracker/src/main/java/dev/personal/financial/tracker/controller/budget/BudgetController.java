@@ -5,7 +5,6 @@ import dev.personal.financial.tracker.dto.budget.BudgetOut;
 
 /**
  * Интерфейс контроллера для работы с бюджетами.
- * Предоставляет методы для обработки HTTP-запросов, связанных с бюджетами.
  */
 public interface BudgetController {
     /**
@@ -21,7 +20,7 @@ public interface BudgetController {
      * @param userId ID пользователя
      * @return данные бюджета
      */
-    BudgetOut getBudgetByUserId(String userId);
+    BudgetOut getBudgetByUserId(int userId);
 
     /**
      * Обновляет существующий бюджет.
@@ -35,5 +34,5 @@ public interface BudgetController {
      *
      * @param userId ID пользователя
      */
-    void deleteBudget(String userId);
+    void deleteBudget(int userId);
 }

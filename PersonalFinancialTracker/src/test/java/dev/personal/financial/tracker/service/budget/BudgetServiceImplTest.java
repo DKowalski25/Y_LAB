@@ -14,11 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class BudgetServiceImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private BudgetRepository budgetRepository;
@@ -41,14 +47,14 @@ class BudgetServiceImplTest {
     @Test
     void setBudget_ShouldSaveBudget() {
         BudgetIn budgetIn = new BudgetIn(
-                "1",
-                "user1",
-                1000.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(1000.0)
         );
         Budget budget = new Budget(
-                "1",
-                "user1",
-                1000.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(1000.0)
         );
 
         doNothing().when(budgetRepository).save(any(Budget.class));
@@ -60,79 +66,79 @@ class BudgetServiceImplTest {
 
     @Test
     void getBudgetByUserId_ShouldReturnBudgetOut_WhenBudgetExists() {
-        String userId = "user1";
         Budget budget = new Budget(
-                "1",
-                userId,
-                1000.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(1000.0)
         );
-        when(budgetRepository.findByUserId(userId)).thenReturn(budget);
+        when(budgetRepository.findByUserId(USER_ID)).thenReturn(budget);
 
-        BudgetOut result = budgetService.getBudgetByUserId(userId);
+        BudgetOut result = budgetService.getBudgetByUserId(USER_ID);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo("1");
-        assertThat(result.getUserId()).isEqualTo(userId);
-        assertThat(result.getMonthlyBudget()).isEqualTo(1000.0);
-        verify(budgetRepository, times(1)).findByUserId(userId);
+        assertThat(result.getId()).isEqualTo(ID);
+        assertThat(result.getUserId()).isEqualTo(USER_ID);
+        assertThat(result.getMonthlyBudget()).isEqualTo(BigDecimal.valueOf(1000.0));
+        verify(budgetRepository, times(1)).findByUserId(USER_ID);
     }
 
     @Test
     void getBudgetByUserId_ShouldThrowException_WhenBudgetDoesNotExist() {
-        String userId = "user1";
-        when(budgetRepository.findByUserId(userId)).thenThrow(new BudgetNotFoundException(userId));
+        when(budgetRepository.findByUserId(USER_ID)).thenThrow(new BudgetNotFoundException(USER_ID));
 
-        assertThatThrownBy(() -> budgetService.getBudgetByUserId(userId))
+        assertThatThrownBy(() -> budgetService.getBudgetByUserId(USER_ID))
                 .isInstanceOf(BudgetNotFoundException.class)
-                .hasMessage("Бюджет для пользователя с id " + userId + " не найден.");
+                .hasMessage("Бюджет для пользователя с id: " + USER_ID + " не найден.");
 
-        verify(budgetRepository, times(1)).findByUserId(userId);
+        verify(budgetRepository, times(1)).findByUserId(USER_ID);
     }
 
     @Test
     void updateBudget_ShouldUpdateBudget_WhenBudgetExists() {
         BudgetIn budgetIn = new BudgetIn(
-                "1",
-                "user1",
-                2000.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(2000.0)
         );
         Budget existingBudget = new Budget(
-                "1",
-                "user1",
-                1000.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(1000.0)
         );
 
-        when(budgetRepository.findByUserId("user1")).thenReturn(existingBudget);
+        when(budgetRepository.findByUserId(USER_ID)).thenReturn(existingBudget);
         doNothing().when(budgetRepository).update(any(Budget.class));
 
         budgetService.updateBudget(budgetIn);
 
-        verify(budgetRepository, times(1)).findByUserId("user1");
+        verify(budgetRepository, times(1)).findByUserId(USER_ID);
         verify(budgetRepository, times(1)).update(existingBudget);
-        assertThat(existingBudget.getMonthlyBudget()).isEqualTo(2000.0);
+        assertThat(existingBudget.getMonthlyBudget()).isEqualTo(BigDecimal.valueOf(2000.0));
     }
 
     @Test
     void updateBudget_ShouldThrowException_WhenBudgetDoesNotExist() {
-        BudgetIn budgetIn = new BudgetIn("1", "user1", 2000.0);
+        BudgetIn budgetIn = new BudgetIn(
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(2000.0));
 
-        when(budgetRepository.findByUserId("user1")).thenThrow(new BudgetNotFoundException("user1"));
+        when(budgetRepository.findByUserId(USER_ID)).thenThrow(new BudgetNotFoundException(USER_ID));
 
         assertThatThrownBy(() -> budgetService.updateBudget(budgetIn))
                 .isInstanceOf(BudgetNotFoundException.class)
-                .hasMessage("Бюджет для пользователя с id user1 не найден.");
+                .hasMessage("Бюджет для пользователя с id: " + USER_ID + " не найден.");
 
-        verify(budgetRepository, times(1)).findByUserId("user1");
+        verify(budgetRepository, times(1)).findByUserId(USER_ID);
         verify(budgetRepository, never()).update(any(Budget.class));
     }
 
     @Test
     void deleteBudget_ShouldDeleteBudget_WhenBudgetExists() {
-        String userId = "user1";
-        doNothing().when(budgetRepository).delete(userId);
+        doNothing().when(budgetRepository).delete(USER_ID);
 
-        budgetService.deleteBudget(userId);
+        budgetService.deleteBudget(USER_ID);
 
-        verify(budgetRepository, times(1)).delete(userId);
+        verify(budgetRepository, times(1)).delete(USER_ID);
     }
 }

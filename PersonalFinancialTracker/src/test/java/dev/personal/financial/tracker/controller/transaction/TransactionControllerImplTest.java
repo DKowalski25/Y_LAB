@@ -13,14 +13,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TransactionControllerImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private TransactionService transactionService;
@@ -46,8 +51,8 @@ class TransactionControllerImplTest {
     @Test
     void addTransaction_Success() {
         TransactionIn transactionIn = new TransactionIn(
-                "1",
-                100.0,
+                ID,
+                BigDecimal.valueOf(100.0),
                 "Food",
                 LocalDate.now(),
                 "Lunch",
@@ -63,17 +68,17 @@ class TransactionControllerImplTest {
     @Test
     void getTransaction_Success() {
         TransactionOut transactionOut = new TransactionOut(
-                "1",
-                "1",
-                100.0,
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(100.0),
                 "Food",
                 LocalDate.now(),
                 "Lunch",
                 false
         );
-        when(transactionService.getTransactionById("1")).thenReturn(transactionOut);
+        when(transactionService.getTransactionById(ID)).thenReturn(transactionOut);
 
-        TransactionOut result = transactionController.getTransaction("1");
+        TransactionOut result = transactionController.getTransaction(ID);
 
         assertEquals(transactionOut, result);
     }
@@ -82,18 +87,18 @@ class TransactionControllerImplTest {
     void getTransactionsByUserId_Success() {
         List<TransactionOut> transactions = Collections.singletonList(
                 new TransactionOut(
-                        "1",
-                        "1",
-                        100.0,
+                        ID,
+                        USER_ID,
+                        BigDecimal.valueOf(100.0),
                         "Food",
                         LocalDate.now(),
                         "Lunch",
                         false
                 )
         );
-        when(transactionService.getTransactionsByUserId("1")).thenReturn(transactions);
+        when(transactionService.getTransactionsByUserId(USER_ID)).thenReturn(transactions);
 
-        List<TransactionOut> result = transactionController.getTransactionsByUserId("1");
+        List<TransactionOut> result = transactionController.getTransactionsByUserId(USER_ID);
 
         assertEquals(transactions, result);
     }
@@ -101,48 +106,48 @@ class TransactionControllerImplTest {
     @Test
     void updateTransaction_Success() {
         TransactionIn transactionIn = new TransactionIn(
-                "1",
-                150.0,
+                ID,
+                BigDecimal.valueOf( 150.0),
                 "Food",
                 LocalDate.now(),
                 "Dinner",
                 false
         );
-        doNothing().when(transactionService).updateTransaction("1", transactionIn);
+        doNothing().when(transactionService).updateTransaction(ID, transactionIn);
 
-        transactionController.updateTransaction("1", transactionIn);
+        transactionController.updateTransaction(ID, transactionIn);
 
-        verify(transactionService, times(1)).updateTransaction("1", transactionIn);
+        verify(transactionService, times(1)).updateTransaction(ID, transactionIn);
         verify(printer, times(1)).printSuccess("Транзакция успешно обновлена.");
     }
 
     @Test
     void deleteTransaction_Success() {
-        doNothing().when(transactionService).deleteTransaction("1");
+        doNothing().when(transactionService).deleteTransaction(ID);
 
-        transactionController.deleteTransaction("1");
+        transactionController.deleteTransaction(ID);
 
-        verify(transactionService, times(1)).deleteTransaction("1");
+        verify(transactionService, times(1)).deleteTransaction(ID);
     }
 
     @Test
     void getTransactionsByUserIdAndCategory_Success() {
         List<TransactionOut> transactions = Collections.singletonList(
                 new TransactionOut(
-                        "1",
-                        "1",
-                        100.0,
+                        ID,
+                        USER_ID,
+                        BigDecimal.valueOf(100.0),
                         "Food",
                         LocalDate.now(),
                         "Lunch",
                         false
                 )
         );
-        when(transactionService.getTransactionsByUserIdAndCategory("1", "Food"))
+        when(transactionService.getTransactionsByUserIdAndCategory(USER_ID, "Food"))
                 .thenReturn(transactions);
 
         List<TransactionOut> result = transactionController
-                .getTransactionsByUserIdAndCategory("1", "Food");
+                .getTransactionsByUserIdAndCategory(USER_ID, "Food");
 
         assertEquals(transactions, result);
     }
@@ -151,9 +156,9 @@ class TransactionControllerImplTest {
     void getTransactionsByUserIdAndDate_Success() {
         List<TransactionOut> transactions = Collections.singletonList(
                 new TransactionOut(
-                        "1",
-                        "1",
-                        100.0,
+                        ID,
+                        USER_ID,
+                        BigDecimal.valueOf(100.0),
                         "Food",
                         LocalDate.now(),
                         "Lunch",
@@ -161,9 +166,9 @@ class TransactionControllerImplTest {
                 )
         );
         LocalDate date = LocalDate.now();
-        when(transactionService.getTransactionsByUserIdAndDate("1", date)).thenReturn(transactions);
+        when(transactionService.getTransactionsByUserIdAndDate(USER_ID, date)).thenReturn(transactions);
 
-        List<TransactionOut> result = transactionController.getTransactionsByUserIdAndDate("1", date);
+        List<TransactionOut> result = transactionController.getTransactionsByUserIdAndDate(USER_ID, date);
 
         assertEquals(transactions, result);
     }
@@ -172,38 +177,38 @@ class TransactionControllerImplTest {
     void getTransactionsByUserIdAndType_Success() {
         List<TransactionOut> transactions = Collections.singletonList(
                 new TransactionOut(
-                        "1",
-                        "1",
-                        100.0,
+                        ID,
+                        USER_ID,
+                        BigDecimal.valueOf(100.0),
                         "Food",
                         LocalDate.now(),
                         "Lunch",
                         false
                 )
         );
-        when(transactionService.getTransactionsByUserIdAndType("1", false)).thenReturn(transactions);
+        when(transactionService.getTransactionsByUserIdAndType(USER_ID, false)).thenReturn(transactions);
 
-        List<TransactionOut> result = transactionController.getTransactionsByUserIdAndType("1", false);
+        List<TransactionOut> result = transactionController.getTransactionsByUserIdAndType(USER_ID, false);
 
         assertEquals(transactions, result);
     }
 
     @Test
     void getTotalExpensesForCurrentMonth_Success() {
-        when(transactionService.getTotalExpensesForCurrentMonth("1")).thenReturn(500.0);
+        when(transactionService.getTotalExpensesForCurrentMonth(USER_ID)).thenReturn(BigDecimal.valueOf(500.0));
 
-        double result = transactionController.getTotalExpensesForCurrentMonth("1");
+        BigDecimal result = transactionController.getTotalExpensesForCurrentMonth(USER_ID);
 
-        assertEquals(500.0, result);
+        assertEquals(BigDecimal.valueOf(500.0), result);
     }
 
     @Test
     void getTransactionsByUserIdAndDateRange_Success() {
         List<TransactionOut> transactions = Collections.singletonList(
                 new TransactionOut(
-                        "1",
-                        "1",
-                        100.0,
+                        ID,
+                        USER_ID,
+                        BigDecimal.valueOf(100.0),
                         "Food",
                         LocalDate.now(),
                         "Lunch",
@@ -212,11 +217,11 @@ class TransactionControllerImplTest {
         );
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now().plusDays(1);
-        when(transactionService.getTransactionsByUserIdAndDateRange("1", startDate, endDate))
+        when(transactionService.getTransactionsByUserIdAndDateRange(USER_ID, startDate, endDate))
                 .thenReturn(transactions);
 
         List<TransactionOut> result = transactionController
-                .getTransactionsByUserIdAndDateRange("1", startDate, endDate);
+                .getTransactionsByUserIdAndDateRange(USER_ID, startDate, endDate);
 
         assertEquals(transactions, result);
     }

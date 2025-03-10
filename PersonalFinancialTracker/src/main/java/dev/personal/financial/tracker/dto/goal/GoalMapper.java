@@ -2,6 +2,8 @@ package dev.personal.financial.tracker.dto.goal;
 
 import dev.personal.financial.tracker.model.Goal;
 
+import java.math.BigDecimal;
+
 public class GoalMapper {
 
     public static Goal toEntity(GoalIn goalIn) {
@@ -10,8 +12,8 @@ public class GoalMapper {
                 goalIn.getUserId(),
                 goalIn.getGoalName(),
                 goalIn.getGoalAmount(),
-                0.0,
-                0.0
+                BigDecimal.valueOf(0.0),
+                BigDecimal.valueOf(0.0)
         );
     }
 

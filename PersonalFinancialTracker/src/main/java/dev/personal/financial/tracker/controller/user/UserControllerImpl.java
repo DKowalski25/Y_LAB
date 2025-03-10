@@ -28,7 +28,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public UserOut getUserById(String id) {
+    public UserOut getUserById(int id) {
         try {
             return userService.getUserById(id);
         } catch (UserNotFoundException e) {

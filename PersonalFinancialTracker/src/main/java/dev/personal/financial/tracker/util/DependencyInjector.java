@@ -65,8 +65,8 @@ public class DependencyInjector {
         return new GoalServiceImpl(goalRepository);
     }
 
-    public GoalController createGoalController(GoalService goalService) {
-        return new GoalControllerImpl(goalService);
+    public GoalController createGoalController(GoalService goalService, ConsolePrinter consolePrinter) {
+        return new GoalControllerImpl(goalService, consolePrinter);
     }
 
     public BudgetRepository createBudgetRepository() {
@@ -77,8 +77,8 @@ public class DependencyInjector {
         return new BudgetServiceImpl(budgetRepository);
     }
 
-    public BudgetController createBudgetController(BudgetService budgetService) {
-        return new BudgetControllerImpl(budgetService);
+    public BudgetController createBudgetController(BudgetService budgetService, ConsolePrinter consolePrinter) {
+        return new BudgetControllerImpl(budgetService, consolePrinter);
     }
 
     public AdminRepository createAdminRepository(UserRepository userRepository) {
@@ -89,7 +89,7 @@ public class DependencyInjector {
         return new AdminServiceImpl(adminRepository);
     }
 
-    public AdminController createAdminController(AdminService adminService) {
-        return new AdminControllerImpl(adminService);
+    public AdminController createAdminController(AdminService adminService, ConsolePrinter consolePrinter) {
+        return new AdminControllerImpl(adminService, consolePrinter);
     }
 }

@@ -12,7 +12,7 @@ import java.util.Map;
  * Хранит бюджеты в памяти с использованием HashMap.
  */
 public class BudgetRepositoryImpl implements BudgetRepository {
-    private final Map<String, Budget> budgets = new HashMap<>();
+    private final Map<Integer, Budget> budgets = new HashMap<>();
 
     @Override
     public void save(Budget budget) {
@@ -23,7 +23,7 @@ public class BudgetRepositoryImpl implements BudgetRepository {
     }
 
     @Override
-    public Budget findByUserId(String userId) {
+    public Budget findByUserId(int userId) {
         Budget budget = budgets.get(userId);
         if (budget == null) {
             throw new BudgetNotFoundException(userId);
@@ -33,17 +33,11 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 
     @Override
     public void update(Budget budget) {
-        if (!budgets.containsKey(budget.getUserId())) {
-            throw new BudgetNotFoundException(budget.getUserId());
-        }
         budgets.put(budget.getUserId(), budget);
     }
 
     @Override
-    public void delete(String userId) {
-        if (!budgets.containsKey(userId)) {
-            throw new BudgetNotFoundException(userId);
-        }
+    public void delete(int userId) {
         budgets.remove(userId);
     }
 }

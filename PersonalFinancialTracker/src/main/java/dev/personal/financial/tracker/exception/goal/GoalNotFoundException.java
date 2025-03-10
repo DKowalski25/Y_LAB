@@ -4,7 +4,7 @@ package dev.personal.financial.tracker.exception.goal;
  * Исключение, выбрасываемое при попытке найти несуществующую цель.
  */
 public class GoalNotFoundException extends RuntimeException {
-    public GoalNotFoundException(String id) {
-        super("Цель с id " + id + " не найдена.");
+    public GoalNotFoundException() {
+        super("Цель не найдена.");
     }
 }

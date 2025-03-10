@@ -23,7 +23,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     }
 
     @Override
-    public void blockUser(String userId) {
+    public void blockUser(int userId) {
         User user = userRepository.findById(userId);
         if (user == null) {
             throw new UserNotFoundException(userId);
@@ -36,7 +36,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     }
 
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(int userId) {
         if (userRepository.findById(userId) == null) {
             throw new UserNotFoundException(userId);
         }

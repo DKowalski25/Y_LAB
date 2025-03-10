@@ -6,7 +6,10 @@ import dev.personal.financial.tracker.exception.goal.GoalAlreadyExistsException;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.service.goal.GoalService;
 
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import lombok.RequiredArgsConstructor;
+
+import java.math.BigDecimal;
 
 /**
  * Реализация интерфейса {@link GoalController}.
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GoalControllerImpl implements GoalController {
     private final GoalService goalService;
+    private final ConsolePrinter printer;
 
     @Override
     public void addGoal(GoalIn goalIn) {
@@ -26,11 +30,11 @@ public class GoalControllerImpl implements GoalController {
     }
 
     @Override
-    public GoalOut getGoalsByUserId(String userId) {
+    public GoalOut getGoalsByUserId(int userId) {
         try {
             return goalService.getGoalsByUserId(userId);
         } catch (GoalNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
             return null;
         }
     }
@@ -40,35 +44,35 @@ public class GoalControllerImpl implements GoalController {
         try {
             goalService.updateGoal(goalIn);
         } catch (GoalNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 
     @Override
-    public void deleteGoalByUserId(String userId) {
+    public void deleteGoalByUserId(int userId) {
         try {
             goalService.deleteGoalByUserId(userId);
         } catch (GoalNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 
     @Override
-    public void updateSavedAmount(String goalId, double amount) {
+    public void updateSavedAmount(int goalId, BigDecimal amount) {
         try {
             goalService.updateSavedAmount(goalId, amount);
         } catch (GoalNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 
     @Override
-    public double getProgress(String goalId) {
+    public double getProgress(int goalId) {
         try {
             return goalService.getProgress(goalId);
         } catch (GoalNotFoundException e) {
-            System.err.println(e.getMessage());
-            return 0.0;
+            printer.printError(e.getMessage());
+            return 0;
         }
     }
 }

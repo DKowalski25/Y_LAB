@@ -35,7 +35,7 @@ public class UserHandler {
             return null;
         }
 
-        String id = UUID.randomUUID().toString();
+        int id = UUID.randomUUID().hashCode();
 
         UserIn user = new UserIn(
                 id,
@@ -100,7 +100,7 @@ public class UserHandler {
         }
 
         UserIn user = new UserIn(
-                null,
+                1234, // затычка, в мапере все равно не используется айди, вроде не должно нигде ничего сломать
                 name,
                 newEmail,
                 password,

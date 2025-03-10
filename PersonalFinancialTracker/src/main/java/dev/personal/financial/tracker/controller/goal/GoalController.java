@@ -3,9 +3,10 @@ package dev.personal.financial.tracker.controller.goal;
 import dev.personal.financial.tracker.dto.goal.GoalIn;
 import dev.personal.financial.tracker.dto.goal.GoalOut;
 
+import java.math.BigDecimal;
+
 /**
  * Интерфейс контроллера для работы с целями.
- * Предоставляет методы для обработки HTTP-запросов, связанных с целями.
  */
 public interface GoalController {
     /**
@@ -21,7 +22,7 @@ public interface GoalController {
      * @param userId ID пользователя
      * @return данные цели
      */
-    GoalOut getGoalsByUserId(String userId);
+    GoalOut getGoalsByUserId(int userId);
 
     /**
      * Обновляет существующую цель.
@@ -35,7 +36,7 @@ public interface GoalController {
      *
      * @param userId ID пользователя
      */
-    void deleteGoalByUserId(String userId);
+    void deleteGoalByUserId(int userId);
 
     /**
      * Обновляет сохраненную сумму для цели.
@@ -43,7 +44,7 @@ public interface GoalController {
      * @param goalId ID цели
      * @param amount сумма для добавления
      */
-    void updateSavedAmount(String goalId, double amount);
+    void updateSavedAmount(int goalId, BigDecimal amount);
 
     /**
      * Возвращает прогресс достижения цели.
@@ -51,5 +52,5 @@ public interface GoalController {
      * @param goalId ID цели
      * @return прогресс в процентах
      */
-    double getProgress(String goalId);
+    double getProgress(int goalId);
 }

@@ -12,10 +12,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BudgetControllerImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private BudgetService budgetService;
@@ -38,9 +44,9 @@ class BudgetControllerImplTest {
     @Test
     void setBudget_Success() {
         BudgetIn budgetIn = new BudgetIn(
-                "1",
-                "1",
-                2000.0);
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(2000.0));
         doNothing().when(budgetService).setBudget(budgetIn);
 
         budgetController.setBudget(budgetIn);
@@ -51,13 +57,13 @@ class BudgetControllerImplTest {
     @Test
     void getBudgetByUserId_Success() {
         BudgetOut budgetOut = new BudgetOut(
-                "1",
-                "1",
-                2000.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(2000.0)
         );
-        when(budgetService.getBudgetByUserId("1")).thenReturn(budgetOut);
+        when(budgetService.getBudgetByUserId(USER_ID)).thenReturn(budgetOut);
 
-        BudgetOut result = budgetController.getBudgetByUserId("1");
+        BudgetOut result = budgetController.getBudgetByUserId(USER_ID);
 
         assertEquals(budgetOut, result);
     }
@@ -65,9 +71,9 @@ class BudgetControllerImplTest {
     @Test
     void updateBudget_Success() {
         BudgetIn budgetIn = new BudgetIn(
-                "1",
-                "1",
-                2500.0
+                ID,
+                USER_ID,
+                BigDecimal.valueOf(2500.0)
         );
         doNothing().when(budgetService).updateBudget(budgetIn);
 
@@ -78,10 +84,10 @@ class BudgetControllerImplTest {
 
     @Test
     void deleteBudget_Success() {
-        doNothing().when(budgetService).deleteBudget("1");
+        doNothing().when(budgetService).deleteBudget(USER_ID);
 
-        budgetController.deleteBudget("1");
+        budgetController.deleteBudget(USER_ID);
 
-        verify(budgetService, times(1)).deleteBudget("1");
+        verify(budgetService, times(1)).deleteBudget(USER_ID);
     }
 }

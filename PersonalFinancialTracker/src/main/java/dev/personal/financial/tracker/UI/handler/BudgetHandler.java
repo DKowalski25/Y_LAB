@@ -10,6 +10,7 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +29,13 @@ public class BudgetHandler {
             return;
         }
 
-        Double monthlyBudget = printer.readDouble("Введите месячный бюджет:");
+        BigDecimal monthlyBudget = printer.readBigDecimal("Введите месячный бюджет:");
         if (monthlyBudget == null) {
             printer.printInfo("Установка бюджета отменена.");
             return;
         }
 
-        String id = UUID.randomUUID().toString();
+        int id = UUID.randomUUID().hashCode();
 
         BudgetIn budgetIn = new BudgetIn(
                 id,
@@ -51,7 +52,7 @@ public class BudgetHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
-
+// убрать в трай кетч, ловить и печатать сообщение исключения из метода
         BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
         if (budgetOut == null) {
             printer.printInfo("Бюджет не установлен.");
@@ -68,9 +69,15 @@ public class BudgetHandler {
 
         List<TransactionOut> transactions = transactionController.getTransactionsByUserId(user.getId());
 
-        double balance = transactions.stream()
-                .mapToDouble(t -> t.isIncome() ? t.getAmount() : -t.getAmount())
-                .sum();
+        BigDecimal balance = BigDecimal.ZERO;
+
+        for (TransactionOut transaction : transactions) {
+            if (transaction.isIncome()) {
+                balance = balance.add(transaction.getAmount());
+            } else {
+                balance = balance.subtract(transaction.getAmount());
+            }
+        }
 
         printer.printWithDivider("Текущий баланс:");
         printer.printInfo("Баланс: " + balance);
@@ -97,15 +104,15 @@ public class BudgetHandler {
         List<TransactionOut> transactions = transactionController.getTransactionsByUserIdAndDateRange(
                 user.getId(), startDate, endDate);
 
-        double totalIncome = transactions.stream()
+        BigDecimal totalIncome = transactions.stream()
                 .filter(TransactionOut::isIncome)
-                .mapToDouble(TransactionOut::getAmount)
-                .sum();
+                .map(TransactionOut::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);;
 
-        double totalExpenses = transactions.stream()
+        BigDecimal totalExpenses = transactions.stream()
                 .filter(t -> !t.isIncome())
-                .mapToDouble(TransactionOut::getAmount)
-                .sum();
+                .map(TransactionOut::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);;
 
         printer.printWithDivider("Суммарные доходы и расходы за период:");
         printer.printInfo("Доходы: " + totalIncome);
@@ -121,10 +128,10 @@ public class BudgetHandler {
 
         List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
 
-        Map<String, Double> expensesByCategory = expenses.stream()
+        Map<String, BigDecimal> expensesByCategory = expenses.stream()
                 .collect(Collectors.groupingBy(
                         TransactionOut::getCategory,
-                        Collectors.summingDouble(TransactionOut::getAmount)));
+                        Collectors.reducing(BigDecimal.ZERO, TransactionOut::getAmount, BigDecimal::add)));
 
         printer.printWithDivider("Анализ расходов по категориям:");
         if (expensesByCategory.isEmpty()) {
@@ -141,17 +148,30 @@ public class BudgetHandler {
             return;
         }
 
-        double balance = transactionController.getTransactionsByUserId(user.getId()).stream()
-                .mapToDouble(t -> t.isIncome() ? t.getAmount() : -t.getAmount())
-                .sum();
+        BigDecimal balance = BigDecimal.ZERO;
+
+        List<TransactionOut> transactions = transactionController.getTransactionsByUserId(user.getId());
+
+        for (TransactionOut transaction : transactions) {
+            if (transaction.isIncome()) {
+                balance = balance.add(transaction.getAmount());
+            } else {
+                balance = balance.subtract(transaction.getAmount());
+            }
+        }
+
+//        BigDecimal balance = transactionController.getTransactionsByUserId(user.getId()).stream()
+//                .mapToDouble(t -> t.isIncome() ? t.getAmount() : -t.getAmount())
+//                .sum();
 
         BudgetOut budget = budgetController.getBudgetByUserId(user.getId());
 
         List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
-        Map<String, Double> expensesByCategory = expenses.stream()
+
+        Map<String, BigDecimal> expensesByCategory = expenses.stream()
                 .collect(Collectors.groupingBy(
                         TransactionOut::getCategory,
-                        Collectors.summingDouble(TransactionOut::getAmount)
+                        Collectors.reducing(BigDecimal.ZERO,TransactionOut::getAmount, BigDecimal::add)
                 ));
 
         printer.printWithDivider("Финансовый отчёт:");

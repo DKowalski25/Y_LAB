@@ -8,7 +8,7 @@ public class TransactionMapper {
 
     public static Transaction toEntity(TransactionIn transactionIn) {
         return new Transaction(
-                UUID.randomUUID().toString(),
+                UUID.randomUUID().hashCode(),
                 transactionIn.getUserId(),
                 transactionIn.getAmount(),
                 transactionIn.getCategory(),

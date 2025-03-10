@@ -4,6 +4,8 @@ import dev.personal.financial.tracker.exception.goal.GoalAlreadyExistsException;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.model.Goal;
 
+import java.math.BigDecimal;
+
 /**
  * Интерфейс репозитория для работы с целями.
  * Предоставляет методы для сохранения, поиска, обновления и удаления целей.
@@ -24,22 +26,20 @@ public interface GoalRepository {
      * @return найденная цель
      * @throws GoalNotFoundException если цель не найдена
      */
-    Goal findById(String id);
+    Goal findById(int id);
 
     /**
      * Ищет цель по ID пользователя.
      *
      * @param userId ID пользователя
      * @return найденная цель
-     * @throws GoalNotFoundException если цель не найдена
      */
-    Goal findByUserId(String userId);
+    Goal findByUserId(int userId);
 
     /**
      * Обновляет существующую цель.
      *
      * @param goal обновленная цель
-     * @throws GoalNotFoundException если цель не найдена
      */
     void update(Goal goal);
 
@@ -49,7 +49,7 @@ public interface GoalRepository {
      * @param userId ID пользователя
      * @throws GoalNotFoundException если цель не найдена
      */
-    void deleteByUserId(String userId);
+    void deleteByUserId(int userId);
 
     /**
      * Обновляет сохраненную сумму для цели.
@@ -58,7 +58,7 @@ public interface GoalRepository {
      * @param amount сумма для добавления
      * @throws GoalNotFoundException если цель не найдена
      */
-    void updateSavedAmount(String goalId, double amount);
+    void updateSavedAmount(int goalId, BigDecimal amount);
 
     /**
      * Возвращает сохраненную сумму для цели.
@@ -67,5 +67,5 @@ public interface GoalRepository {
      * @return сохраненная сумма
      * @throws GoalNotFoundException если цель не найдена
      */
-    double getSavedAmount(String goalId);
+    BigDecimal getSavedAmount(int goalId);
 }

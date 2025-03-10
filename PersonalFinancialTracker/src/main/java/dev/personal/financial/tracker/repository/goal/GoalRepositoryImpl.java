@@ -4,6 +4,7 @@ import dev.personal.financial.tracker.exception.goal.GoalAlreadyExistsException;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.model.Goal;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ import java.util.Map;
  * Хранит цели в памяти с использованием HashMap.
  */
 public class GoalRepositoryImpl implements GoalRepository {
-    private final Map<String, Goal> goals = new HashMap<>();
+    private final Map<Integer, Goal> goals = new HashMap<>();
 
     @Override
     public void save(Goal goal) {
@@ -23,49 +24,41 @@ public class GoalRepositoryImpl implements GoalRepository {
     }
 
     @Override
-    public Goal findById(String id) {
+    public Goal findById(int id) {
         Goal goal = goals.get(id);
         if (goal == null) {
-            throw new GoalNotFoundException(id);
+            throw new GoalNotFoundException();
         }
         return goal;
     }
 
     @Override
-    public Goal findByUserId(String userId) {
-        Goal goal = goals.values().stream()
-                .filter(g -> g.getUserId().equals(userId))
+    public Goal findByUserId(int userId) {
+        return goals.values().stream()
+                .filter(g -> g.getUserId() == (userId))
                 .findFirst()
                 .orElse(null);
-        if (goal == null) {
-            throw new GoalNotFoundException(userId);
-        }
-        return goal;
     }
 
     @Override
     public void update(Goal goal) {
-        if (!goals.containsKey(goal.getId())) {
-            throw new GoalNotFoundException(goal.getId());
-        }
         goals.put(goal.getId(), goal);
     }
 
     @Override
-    public void deleteByUserId(String userId) {
-        Goal goal = findByUserId(userId);
-        goals.values().removeIf(g -> g.getUserId().equals(userId));
+    public void deleteByUserId(int userId) {
+        goals.values().removeIf(g -> g.getUserId() == (userId));
     }
 
     @Override
-    public void updateSavedAmount(String goalId, double amount) {
+    public void updateSavedAmount(int goalId, BigDecimal amount) {
         Goal goal = findById(goalId);
-        goal.setSavedAmount(goal.getSavedAmount() + amount);
+        goal.setSavedAmount(goal.getSavedAmount().add(amount));
         update(goal);
     }
 
     @Override
-    public double getSavedAmount(String goalId) {
+    public BigDecimal getSavedAmount(int goalId) {
         Goal goal = findById(goalId);
         return goal.getSavedAmount();
     }

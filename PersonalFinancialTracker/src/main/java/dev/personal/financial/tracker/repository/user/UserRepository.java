@@ -16,55 +16,52 @@ public interface UserRepository {
      * @param user объект пользователя
      * @throws UserAlreadyExistsException если пользователь с таким email уже существует
      */
-
     void save(User user);
+
     /**
      * Ищет пользователя по ID.
      *
      * @param id идентификатор пользователя
-     * @return объект пользователя
+     * @return User объект пользователя
      * @throws UserNotFoundException если пользователь не найден
      */
+    User findById(int id);
 
-    User findById(String id);
     /**
      * Возвращает список всех пользователей.
      *
-     * @return список пользователей
+     * @return List<User> список пользователей
      */
-
     List<User> findAll();
+
     /**
      * Ищет пользователя по email.
      *
      * @param email email пользователя
-     * @return объект пользователя
+     * @return User объект пользователя
      * @throws UserNotFoundException если пользователь не найден
      */
-
     User getByEmail(String email);
+
     /**
      * Обновляет данные пользователя.
      *
      * @param user объект пользователя с обновленными данными
-     * @throws UserNotFoundException если пользователь не найден
      */
-
     void update(User user);
+
     /**
      * Проверяет, существует ли пользователь с таким email.
      *
      * @param email email пользователя
      * @return true, если пользователь существует, иначе false
      */
-
     boolean existsByEmail(String email);
+
     /**
      * Удаляет пользователя по ID.
      *
      * @param id идентификатор пользователя
-     * @throws UserNotFoundException если пользователь не найден
      */
-
-    void delete(String id);
+    void delete(int id);
 }

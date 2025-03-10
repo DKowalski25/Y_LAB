@@ -25,7 +25,7 @@ public interface BudgetService {
      * @return данные бюджета
      * @throws BudgetNotFoundException если бюджет не найден
      */
-    BudgetOut getBudgetByUserId(String userId);
+    BudgetOut getBudgetByUserId(int userId);
 
     /**
      * Обновляет существующий бюджет.
@@ -41,5 +41,5 @@ public interface BudgetService {
      * @param userId ID пользователя
      * @throws BudgetNotFoundException если бюджет не найден
      */
-    void deleteBudget(String userId);
+    void deleteBudget(int userId);
 }

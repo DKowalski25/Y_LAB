@@ -23,7 +23,7 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public BudgetOut getBudgetByUserId(String userId) {
+    public BudgetOut getBudgetByUserId(int userId) {
         Budget budget = budgetRepository.findByUserId(userId);
         return BudgetMapper.toDto(budget);
     }
@@ -36,7 +36,8 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public void deleteBudget(String userId) {
+    public void deleteBudget(int userId) {
+        Budget budget = budgetRepository.findByUserId(userId);
         budgetRepository.delete(userId);
     }
 }

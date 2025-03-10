@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * Хранит уведомления в памяти с использованием HashMap.
  */
 public class NotificationRepositoryImpl implements NotificationRepository {
-    private final Map<String, Notification> notifications = new HashMap<>();
+    private final Map<Integer, Notification> notifications = new HashMap<>();
 
     @Override
     public void save(Notification notification) {
@@ -25,14 +25,14 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     }
 
     @Override
-    public List<Notification> findByUserId(String userId) {
+    public List<Notification> findByUserId(int userId) {
         return notifications.values().stream()
-                .filter(notification -> notification.getUserId().equals(userId))
+                .filter(notification -> notification.getUserId() == (userId))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(int id) {
         if (!notifications.containsKey(id)) {
             throw new NotificationNotFoundException(id);
         }

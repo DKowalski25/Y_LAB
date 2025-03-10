@@ -13,6 +13,7 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class TransactionHandler {
             return;
         }
 
-        Double amount = printer.readDouble("Введите сумму транзакции:");
+        BigDecimal amount = printer.readBigDecimal("Введите сумму транзакции:");
         if (amount == null) {
             printer.printInfo("Добавление транзакции отменено.");
             return;
@@ -55,8 +56,8 @@ public class TransactionHandler {
         if (!isIncome) {
             BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
             if (budgetOut != null) {
-                double totalExpenses = transactionController.getTotalExpensesForCurrentMonth(user.getId());
-                if (totalExpenses + amount > budgetOut.getMonthlyBudget()) {
+                BigDecimal totalExpenses = transactionController.getTotalExpensesForCurrentMonth(user.getId());
+                if (totalExpenses.add(amount).compareTo(budgetOut.getMonthlyBudget()) > 0) {
                     printer.printInfo("Вы превысили месячный бюджета.");
                     return;
                 }
@@ -90,13 +91,13 @@ public class TransactionHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
         }
 
-        String transactionId = printer.readNonEmptyString("Введите id транзакции:");
-        if (transactionId == null) {
-            printer.printInfo("Редактирование транзакции отменено.");
-            return;
-        }
+        int transactionId = printer.readInt("Введите id транзакции:");
+//        if (transactionId == null) {
+//            printer.printInfo("Редактирование транзакции отменено.");
+//            return;
+//        } изменить метод readInt что можно было выходить на q
 
-        Double amount = printer.readDouble("Введите сумму транзакции:");
+        BigDecimal amount = printer.readBigDecimal("Введите сумму транзакции:");
         if (amount == null) {
             printer.printInfo("Редактирование транзакции отменено.");
             return;
@@ -142,11 +143,11 @@ public class TransactionHandler {
         printer.printPrompt("1. Показать все транзакции");
         printer.printPrompt("2. Показать отфильтрованные транзакции");
 
-        Integer choice = printer.readInt("Выберите действие:");
-        if (choice == null) {
-            printer.printInfo("Просмотр транзакций отменен.");
-            return;
-        }
+        int choice = printer.readInt("Выберите действие:");
+        //        if (transactionId == null) {
+//            printer.printInfo("Редактирование транзакции отменено.");
+//            return;
+//        } изменить метод readInt что можно было выходить на q
 
         switch (choice) {
             case 1:
@@ -179,11 +180,11 @@ public class TransactionHandler {
         printer.printPrompt("2. По дате");
         printer.printPrompt("3. По типу(доход/расход)");
 
-        Integer choice = printer.readInt("Выберите номер действие:");
-        if (choice == null) {
-            printer.printInfo("Фильтрация отменена.");
-            return;
-        }
+        int choice = printer.readInt("Выберите номер действие:");
+        //        if (transactionId == null) {
+//            printer.printInfo("Редактирование транзакции отменено.");
+//            return;
+//        } изменить метод readInt что можно было выходить на q
 
         List<TransactionOut> transactions;
         switch (choice) {
@@ -232,7 +233,7 @@ public class TransactionHandler {
             return;
         }
 
-        String transactionId = printer.readNonEmptyString("Введите ID транзакции для удаления:");
+        int transactionId = printer.readInt("Введите ID транзакции для удаления:");
         transactionController.deleteTransaction(transactionId);
         printer.printSuccess("Транзакция успешно удалена.");
     }

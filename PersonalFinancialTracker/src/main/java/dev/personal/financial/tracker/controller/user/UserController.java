@@ -20,7 +20,7 @@ public interface UserController {
      * @param id идентификатор пользователя
      * @return DTO с данными пользователя
      */
-    UserOut getUserById(String id);
+    UserOut getUserById(int id);
 
     /**
      * Получает пользователя по email.

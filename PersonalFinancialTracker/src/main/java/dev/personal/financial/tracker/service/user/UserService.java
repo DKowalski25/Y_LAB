@@ -24,7 +24,7 @@ public interface UserService {
      * @return DTO с данными пользователя
      * @throws UserNotFoundException если пользователь не найден
      */
-    UserOut getUserById(String id);
+    UserOut getUserById(int id);
 
     /**
      * Получает пользователя по email.

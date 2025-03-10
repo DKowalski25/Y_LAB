@@ -14,11 +14,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class AdminServiceImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int ID2 = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private AdminRepository adminRepository;
@@ -41,7 +46,7 @@ class AdminServiceImplTest {
     @Test
     void getAllUsers_ShouldReturnListOfUserOut() {
         User user1 = new User(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 "password123",
@@ -49,7 +54,7 @@ class AdminServiceImplTest {
                 false
         );
         User user2 = new User(
-                "2",
+                ID2,
                 "admin",
                 "admin@example.com",
                 "password456",
@@ -61,13 +66,13 @@ class AdminServiceImplTest {
         List<UserOut> result = adminService.getAllUsers();
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getId()).isEqualTo("1");
+        assertThat(result.get(0).getId()).isEqualTo(ID);
         assertThat(result.get(0).getName()).isEqualTo("John Doe");
         assertThat(result.get(0).getEmail()).isEqualTo("john@example.com");
         assertThat(result.get(0).getRole()).isEqualTo(UserRole.USER);
         assertThat(result.get(0).getIsBlocked()).isFalse();
 
-        assertThat(result.get(1).getId()).isEqualTo("2");
+        assertThat(result.get(1).getId()).isEqualTo(ID2);
         assertThat(result.get(1).getName()).isEqualTo("admin");
         assertThat(result.get(1).getEmail()).isEqualTo("admin@example.com");
         assertThat(result.get(1).getRole()).isEqualTo(UserRole.ADMIN);
@@ -78,21 +83,19 @@ class AdminServiceImplTest {
 
     @Test
     void blockUser_ShouldBlockUser() {
-        String userId = "1";
-        doNothing().when(adminRepository).blockUser(userId);
+        doNothing().when(adminRepository).blockUser(USER_ID);
 
-        adminService.blockUser(userId);
+        adminService.blockUser(USER_ID);
 
-        verify(adminRepository, times(1)).blockUser(userId);
+        verify(adminRepository, times(1)).blockUser(USER_ID);
     }
 
     @Test
     void deleteUser_ShouldDeleteUser() {
-        String userId = "1";
-        doNothing().when(adminRepository).deleteUser(userId);
+        doNothing().when(adminRepository).deleteUser(USER_ID);
 
-        adminService.deleteUser(userId);
+        adminService.deleteUser(USER_ID);
 
-        verify(adminRepository, times(1)).deleteUser(userId);
+        verify(adminRepository, times(1)).deleteUser(USER_ID);
     }
 }

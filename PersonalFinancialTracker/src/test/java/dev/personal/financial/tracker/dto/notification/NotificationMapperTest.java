@@ -11,14 +11,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class NotificationMapperTest {
 
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
+
     @Test
     void toEntity_ShouldMapNotificationInToNotification() {
-        NotificationIn notificationIn = new NotificationIn("user1", "Test message");
+        NotificationIn notificationIn = new NotificationIn(USER_ID, "Test message");
 
         Notification notification = NotificationMapper.toEntity(notificationIn);
 
-        assertThat(notification.getId()).isNotNull();
-        assertThat(notification.getUserId()).isEqualTo("user1");
+        assertThat(notification.getId()).isNotZero();
+        assertThat(notification.getUserId()).isEqualTo(USER_ID);
         assertThat(notification.getMessage()).isEqualTo("Test message");
         assertThat(notification.getCreatedAt()).isNotNull();
     }
@@ -26,16 +29,16 @@ class NotificationMapperTest {
     @Test
     void toDto_ShouldMapNotificationToNotificationOut() {
         Notification notification = new Notification(
-                UUID.randomUUID().toString(),
-                "user1",
+                ID,
+                USER_ID,
                 "Test message",
                 LocalDateTime.now()
         );
 
         NotificationOut notificationOut = NotificationMapper.toDto(notification);
 
-        assertThat(notificationOut.getId()).isEqualTo(notification.getId());
-        assertThat(notificationOut.getUserId()).isEqualTo("user1");
+        assertThat(notificationOut.getId()).isEqualTo(ID);
+        assertThat(notificationOut.getUserId()).isEqualTo(USER_ID);
         assertThat(notificationOut.getMessage()).isEqualTo("Test message");
         assertThat(notificationOut.getCreatedAt()).isEqualTo(notification.getCreatedAt());
     }

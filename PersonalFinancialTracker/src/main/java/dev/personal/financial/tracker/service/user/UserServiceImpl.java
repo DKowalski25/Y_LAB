@@ -3,7 +3,7 @@ package dev.personal.financial.tracker.service.user;
 import dev.personal.financial.tracker.dto.user.UserIn;
 import dev.personal.financial.tracker.dto.user.UserMapper;
 import dev.personal.financial.tracker.dto.user.UserOut;
-import dev.personal.financial.tracker.exception.user.UserNotFoundException;
+import dev.personal.financial.tracker.exception.user.UserAlreadyExistsException;
 import dev.personal.financial.tracker.model.User;
 import dev.personal.financial.tracker.repository.user.UserRepository;
 
@@ -18,15 +18,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserIn userIn) {
-        if (userRepository.existsByEmail(userIn.getEmail())) {
-            throw new IllegalArgumentException("Пользователь с email " + userIn.getEmail() + " уже существует.");
+        String email = userIn.getEmail();
+
+        if (userRepository.existsByEmail(email)) {
+            throw new UserAlreadyExistsException(email);
         }
+
         User user = UserMapper.toEntity(userIn);
         userRepository.save(user);
     }
 
     @Override
-    public UserOut getUserById(String id) {
+    public UserOut getUserById(int id) {
         User user = userRepository.findById(id);
         return UserMapper.toDto(user);
     }

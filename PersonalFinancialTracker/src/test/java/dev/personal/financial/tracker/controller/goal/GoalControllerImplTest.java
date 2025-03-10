@@ -12,10 +12,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GoalControllerImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private GoalService goalService;
@@ -38,10 +44,10 @@ class GoalControllerImplTest {
     @Test
     void addGoal_Success() {
         GoalIn goalIn = new GoalIn(
-                "1",
-                "1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0
+                BigDecimal.valueOf(10000.0)
         );
         doNothing().when(goalService).addGoal(goalIn);
 
@@ -53,16 +59,16 @@ class GoalControllerImplTest {
     @Test
     void getGoalsByUserId_Success() {
         GoalOut goalOut = new GoalOut(
-                "1",
-                "1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0,
-                5000.0,
-                5000.0
+                BigDecimal.valueOf(10000.0),
+                BigDecimal.valueOf(5000.0),
+                BigDecimal.valueOf(5000.0)
         );
-        when(goalService.getGoalsByUserId("1")).thenReturn(goalOut);
+        when(goalService.getGoalsByUserId(USER_ID)).thenReturn(goalOut);
 
-        GoalOut result = goalController.getGoalsByUserId("1");
+        GoalOut result = goalController.getGoalsByUserId(USER_ID);
 
         assertEquals(goalOut, result);
     }
@@ -70,10 +76,10 @@ class GoalControllerImplTest {
     @Test
     void updateGoal_Success() {
         GoalIn goalIn = new GoalIn(
-                "1",
-                "1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                15000.0
+                BigDecimal.valueOf(15000.0)
         );
         doNothing().when(goalService).updateGoal(goalIn);
 
@@ -84,27 +90,27 @@ class GoalControllerImplTest {
 
     @Test
     void deleteGoalByUserId_Success() {
-        doNothing().when(goalService).deleteGoalByUserId("1");
+        doNothing().when(goalService).deleteGoalByUserId(USER_ID);
 
-        goalController.deleteGoalByUserId("1");
+        goalController.deleteGoalByUserId(USER_ID);
 
-        verify(goalService, times(1)).deleteGoalByUserId("1");
+        verify(goalService, times(1)).deleteGoalByUserId(USER_ID);
     }
 
     @Test
     void updateSavedAmount_Success() {
-        doNothing().when(goalService).updateSavedAmount("1", 2000.0);
+        doNothing().when(goalService).updateSavedAmount(ID, BigDecimal.valueOf(2000.0));
 
-        goalController.updateSavedAmount("1", 2000.0);
+        goalController.updateSavedAmount(ID, BigDecimal.valueOf(2000.0));
 
-        verify(goalService, times(1)).updateSavedAmount("1", 2000.0);
+        verify(goalService, times(1)).updateSavedAmount(ID, BigDecimal.valueOf(2000.0));
     }
 
     @Test
     void getProgress_Success() {
-        when(goalService.getProgress("1")).thenReturn(50.0);
+        when(goalService.getProgress(ID)).thenReturn(50.0);
 
-        double result = goalController.getProgress("1");
+        double result = goalController.getProgress(ID);
 
         assertEquals(50.0, result);
     }

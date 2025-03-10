@@ -9,18 +9,15 @@ import java.util.*;
  * Реализация репозитория пользователей с хранением данных в памяти.
  */
 public class UserRepositoryImpl implements UserRepository {
-    private final Map<String, User> users = new HashMap<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
     public void save(User user) {
-        if (existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Пользователь с email " + user.getEmail() + " уже существует.");
-        }
         users.put(user.getId(), user);
     }
 
     @Override
-    public User findById(String id) {
+    public User findById(int id) {
         return Optional.ofNullable(users.get(id))
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -40,9 +37,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new UserNotFoundException(user.getId());
-        }
         users.put(user.getId(), user);
     }
 
@@ -52,9 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(String id) {
-        if (users.remove(id) == null) {
-            throw new UserNotFoundException(id);
-        }
+    public void delete(int id) {
+        users.remove(id);
     }
 }

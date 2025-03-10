@@ -1,9 +1,9 @@
 package dev.personal.financial.tracker.repository.transaction;
 
-import dev.personal.financial.tracker.exception.transaction.TransactionAlreadyExistsException;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.model.Transaction;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +16,6 @@ public interface TransactionRepository {
      * Сохраняет транзакцию.
      *
      * @param transaction транзакция для сохранения
-     * @throws TransactionAlreadyExistsException если транзакция с таким ID уже существует
      */
     void save(Transaction transaction);
 
@@ -26,7 +25,7 @@ public interface TransactionRepository {
      * @param userId ID пользователя
      * @return список транзакций
      */
-    List<Transaction> findByUserId(String userId);
+    List<Transaction> findByUserId(int userId);
 
     /**
      * Ищет транзакцию по ID.
@@ -35,13 +34,12 @@ public interface TransactionRepository {
      * @return найденная транзакция
      * @throws TransactionNotFoundException если транзакция не найдена
      */
-    Transaction findById(String id);
+    Transaction findById(int id);
 
     /**
      * Обновляет существующую транзакцию.
      *
      * @param transaction обновленная транзакция
-     * @throws TransactionNotFoundException если транзакция не найдена
      */
     void update(Transaction transaction);
 
@@ -49,9 +47,8 @@ public interface TransactionRepository {
      * Удаляет транзакцию по ID.
      *
      * @param id ID транзакции
-     * @throws TransactionNotFoundException если транзакция не найдена
      */
-    void delete(String id);
+    void delete(int id);
 
     /**
      * Возвращает список транзакций пользователя по категории.
@@ -60,7 +57,7 @@ public interface TransactionRepository {
      * @param category категория транзакции
      * @return список транзакций
      */
-    List<Transaction> findByUserIdAndCategory(String userId, String category);
+    List<Transaction> findByUserIdAndCategory(int userId, String category);
 
     /**
      * Возвращает список транзакций пользователя по дате.
@@ -69,7 +66,7 @@ public interface TransactionRepository {
      * @param date дата транзакции
      * @return список транзакций
      */
-    List<Transaction> findByUserIdAndDate(String userId, LocalDate date);
+    List<Transaction> findByUserIdAndDate(int userId, LocalDate date);
 
     /**
      * Возвращает список транзакций пользователя по типу (доход/расход).
@@ -78,7 +75,7 @@ public interface TransactionRepository {
      * @param isIncome true для доходов, false для расходов
      * @return список транзакций
      */
-    List<Transaction> findByUserIdAndType(String userId, boolean isIncome);
+    List<Transaction> findByUserIdAndType(int userId, boolean isIncome);
 
     /**
      * Возвращает общую сумму расходов пользователя за текущий месяц.
@@ -86,7 +83,7 @@ public interface TransactionRepository {
      * @param userId ID пользователя
      * @return общая сумма расходов
      */
-    double getTotalExpensesForCurrentMonth(String userId);
+    BigDecimal getTotalExpensesForCurrentMonth(int userId);
 
     /**
      * Возвращает список транзакций пользователя за указанный период.
@@ -96,5 +93,5 @@ public interface TransactionRepository {
      * @param endDate конечная дата периода
      * @return список транзакций
      */
-    List<Transaction> findByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate);
+    List<Transaction> findByUserIdAndDateRange(int userId, LocalDate startDate, LocalDate endDate);
 }

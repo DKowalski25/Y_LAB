@@ -2,19 +2,18 @@ package dev.personal.financial.tracker.controller.transaction;
 
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
-import dev.personal.financial.tracker.exception.transaction.TransactionAlreadyExistsException;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.service.transaction.TransactionService;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Реализация интерфейса {@link TransactionController}.
-
  */
 @RequiredArgsConstructor
 public class TransactionControllerImpl implements TransactionController {
@@ -26,13 +25,13 @@ public class TransactionControllerImpl implements TransactionController {
         try {
             transactionService.addTransaction(transactionIn);
             printer.printSuccess("Транзакция успешно добавлена.");
-        } catch (TransactionAlreadyExistsException e) {
+        } catch (Exception e) {
             printer.printError("Ошибка: " + e.getMessage());
         }
     }
 
     @Override
-    public TransactionOut getTransaction(String id) {
+    public TransactionOut getTransaction(int id) {
         try {
             return transactionService.getTransactionById(id);
         } catch (TransactionNotFoundException e) {
@@ -42,12 +41,12 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserId(String userId) {
+    public List<TransactionOut> getTransactionsByUserId(int userId) {
         return transactionService.getTransactionsByUserId(userId);
     }
 
     @Override
-    public void updateTransaction(String id, TransactionIn transactionIn) {
+    public void updateTransaction(int id, TransactionIn transactionIn) {
         try {
             transactionService.updateTransaction(id, transactionIn);
             printer.printSuccess("Транзакция успешно обновлена.");
@@ -57,7 +56,7 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @Override
-    public void deleteTransaction(String id) {
+    public void deleteTransaction(int id) {
         try {
             transactionService.deleteTransaction(id);
             printer.printSuccess("Транзакция успешно удалена.");
@@ -67,27 +66,27 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserIdAndCategory(String userId, String category) {
+    public List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, String category) {
         return transactionService.getTransactionsByUserIdAndCategory(userId, category);
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserIdAndDate(String userId, LocalDate date) {
+    public List<TransactionOut> getTransactionsByUserIdAndDate(int userId, LocalDate date) {
         return transactionService.getTransactionsByUserIdAndDate(userId, date);
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserIdAndType(String userId, boolean type) {
+    public List<TransactionOut> getTransactionsByUserIdAndType(int userId, boolean type) {
         return transactionService.getTransactionsByUserIdAndType(userId, type);
     }
 
     @Override
-    public double getTotalExpensesForCurrentMonth(String userId) {
+    public BigDecimal getTotalExpensesForCurrentMonth(int userId) {
         return transactionService.getTotalExpensesForCurrentMonth(userId);
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserIdAndDateRange(String userId, LocalDate startDate, LocalDate endDate) {
+    public List<TransactionOut> getTransactionsByUserIdAndDateRange(int userId, LocalDate startDate, LocalDate endDate) {
         return transactionService.getTransactionsByUserIdAndDateRange(userId, startDate, endDate);
     }
 }

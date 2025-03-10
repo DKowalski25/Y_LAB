@@ -15,21 +15,21 @@ public class AdminHandler {
     }
 
     public void blockUser() {
-        String userId = printer.readNonEmptyString("Введите id пользователя, которого хотите заблокировать:");
-        if (userId == null) {
-            printer.printInfo("Блокировка пользователя отменена.");
-            return;
-        }
+        int userId = printer.readInt("Введите id пользователя, которого хотите заблокировать:");
+//        if (userId == null) {
+//            printer.printInfo("Блокировка пользователя отменена.");
+//            return;
+//        }
         adminController.blockUser(userId);
         printer.printSuccess("Пользователь заблокирован");
     }
 
     public void deleteUser() {
-        String userId = printer.readNonEmptyString("Введите id пользователя, которого хотите удалить:");
-        if (userId == null) {
-            printer.printInfo("Удаление пользователя отменено.");
-            return;
-        }
+        int userId = printer.readInt("Введите id пользователя, которого хотите удалить:");
+//        if (userId == null) {
+//            printer.printInfo("Удаление пользователя отменено.");
+//            return;
+//        }
         adminController.deleteUser(userId);
         printer.printSuccess("Пользователь удален");
     }

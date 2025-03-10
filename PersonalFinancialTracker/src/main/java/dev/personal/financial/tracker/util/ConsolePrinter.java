@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.util;
 
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -84,6 +85,21 @@ public class ConsolePrinter {
             }
             try {
                 return Double.parseDouble(input);
+            } catch (NumberFormatException e) {
+                printError("Неверный формат числа. Пожалуйста, введите корректное число.");
+            }
+        }
+    }
+
+    public BigDecimal readBigDecimal(String prompt) {
+        while (true) {
+            printPrompt(prompt + " (или введите 'q' для выхода):");
+            String input = sc.nextLine();
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
+            try {
+                return new BigDecimal(input);
             } catch (NumberFormatException e) {
                 printError("Неверный формат числа. Пожалуйста, введите корректное число.");
             }

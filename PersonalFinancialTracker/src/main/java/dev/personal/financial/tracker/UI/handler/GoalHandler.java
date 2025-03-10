@@ -10,6 +10,7 @@ import dev.personal.financial.tracker.dto.user.UserOut;
 
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -35,13 +36,13 @@ public class GoalHandler {
             return;
         }
 
-        Double targetAmount = printer.readDouble("Введите требуемую сумму:");
+        BigDecimal targetAmount = printer.readBigDecimal("Введите требуемую сумму:");
         if (targetAmount == null) {
             printer.printInfo("Добавление цели отменено.");
             return;
         }
 
-        String id = UUID.randomUUID().toString();
+        int id = UUID.randomUUID().hashCode();
 
         GoalIn goalIn = new GoalIn(
                 id,
@@ -59,8 +60,9 @@ public class GoalHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
-
+// убрать в трай кетч, ловить и печатать сообщение исключения из метода
         GoalOut goal = goalController.getGoalsByUserId(user.getId());
+
         if (goal == null) {
             printer.printInfo("Цель не установлена.");
         } else {

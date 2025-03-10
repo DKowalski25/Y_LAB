@@ -9,7 +9,7 @@ public class NotificationMapper {
 
     public static Notification toEntity(NotificationIn notificationIn) {
         return new Notification(
-                UUID.randomUUID().toString(),
+                UUID.randomUUID().hashCode(),
                 notificationIn.getUserId(),
                 notificationIn.getMessage(),
                 LocalDateTime.now()

@@ -21,12 +21,12 @@ public interface AdminController {
      *
      * @param userId ID пользователя
      */
-    void blockUser(String userId);
+    void blockUser(int userId);
 
     /**
      * Удаляет пользователя по ID.
      *
      * @param userId ID пользователя
      */
-    void deleteUser(String userId);
+    void deleteUser(int userId);
 }

@@ -16,10 +16,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class UserControllerImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
 
     @Mock
     private UserService userService;
@@ -45,7 +49,7 @@ class UserControllerImplTest {
     @Test
     void registerUser_Success() {
         UserIn userIn = new UserIn(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 "password123",
@@ -62,7 +66,7 @@ class UserControllerImplTest {
     @Test
     void registerUser_ThrowsException() {
         UserIn userIn = new UserIn(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 "password123",
@@ -79,24 +83,24 @@ class UserControllerImplTest {
     @Test
     void getUserById_Success() {
         UserOut userOut = new UserOut(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 UserRole.USER,
                 false
         );
-        when(userService.getUserById("1")).thenReturn(userOut);
+        when(userService.getUserById(ID)).thenReturn(userOut);
 
-        UserOut result = userController.getUserById("1");
+        UserOut result = userController.getUserById(ID);
 
         assertEquals(userOut, result);
     }
 
     @Test
     void getUserById_ThrowsException() {
-        when(userService.getUserById("1")).thenThrow(new UserNotFoundException());
+        when(userService.getUserById(ID)).thenThrow(new UserNotFoundException());
 
-        UserOut result = userController.getUserById("1");
+        UserOut result = userController.getUserById(ID);
 
         assertNull(result);
         verify(printer, times(1)).printError("Пользователь не найден.");
@@ -105,7 +109,7 @@ class UserControllerImplTest {
     @Test
     void getUserByEmail_Success() {
         UserOut userOut = new UserOut(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 UserRole.USER,
@@ -125,13 +129,13 @@ class UserControllerImplTest {
         UserOut result = userController.getUserByEmail("john@example.com");
 
         assertNull(result);
-        verify(printer, times(1)).printError("Пользователь с email john@example.com не найден.");
+        verify(printer, times(1)).printError("Пользователь с email: john@example.com не найден.");
     }
 
     @Test
     void updateUser_Success() {
         UserIn userIn = new UserIn(
-                "1",
+                ID,
                 "John Doe Updated",
                 "john@example.com",
                 "newpassword123",
@@ -148,7 +152,7 @@ class UserControllerImplTest {
     @Test
     void updateUser_ThrowsException() {
         UserIn userIn = new UserIn(
-                "1",
+                ID,
                 "John Doe Updated",
                 "john@example.com",
                 "newpassword123",
@@ -158,7 +162,7 @@ class UserControllerImplTest {
 
         userController.updateUser("john@example.com", userIn);
 
-        verify(printer, times(1)).printError("Пользователь с email john@example.com не найден.");
+        verify(printer, times(1)).printError("Пользователь с email: john@example.com не найден.");
     }
 
     @Test
@@ -177,6 +181,6 @@ class UserControllerImplTest {
 
         userController.deleteUserByEmail("john@example.com");
 
-        verify(printer, times(1)).printError("Пользователь с email john@example.com не найден.");
+        verify(printer, times(1)).printError("Пользователь с email: john@example.com не найден.");
     }
 }

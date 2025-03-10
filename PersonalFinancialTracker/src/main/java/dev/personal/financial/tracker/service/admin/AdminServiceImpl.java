@@ -27,12 +27,12 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void blockUser(String userId) {
+    public void blockUser(int userId) {
         adminRepository.blockUser(userId);
     }
 
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(int userId) {
         adminRepository.deleteUser(userId);
     }
 }

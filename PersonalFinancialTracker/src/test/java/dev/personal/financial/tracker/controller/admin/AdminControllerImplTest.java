@@ -14,11 +14,15 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AdminControllerImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private AdminService adminService;
@@ -42,7 +46,7 @@ class AdminControllerImplTest {
     void getAllUsers_Success() {
         List<UserOut> users = Collections.singletonList(
                 new UserOut(
-                        "1",
+                        ID,
                         "John Doe",
                         "john@example.com",
                         UserRole.USER,
@@ -58,19 +62,19 @@ class AdminControllerImplTest {
 
     @Test
     void blockUser_Success() {
-        doNothing().when(adminService).blockUser("1");
+        doNothing().when(adminService).blockUser(USER_ID);
 
-        adminController.blockUser("1");
+        adminController.blockUser(USER_ID);
 
-        verify(adminService, times(1)).blockUser("1");
+        verify(adminService, times(1)).blockUser(USER_ID);
     }
 
     @Test
     void deleteUser_Success() {
-        doNothing().when(adminService).deleteUser("1");
+        doNothing().when(adminService).deleteUser(USER_ID);
 
-        adminController.deleteUser("1");
+        adminController.deleteUser(USER_ID);
 
-        verify(adminService, times(1)).deleteUser("1");
+        verify(adminService, times(1)).deleteUser(USER_ID);
     }
 }

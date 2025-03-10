@@ -6,6 +6,7 @@ import dev.personal.financial.tracker.exception.budget.BudgetAlreadyExistsExcept
 import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
 import dev.personal.financial.tracker.service.budget.BudgetService;
 
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -14,22 +15,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BudgetControllerImpl implements BudgetController {
     private final BudgetService budgetService;
+    private final ConsolePrinter printer;
 
     @Override
     public void setBudget(BudgetIn budgetIn) {
         try {
             budgetService.setBudget(budgetIn);
         } catch (BudgetAlreadyExistsException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 
     @Override
-    public BudgetOut getBudgetByUserId(String userId) {
+    public BudgetOut getBudgetByUserId(int userId) {
         try {
             return budgetService.getBudgetByUserId(userId);
         } catch (BudgetNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
             return null;
         }
     }
@@ -39,16 +41,16 @@ public class BudgetControllerImpl implements BudgetController {
         try {
             budgetService.updateBudget(budgetIn);
         } catch (BudgetNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 
     @Override
-    public void deleteBudget(String userId) {
+    public void deleteBudget(int userId) {
         try {
             budgetService.deleteBudget(userId);
         } catch (BudgetNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 }

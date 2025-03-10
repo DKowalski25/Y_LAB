@@ -5,14 +5,19 @@ import dev.personal.financial.tracker.model.UserRole;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserMapperTest {
 
+    private final static int ID = UUID.randomUUID().hashCode();
+
+
     @Test
     void toEntity_ShouldMapUserInToUser() {
         UserIn userIn = new UserIn(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 "password123",
@@ -21,7 +26,7 @@ class UserMapperTest {
 
         User user = UserMapper.toEntity(userIn);
 
-        assertThat(user.getId()).isEqualTo("1");
+        assertThat(user.getId()).isEqualTo(ID);
         assertThat(user.getName()).isEqualTo("John Doe");
         assertThat(user.getEmail()).isEqualTo("john@example.com");
         assertThat(user.getPassword()).isEqualTo("password123");
@@ -32,7 +37,7 @@ class UserMapperTest {
     @Test
     void toDto_ShouldMapUserToUserOut() {
         User user = new User(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 "password123",
@@ -42,7 +47,7 @@ class UserMapperTest {
 
         UserOut userOut = UserMapper.toDto(user);
 
-        assertThat(userOut.getId()).isEqualTo("1");
+        assertThat(userOut.getId()).isEqualTo(ID);
         assertThat(userOut.getName()).isEqualTo("John Doe");
         assertThat(userOut.getEmail()).isEqualTo("john@example.com");
         assertThat(userOut.getRole()).isEqualTo(UserRole.USER);
@@ -52,7 +57,7 @@ class UserMapperTest {
     @Test
     void updateEntity_ShouldUpdateUserFields() {
         User user = new User(
-                "1",
+                ID,
                 "John Doe",
                 "john@example.com",
                 "password123",
@@ -60,7 +65,7 @@ class UserMapperTest {
                 false
         );
         UserIn userIn = new UserIn(
-                "1",
+                ID,
                 "Jane Doe",
                 "jane@example.com",
                 "newpassword123",

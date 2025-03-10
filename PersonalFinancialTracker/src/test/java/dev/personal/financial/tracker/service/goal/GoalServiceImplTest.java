@@ -14,11 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class GoalServiceImplTest {
+
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
 
     @Mock
     private GoalRepository goalRepository;
@@ -41,18 +47,18 @@ class GoalServiceImplTest {
     @Test
     void addGoal_ShouldSaveGoal() {
         GoalIn goalIn = new GoalIn(
-                "1",
-                "user1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0
+                BigDecimal.valueOf(10000.0)
         );
         Goal goal = new Goal(
-                "1",
-                "user1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0,
-                0.0,
-                0.0
+                BigDecimal.valueOf(10000.0),
+                BigDecimal.valueOf(0.0),
+                BigDecimal.valueOf(0.0)
         );
 
         doNothing().when(goalRepository).save(any(Goal.class));
@@ -64,173 +70,176 @@ class GoalServiceImplTest {
 
     @Test
     void getGoalById_ShouldReturnGoalOut_WhenGoalExists() {
-        String goalId = "1";
         Goal goal = new Goal(
-                goalId,
-                "user1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0,
-                5000.0,
-                5000.0
+                BigDecimal.valueOf(10000.0),
+                BigDecimal.valueOf(5000.0),
+                BigDecimal.valueOf(5000.0)
         );
-        when(goalRepository.findById(goalId)).thenReturn(goal);
+        when(goalRepository.findById(ID)).thenReturn(goal);
 
-        GoalOut result = goalService.getGoalById(goalId);
+        GoalOut result = goalService.getGoalById(ID);
 
         assertThat(result).isNotNull();
-        assertThat(result.getId()).isEqualTo(goalId);
-        assertThat(result.getUserId()).isEqualTo("user1");
+        assertThat(result.getId()).isEqualTo(ID);
+        assertThat(result.getUserId()).isEqualTo(USER_ID);
         assertThat(result.getGoalName()).isEqualTo("Buy a car");
-        assertThat(result.getGoalAmount()).isEqualTo(10000.0);
-        assertThat(result.getCurrentAmount()).isEqualTo(5000.0);
-        assertThat(result.getSavedAmount()).isEqualTo(5000.0);
-        verify(goalRepository, times(1)).findById(goalId);
+        assertThat(result.getGoalAmount()).isEqualTo(BigDecimal.valueOf(10000.0));
+        assertThat(result.getCurrentAmount()).isEqualTo(BigDecimal.valueOf(5000.0));
+        assertThat(result.getSavedAmount()).isEqualTo(BigDecimal.valueOf(5000.0));
+        verify(goalRepository, times(1)).findById(ID);
     }
 
     @Test
     void getGoalById_ShouldThrowException_WhenGoalDoesNotExist() {
-        String goalId = "1";
-        when(goalRepository.findById(goalId)).thenThrow(new GoalNotFoundException(goalId));
+        when(goalRepository.findById(ID)).thenThrow(new GoalNotFoundException());
 
-        assertThatThrownBy(() -> goalService.getGoalById(goalId))
+        assertThatThrownBy(() -> goalService.getGoalById(ID))
                 .isInstanceOf(GoalNotFoundException.class)
-                .hasMessage("Цель с id " + goalId + " не найдена.");
+                .hasMessage("Цель не найдена.");
 
-        verify(goalRepository, times(1)).findById(goalId);
+        verify(goalRepository, times(1)).findById(ID);
     }
 
     @Test
     void getGoalsByUserId_ShouldReturnGoalOut_WhenGoalExists() {
-        String userId = "user1";
         Goal goal = new Goal(
-                "1",
-                userId,
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0,
-                5000.0,
-                5000.0
+                BigDecimal.valueOf(10000.0),
+                BigDecimal.valueOf(5000.0),
+                BigDecimal.valueOf(5000.0)
         );
-        when(goalRepository.findByUserId(userId)).thenReturn(goal);
+        when(goalRepository.findByUserId(USER_ID)).thenReturn(goal);
 
-        GoalOut result = goalService.getGoalsByUserId(userId);
+        GoalOut result = goalService.getGoalsByUserId(USER_ID);
 
         assertThat(result).isNotNull();
-        assertThat(result.getUserId()).isEqualTo(userId);
+        assertThat(result.getUserId()).isEqualTo(USER_ID);
         assertThat(result.getGoalName()).isEqualTo("Buy a car");
-        assertThat(result.getGoalAmount()).isEqualTo(10000.0);
-        assertThat(result.getCurrentAmount()).isEqualTo(5000.0);
-        assertThat(result.getSavedAmount()).isEqualTo(5000.0);
-        verify(goalRepository, times(1)).findByUserId(userId);
+        assertThat(result.getGoalAmount()).isEqualTo(BigDecimal.valueOf(10000.0));
+        assertThat(result.getCurrentAmount()).isEqualTo(BigDecimal.valueOf(5000.0));
+        assertThat(result.getSavedAmount()).isEqualTo(BigDecimal.valueOf(5000.0));
+        verify(goalRepository, times(1)).findByUserId(USER_ID);
     }
 
     @Test
     void getGoalsByUserId_ShouldThrowException_WhenGoalDoesNotExist() {
-        String userId = "user1";
-        when(goalRepository.findByUserId(userId)).thenThrow(new GoalNotFoundException(userId));
+        when(goalRepository.findByUserId(USER_ID)).thenThrow(new GoalNotFoundException());
 
-        assertThatThrownBy(() -> goalService.getGoalsByUserId(userId))
+        assertThatThrownBy(() -> goalService.getGoalsByUserId(USER_ID))
                 .isInstanceOf(GoalNotFoundException.class)
-                .hasMessage("Цель с id " + userId + " не найдена.");
+                .hasMessage("Цель не найдена.");
 
-        verify(goalRepository, times(1)).findByUserId(userId);
+        verify(goalRepository, times(1)).findByUserId(USER_ID);
     }
 
     @Test
     void updateGoal_ShouldUpdateGoal_WhenGoalExists() {
         GoalIn goalIn = new GoalIn(
-                "1",
-                "user1",
+                ID,
+                USER_ID,
                 "Buy a house",
-                200000.0
+                BigDecimal.valueOf(200000.0)
         );
         Goal existingGoal = new Goal(
-                "1",
-                "user1",
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0,
-                5000.0,
-                5000.0
+                BigDecimal.valueOf(10000.0),
+                BigDecimal.valueOf(5000.0),
+                BigDecimal.valueOf(5000.0)
         );
 
-        when(goalRepository.findById("1")).thenReturn(existingGoal);
+        when(goalRepository.findById(ID)).thenReturn(existingGoal);
         doNothing().when(goalRepository).update(any(Goal.class));
 
         goalService.updateGoal(goalIn);
 
-        verify(goalRepository, times(1)).findById("1");
+        verify(goalRepository, times(1)).findById(ID);
         verify(goalRepository, times(1)).update(existingGoal);
         assertThat(existingGoal.getGoalName()).isEqualTo("Buy a house");
-        assertThat(existingGoal.getGoalAmount()).isEqualTo(200000.0);
+        assertThat(existingGoal.getGoalAmount()).isEqualTo(BigDecimal.valueOf(200000.0));
     }
 
     @Test
     void updateGoal_ShouldThrowException_WhenGoalDoesNotExist() {
         GoalIn goalIn = new GoalIn(
-                "1",
-                "user1",
+                ID,
+                USER_ID,
                 "Buy a house",
-                200000.0
+                BigDecimal.valueOf(200000.0)
         );
 
-        when(goalRepository.findById("1")).thenThrow(new GoalNotFoundException("1"));
+        when(goalRepository.findById(ID)).thenThrow(new GoalNotFoundException());
 
         assertThatThrownBy(() -> goalService.updateGoal(goalIn))
                 .isInstanceOf(GoalNotFoundException.class)
-                .hasMessage("Цель с id 1 не найдена.");
+                .hasMessage("Цель не найдена.");
 
-        verify(goalRepository, times(1)).findById("1");
+        verify(goalRepository, times(1)).findById(ID);
         verify(goalRepository, never()).update(any(Goal.class));
     }
 
     @Test
     void deleteGoalByUserId_ShouldDeleteGoal_WhenGoalExists() {
-        String userId = "user1";
-        doNothing().when(goalRepository).deleteByUserId(userId);
+        Goal goal = new Goal(
+                ID,
+                USER_ID,
+                "Buy a car",
+                BigDecimal.valueOf(10000),
+                BigDecimal.valueOf(5000),
+                BigDecimal.valueOf(5000)
+        );
+        when(goalRepository.findByUserId(USER_ID)).thenReturn(goal);
 
-        goalService.deleteGoalByUserId(userId);
+        doNothing().when(goalRepository).deleteByUserId(USER_ID);
 
-        verify(goalRepository, times(1)).deleteByUserId(userId);
+        goalService.deleteGoalByUserId(USER_ID);
+
+        verify(goalRepository, times(1)).deleteByUserId(USER_ID);
     }
 
     @Test
     void updateSavedAmount_ShouldUpdateSavedAmount_WhenGoalExists() {
-        String userId = "user1";
-        double amount = 1000.0;
-        doNothing().when(goalRepository).updateSavedAmount(userId, amount);
+        BigDecimal amount = BigDecimal.valueOf(1000.0);
+        doNothing().when(goalRepository).updateSavedAmount(USER_ID, amount);
 
-        goalService.updateSavedAmount(userId, amount);
+        goalService.updateSavedAmount(USER_ID, amount);
 
-        verify(goalRepository, times(1)).updateSavedAmount(userId, amount);
+        verify(goalRepository, times(1)).updateSavedAmount(USER_ID, amount);
     }
 
     @Test
     void getProgress_ShouldReturnProgress_WhenGoalExists() {
-        String userId = "user1";
         Goal goal = new Goal(
-                "1",
-                userId,
+                ID,
+                USER_ID,
                 "Buy a car",
-                10000.0,
-                5000.0,
-                5000.0
+                BigDecimal.valueOf(10000.0),
+                BigDecimal.valueOf(5000.0),
+                BigDecimal.valueOf(5000.0)
         );
-        when(goalRepository.findById(userId)).thenReturn(goal);
+        when(goalRepository.findById(USER_ID)).thenReturn(goal);
 
-        double result = goalService.getProgress(userId);
+        double result = goalService.getProgress(USER_ID);
 
         assertThat(result).isEqualTo(50.0);
-        verify(goalRepository, times(1)).findById(userId);
+        verify(goalRepository, times(1)).findById(USER_ID);
     }
 
     @Test
     void getProgress_ShouldThrowException_WhenGoalDoesNotExist() {
-        String goalId = "1";
-        when(goalRepository.findById(goalId)).thenThrow(new GoalNotFoundException(goalId));
 
-        assertThatThrownBy(() -> goalService.getProgress(goalId))
+        when(goalRepository.findById(ID)).thenThrow(new GoalNotFoundException());
+
+        assertThatThrownBy(() -> goalService.getProgress(ID))
                 .isInstanceOf(GoalNotFoundException.class)
-                .hasMessage("Цель с id " + goalId + " не найдена.");
+                .hasMessage("Цель не найдена.");
 
-        verify(goalRepository, times(1)).findById(goalId);
+        verify(goalRepository, times(1)).findById(ID);
     }
 }

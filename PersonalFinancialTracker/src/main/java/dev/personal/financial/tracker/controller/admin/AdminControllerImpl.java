@@ -5,6 +5,7 @@ import dev.personal.financial.tracker.exception.user.UserAlreadyBlockedException
 import dev.personal.financial.tracker.exception.user.UserNotFoundException;
 import dev.personal.financial.tracker.service.admin.AdminService;
 
+import dev.personal.financial.tracker.util.ConsolePrinter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminControllerImpl implements AdminController {
     private final AdminService adminService;
+    private final ConsolePrinter printer;
 
     @Override
     public List<UserOut> getAllUsers() {
@@ -22,20 +24,20 @@ public class AdminControllerImpl implements AdminController {
     }
 
     @Override
-    public void blockUser(String userId) {
+    public void blockUser(int userId) {
         try {
             adminService.blockUser(userId);
         } catch (UserNotFoundException | UserAlreadyBlockedException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(int userId) {
         try {
             adminService.deleteUser(userId);
         } catch (UserNotFoundException e) {
-            System.err.println(e.getMessage());
+            printer.printError(e.getMessage());
         }
     }
 }

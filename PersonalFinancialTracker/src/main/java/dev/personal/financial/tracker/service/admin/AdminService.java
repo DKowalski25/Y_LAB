@@ -25,7 +25,7 @@ public interface AdminService {
      * @throws UserNotFoundException если пользователь не найден
      * @throws UserAlreadyBlockedException если пользователь уже заблокирован
      */
-    void blockUser(String userId);
+    void blockUser(int userId);
 
     /**
      * Удаляет пользователя по ID.
@@ -33,5 +33,5 @@ public interface AdminService {
      * @param userId ID пользователя
      * @throws UserNotFoundException если пользователь не найден
      */
-    void deleteUser(String userId);
+    void deleteUser(int userId);
 }

@@ -22,6 +22,9 @@ import static org.mockito.Mockito.*;
 
 class NotificationServiceImplTest {
 
+    private final static int ID = UUID.randomUUID().hashCode();
+    private final static int USER_ID = UUID.randomUUID().hashCode();
+
     @Mock
     private NotificationRepository notificationRepository;
 
@@ -43,11 +46,11 @@ class NotificationServiceImplTest {
     @Test
     void sendNotification_ShouldSaveNotification() {
         NotificationIn notificationIn = new NotificationIn(
-                "user1",
+                USER_ID,
                 "Test message"
         );
         Notification notification = new Notification(
-                "user1",
+                USER_ID,
                 "Test message"
         );
 
@@ -62,41 +65,42 @@ class NotificationServiceImplTest {
     void getNotificationsByUserId_ShouldReturnListOfNotificationOut() {
         String userId = "user1";
         Notification notification1 = new Notification(
-                UUID.randomUUID().toString(), userId,
+                ID,
+                USER_ID,
                 "Message 1",
                 LocalDateTime.now()
         );
         Notification notification2 = new Notification(
-                UUID.randomUUID().toString(),
-                userId,
+                ID,
+                USER_ID,
                 "Message 2",
                 LocalDateTime.now()
         );
 
-        when(notificationRepository.findByUserId(userId)).thenReturn(List.of(notification1, notification2));
+        when(notificationRepository.findByUserId(USER_ID)).thenReturn(List.of(notification1, notification2));
 
-        List<NotificationOut> result = notificationService.getNotificationsByUserId(userId);
+        List<NotificationOut> result = notificationService.getNotificationsByUserId(USER_ID);
 
         assertThat(result).hasSize(2);
-        assertThat(result.get(0).getUserId()).isEqualTo(userId);
+        assertThat(result.get(0).getUserId()).isEqualTo(USER_ID);
         assertThat(result.get(0).getMessage()).isEqualTo("Message 1");
 
-        assertThat(result.get(1).getUserId()).isEqualTo(userId);
+        assertThat(result.get(1).getUserId()).isEqualTo(USER_ID);
         assertThat(result.get(1).getMessage()).isEqualTo("Message 2");
 
-        verify(notificationRepository, times(1)).findByUserId(userId);
+        verify(notificationRepository, times(1)).findByUserId(USER_ID);
     }
 
     @Test
     void deleteNotification_ShouldDeleteNotification() {
-        String notificationId = UUID.randomUUID().toString();
-        doNothing().when(notificationRepository).delete(notificationId);
+        doNothing().when(notificationRepository).delete(ID);
 
-        notificationService.deleteNotification(notificationId);
+        notificationService.deleteNotification(ID);
 
-        verify(notificationRepository, times(1)).delete(notificationId);
+        verify(notificationRepository, times(1)).delete(ID);
     }
 }
+
 
 //    @Test
 //    void sendEmailNotification_ShouldPrintEmailDetails() {

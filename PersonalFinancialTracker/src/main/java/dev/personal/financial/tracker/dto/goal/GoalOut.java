@@ -3,13 +3,15 @@ package dev.personal.financial.tracker.dto.goal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 public class GoalOut {
-    private String id;
-    private String userId;
+    private int id;
+    private int userId;
     private String goalName;
-    private double goalAmount;
-    private double currentAmount;
-    private double savedAmount;
+    private BigDecimal goalAmount;
+    private BigDecimal currentAmount;
+    private BigDecimal savedAmount;
 }

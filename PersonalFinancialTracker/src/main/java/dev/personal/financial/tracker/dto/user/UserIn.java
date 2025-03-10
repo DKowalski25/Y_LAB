@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class UserIn {
-    private String id;
+    private int id;
     private String name;
     private String email;
     private String password;
