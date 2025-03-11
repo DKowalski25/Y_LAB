@@ -28,12 +28,7 @@ public class BudgetControllerImpl implements BudgetController {
 
     @Override
     public BudgetOut getBudgetByUserId(int userId) {
-        try {
-            return budgetService.getBudgetByUserId(userId);
-        } catch (BudgetNotFoundException e) {
-            printer.printError(e.getMessage());
-            return null;
-        }
+        return budgetService.getBudgetByUserId(userId);
     }
 
     @Override

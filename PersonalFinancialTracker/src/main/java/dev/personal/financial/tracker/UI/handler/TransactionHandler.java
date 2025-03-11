@@ -4,6 +4,9 @@ import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.dto.budget.BudgetOut;
 import dev.personal.financial.tracker.dto.goal.GoalOut;
+import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
+import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
+import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 
@@ -54,24 +57,23 @@ public class TransactionHandler {
         }
 
         if (!isIncome) {
-            BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
-            if (budgetOut != null) {
+            try {
+                BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
                 BigDecimal totalExpenses = transactionController.getTotalExpensesForCurrentMonth(user.getId());
                 if (totalExpenses.add(amount).compareTo(budgetOut.getMonthlyBudget()) > 0) {
                     printer.printInfo("Вы превысили месячный бюджета.");
                     return;
                 }
-            }
+            } catch (BudgetNotFoundException ignored) {}
         }
 
         if (isIncome) {
-            GoalOut goal = goalController.getGoalsByUserId(user.getId());
-            if (goal != null) {
+            try {
+                GoalOut goal = goalController.getGoalsByUserId(user.getId());
                 goalController.updateSavedAmount(goal.getId(), amount);
                 double progress = goalController.getProgress(goal.getId());
                 notifyProgress(goal, progress);
-            }
-
+            } catch (GoalNotFoundException ignored) {}
         }
         TransactionIn transactionIn = new TransactionIn(
                 user.getId(),
@@ -83,7 +85,6 @@ public class TransactionHandler {
         );
 
         transactionController.addTransaction(transactionIn);
-        printer.printSuccess("Транзакция успешно добавлена." + user.getId());
     }
 
     public void editTransaction(UserOut user) {
@@ -91,11 +92,11 @@ public class TransactionHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
         }
 
-        int transactionId = printer.readInt("Введите id транзакции:");
-//        if (transactionId == null) {
-//            printer.printInfo("Редактирование транзакции отменено.");
-//            return;
-//        } изменить метод readInt что можно было выходить на q
+        Integer transactionId = printer.readInt("Введите id транзакции:");
+        if (transactionId == null) {
+            printer.printInfo("Редактирование транзакции отменено.");
+            return;
+        }
 
         BigDecimal amount = printer.readBigDecimal("Введите сумму транзакции:");
         if (amount == null) {
@@ -143,11 +144,7 @@ public class TransactionHandler {
         printer.printPrompt("1. Показать все транзакции");
         printer.printPrompt("2. Показать отфильтрованные транзакции");
 
-        int choice = printer.readInt("Выберите действие:");
-        //        if (transactionId == null) {
-//            printer.printInfo("Редактирование транзакции отменено.");
-//            return;
-//        } изменить метод readInt что можно было выходить на q
+        int choice = printer.readIntMenu("Выберите действие:");
 
         switch (choice) {
             case 1:
@@ -180,11 +177,7 @@ public class TransactionHandler {
         printer.printPrompt("2. По дате");
         printer.printPrompt("3. По типу(доход/расход)");
 
-        int choice = printer.readInt("Выберите номер действие:");
-        //        if (transactionId == null) {
-//            printer.printInfo("Редактирование транзакции отменено.");
-//            return;
-//        } изменить метод readInt что можно было выходить на q
+        int choice = printer.readIntMenu("Выберите номер действие:");
 
         List<TransactionOut> transactions;
         switch (choice) {
@@ -232,10 +225,13 @@ public class TransactionHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
+        try {
+            int transactionId = printer.readInt("Введите ID транзакции для удаления:");
+            transactionController.deleteTransaction(transactionId);
+        } catch (TransactionNotFoundException e) {
+            printer.printError("Ошибка: " + e.getMessage());
+        }
 
-        int transactionId = printer.readInt("Введите ID транзакции для удаления:");
-        transactionController.deleteTransaction(transactionId);
-        printer.printSuccess("Транзакция успешно удалена.");
     }
 
     private void notifyProgress(GoalOut goal, double progress) {

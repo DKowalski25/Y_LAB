@@ -26,7 +26,7 @@ public class UserMenu {
             printer.printPrompt("4. Профиль");
             printer.printPrompt("5. Выйти из аккаунта");
 
-            int choice = printer.readInt("Выберите категорию:");
+            int choice = printer.readIntMenu("Выберите категорию:");
 
             switch (choice) {
                 case 1:
@@ -62,7 +62,7 @@ public class UserMenu {
             printer.printPrompt("4. Удалить транзакцию");
             printer.printPrompt("5. Вернуться в главное меню");
 
-            int choice = printer.readInt("Выберите действие:");
+            int choice = printer.readIntMenu("Выберите действие:");
 
             switch (choice) {
                 case 1:
@@ -93,7 +93,7 @@ public class UserMenu {
             printer.printPrompt("3. Удалить цель");
             printer.printPrompt("4. Вернуться в главное меню");
 
-            int choice = printer.readInt("Выберите действие:");
+            int choice = printer.readIntMenu("Выберите действие:");
 
             switch (choice) {
                 case 1:
@@ -120,7 +120,7 @@ public class UserMenu {
             printer.printPrompt("3. Статистика бюджета");
             printer.printPrompt("4. Вернуться в главное меню");
 
-            int choice = printer.readInt("Выберите действие:");
+            int choice = printer.readIntMenu("Выберите действие:");
 
             switch (choice) {
                 case 1:
@@ -148,7 +148,7 @@ public class UserMenu {
             printer.printPrompt("4. Формирование отчёта по финансовому состоянию");
             printer.printPrompt("5. Вернуться в меню бюджета");
 
-            int choice = printer.readInt("Выберите действие:");
+            int choice = printer.readIntMenu("Выберите действие:");
 
             switch (choice) {
                 case 1:
@@ -178,7 +178,7 @@ public class UserMenu {
             printer.printPrompt("2. Удалить аккаунт");
             printer.printPrompt("3. Вернуться в главное меню");
 
-            int choice = printer.readInt("Выберите действие:");
+            int choice = printer.readIntMenu("Выберите действие:");
 
             switch (choice) {
                 case 1:

@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.controller.goal;
 
 import dev.personal.financial.tracker.dto.goal.GoalIn;
 import dev.personal.financial.tracker.dto.goal.GoalOut;
+import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 
 import java.math.BigDecimal;
 
@@ -21,6 +22,7 @@ public interface GoalController {
      *
      * @param userId ID пользователя
      * @return данные цели
+     * @throws GoalNotFoundException если цель не найдена
      */
     GoalOut getGoalsByUserId(int userId);
 
@@ -35,6 +37,7 @@ public interface GoalController {
      * Удаляет цель по ID пользователя.
      *
      * @param userId ID пользователя
+     * @throws GoalNotFoundException если цель не найдена
      */
     void deleteGoalByUserId(int userId);
 

@@ -1,5 +1,6 @@
 package dev.personal.financial.tracker.UI.handler;
 
+import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.goal.GoalController;
 
@@ -24,11 +25,13 @@ public class GoalHandler {
             return;
         }
 
-        GoalOut existingGoal = goalController.getGoalsByUserId(user.getId());
-        if (existingGoal != null) {
+        try {
+            GoalOut existingGoal = goalController.getGoalsByUserId(user.getId());
             printer.printError("У вас уже есть цель. Сначала удалите текущую цель.");
             return;
-        }
+        } catch (GoalNotFoundException ignored) {
+
+        };
 
         String goalName = printer.readNonEmptyString("Введите название цели:");
         if (goalName == null) {
@@ -60,12 +63,9 @@ public class GoalHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
-// убрать в трай кетч, ловить и печатать сообщение исключения из метода
-        GoalOut goal = goalController.getGoalsByUserId(user.getId());
 
-        if (goal == null) {
-            printer.printInfo("Цель не установлена.");
-        } else {
+        try {
+            GoalOut goal = goalController.getGoalsByUserId(user.getId());
             printer.printWithDivider("Ваша цель:");
             double progress = goalController.getProgress(goal.getId());
             printer.printInfo("Цель: " + goal.getGoalName());
@@ -73,6 +73,8 @@ public class GoalHandler {
             printer.printInfo("Накоплено: " + goal.getSavedAmount());
             printer.printInfo("Прогресс: " + progress + "%");
             printer.printWithDivider("");
+        } catch (GoalNotFoundException e) {
+            printer.printInfo(e.getMessage());
         }
     }
 
@@ -82,8 +84,11 @@ public class GoalHandler {
             return;
         }
 
-        goalController.deleteGoalByUserId(userOut.getId());
-        printer.printSuccess("Цель успешно удалена.");
-
+        try {
+            goalController.deleteGoalByUserId(userOut.getId());
+            printer.printSuccess("Цель успешно удалена.");
+        } catch (GoalNotFoundException e) {
+            printer.printError(e.getMessage());
+        }
     }
 }

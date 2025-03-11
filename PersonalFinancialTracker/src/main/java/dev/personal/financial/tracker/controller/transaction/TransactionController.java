@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.controller.transaction;
 
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
+import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -46,6 +47,7 @@ public interface TransactionController {
      * Удаляет транзакцию по ID.
      *
      * @param id ID транзакции
+     * @throws TransactionNotFoundException если транзакция не найдена
      */
     void deleteTransaction(int id);
 

@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 
 /**
  * Реализация интерфейса {@link GoalController}.
- * Обрабатывает HTTP-запросы, связанные с целями.
  */
 @RequiredArgsConstructor
 public class GoalControllerImpl implements GoalController {
@@ -31,12 +30,7 @@ public class GoalControllerImpl implements GoalController {
 
     @Override
     public GoalOut getGoalsByUserId(int userId) {
-        try {
-            return goalService.getGoalsByUserId(userId);
-        } catch (GoalNotFoundException e) {
-            printer.printError(e.getMessage());
-            return null;
-        }
+        return goalService.getGoalsByUserId(userId);
     }
 
     @Override
@@ -50,11 +44,7 @@ public class GoalControllerImpl implements GoalController {
 
     @Override
     public void deleteGoalByUserId(int userId) {
-        try {
-            goalService.deleteGoalByUserId(userId);
-        } catch (GoalNotFoundException e) {
-            printer.printError(e.getMessage());
-        }
+        goalService.deleteGoalByUserId(userId);
     }
 
     @Override

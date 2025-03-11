@@ -41,7 +41,7 @@ public class MainMenu {
             printer.printPrompt("2. Вход");
             printer.printPrompt("3. Выход");
 
-            int choice = printer.readInt("Выберите номер действие:");
+            int choice = printer.readIntMenu("Выберите номер действие:");
 
             switch (choice) {
                 case 1:

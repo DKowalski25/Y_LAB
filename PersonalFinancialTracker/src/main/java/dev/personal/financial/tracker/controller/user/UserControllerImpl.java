@@ -21,7 +21,7 @@ public class UserControllerImpl implements UserController {
     public void registerUser(UserIn userIn) {
         try {
             userService.registerUser(userIn);
-            printer.printSuccess("Пользователь зарегистрирован.");
+            printer.printSuccess("Пользователь успешно зарегистрирован.");
         } catch (UserAlreadyExistsException e) {
             printer.printError(e.getMessage());
         }

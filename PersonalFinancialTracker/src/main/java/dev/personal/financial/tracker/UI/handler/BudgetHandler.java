@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.UI.handler;
 
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
+import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.dto.budget.BudgetIn;
@@ -52,12 +53,12 @@ public class BudgetHandler {
             printer.printError("Ошибка: пользователь не авторизован.");
             return;
         }
-// убрать в трай кетч, ловить и печатать сообщение исключения из метода
-        BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
-        if (budgetOut == null) {
-            printer.printInfo("Бюджет не установлен.");
-        } else {
+
+        try {
+            BudgetOut budgetOut = budgetController.getBudgetByUserId(user.getId());
             printer.printWithDivider("Ваш месячный бюджет: " + budgetOut.getMonthlyBudget());
+        } catch (BudgetNotFoundException e) {
+            printer.printInfo("Бюджет не установлен.");
         }
     }
 
@@ -160,35 +161,36 @@ public class BudgetHandler {
             }
         }
 
-//        BigDecimal balance = transactionController.getTransactionsByUserId(user.getId()).stream()
-//                .mapToDouble(t -> t.isIncome() ? t.getAmount() : -t.getAmount())
-//                .sum();
 
-        BudgetOut budget = budgetController.getBudgetByUserId(user.getId());
+        try {
+            BudgetOut budget = budgetController.getBudgetByUserId(user.getId());
 
-        List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
+            List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
 
-        Map<String, BigDecimal> expensesByCategory = expenses.stream()
-                .collect(Collectors.groupingBy(
-                        TransactionOut::getCategory,
-                        Collectors.reducing(BigDecimal.ZERO,TransactionOut::getAmount, BigDecimal::add)
-                ));
+            Map<String, BigDecimal> expensesByCategory = expenses.stream()
+                    .collect(Collectors.groupingBy(
+                            TransactionOut::getCategory,
+                            Collectors.reducing(BigDecimal.ZERO,TransactionOut::getAmount, BigDecimal::add)
+                    ));
 
-        printer.printWithDivider("Финансовый отчёт:");
-        printer.printInfo("Текущий баланс: " + balance);
+            printer.printWithDivider("Финансовый отчёт:");
+            printer.printInfo("Текущий баланс: " + balance);
 
-        if (budget != null) {
-            printer.printInfo("Месячный бюджет: " + budget.getMonthlyBudget());
-        } else {
-            printer.printInfo("Месячный бюджет не установлен.");
-        }
+            if (budget != null) {
+                printer.printInfo("Месячный бюджет: " + budget.getMonthlyBudget());
+            } else {
+                printer.printInfo("Месячный бюджет не установлен.");
+            }
 
-        printer.printInfo("Расходы по категориям:");
-        if (expensesByCategory.isEmpty()) {
-            printer.printInfo("Расходы не найдены.");
-        } else {
-            expensesByCategory.forEach((category, amount) ->
-                    printer.printInfo(category + ": " + amount));
+            printer.printInfo("Расходы по категориям:");
+            if (expensesByCategory.isEmpty()) {
+                printer.printInfo("Расходы не найдены.");
+            } else {
+                expensesByCategory.forEach((category, amount) ->
+                        printer.printInfo(category + ": " + amount));
+            }
+        } catch (BudgetNotFoundException e) {
+            printer.printError(e.getMessage());
         }
     }
 }

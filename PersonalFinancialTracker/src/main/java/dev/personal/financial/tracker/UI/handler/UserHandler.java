@@ -1,5 +1,6 @@
 package dev.personal.financial.tracker.UI.handler;
 
+import dev.personal.financial.tracker.exception.user.UserNotFoundException;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.user.UserController;
 import dev.personal.financial.tracker.dto.user.UserIn;
@@ -45,7 +46,6 @@ public class UserHandler {
                 UserRole.USER
         );
         userController.registerUser(user);
-        printer.printSuccess("Пользователь успешно зарегистрирован.");
         return userController.getUserByEmail(email);
     }
 
@@ -62,20 +62,23 @@ public class UserHandler {
             return null;
         }
 
-        User user = userRepository.getByEmail(email);
-        UserOut userOut = userController.getUserByEmail(email);
+        try {
+            User user = userRepository.getByEmail(email);
+            UserOut userOut = userController.getUserByEmail(email);
 
-        if (user != null && user.getPassword().equals(password)) {
-            if (user.getIsBlocked()) {
-                printer.printError("Пользователь заблокирован.");
+            if (user != null && user.getPassword().equals(password)) {
+                if (user.getIsBlocked()) {
+                    printer.printError("Пользователь заблокирован.");
+                } else {
+                    printer.printSuccess("Пользователь успешно авторизован.");
+                    return userOut;
+                }
             } else {
-                printer.printSuccess("Пользователь успешно авторизован.");
-                return userOut;
+                printer.printError("Неверный пароль.");
             }
-        } else if (user == null){
-            printer.printError("Пользователь с таким email не найден.");
-        } else {
-            printer.printError("Неверный пароль.");
+            return null;
+        } catch (UserNotFoundException e) {
+            printer.printError(e.getMessage());
         }
         return null;
     }

@@ -106,7 +106,7 @@ public class ConsolePrinter {
         }
     }
 
-    public int readInt(String prompt) {
+    public int readIntMenu(String prompt) {
         while (true) {
             printPrompt(prompt);
             if (sc.hasNextInt()) {
@@ -116,6 +116,23 @@ public class ConsolePrinter {
             } else {
                 printError("Неверный формат числа. Пожалуйста, введите корректное число.");
                 sc.next();
+            }
+        }
+    }
+
+    public Integer readInt(String prompt) {
+        while (true) {
+            printPrompt(prompt + " (или введите 'q' для выхода):");
+            String input = sc.nextLine();
+
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
+
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                printError("Неверный формат числа. Пожалуйста, введите целое число.");
             }
         }
     }

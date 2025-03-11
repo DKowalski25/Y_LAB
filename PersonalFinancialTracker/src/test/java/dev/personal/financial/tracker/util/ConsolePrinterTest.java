@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -125,19 +126,49 @@ class ConsolePrinterTest {
 
     @Test
     void readInt_ShouldReturnValidInt() {
-        when(sc.hasNextInt()).thenReturn(true);
-        when(sc.nextInt()).thenReturn(42);
-        int result = consolePrinter.readInt("Enter an integer:");
+        when(sc.nextLine()).thenReturn("42");
+        Integer result = consolePrinter.readInt("Enter an integer:");
+        assertEquals(42, result);
+    }
+
+
+    @Test
+    void readInt_ShouldHandleInvalidInput() {
+        when(sc.nextLine()).thenReturn("invalid", "42");
+        Integer result = consolePrinter.readInt("Enter an integer:");
         assertEquals(42, result);
     }
 
     @Test
-    void readInt_ShouldHandleInvalidInput() {
+    void readIntMenu_ShouldReturnValidInt() {
+        when(sc.hasNextInt()).thenReturn(true);
+        when(sc.nextInt()).thenReturn(42);
+        int result = consolePrinter.readIntMenu("Enter an integer:");
+        assertEquals(42, result);
+        verify(sc).nextLine();
+    }
+
+    @Test
+    void readIntMenu_ShouldHandleInvalidInput() {
         when(sc.hasNextInt()).thenReturn(false, true);
         when(sc.nextInt()).thenReturn(42);
         when(sc.next()).thenReturn("invalid");
-        int result = consolePrinter.readInt("Enter an integer:");
+        int result = consolePrinter.readIntMenu("Enter an integer:");
         assertEquals(42, result);
+    }
+
+    @Test
+    void readBigDecimal_ShouldReturnValidBigDecimal() {
+        when(sc.nextLine()).thenReturn("100.50");
+        BigDecimal result = consolePrinter.readBigDecimal("Enter a decimal number:");
+        assertEquals(new BigDecimal("100.50"), result);
+    }
+
+    @Test
+    void readBigDecimal_ShouldHandleInvalidInput() {
+        when(sc.nextLine()).thenReturn("invalid", "100.50");
+        BigDecimal result = consolePrinter.readBigDecimal("Enter a decimal number:");
+        assertEquals(new BigDecimal("100.50"), result);
     }
 
     @Test

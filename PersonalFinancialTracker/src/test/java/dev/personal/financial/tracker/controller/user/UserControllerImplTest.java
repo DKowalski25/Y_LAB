@@ -60,7 +60,7 @@ class UserControllerImplTest {
         userController.registerUser(userIn);
 
         verify(userService, times(1)).registerUser(userIn);
-        verify(printer, times(1)).printSuccess("Пользователь зарегистрирован.");
+        verify(printer, times(1)).printSuccess("Пользователь успешно зарегистрирован.");
     }
 
     @Test

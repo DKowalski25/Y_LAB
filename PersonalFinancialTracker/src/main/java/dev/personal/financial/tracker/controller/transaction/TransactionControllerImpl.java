@@ -36,7 +36,7 @@ public class TransactionControllerImpl implements TransactionController {
             return transactionService.getTransactionById(id);
         } catch (TransactionNotFoundException e) {
             printer.printError("Ошибка: " + e.getMessage());
-            return null; // или можно выбросить другое исключение для HTTP-ответа
+            return null;
         }
     }
 
@@ -57,12 +57,8 @@ public class TransactionControllerImpl implements TransactionController {
 
     @Override
     public void deleteTransaction(int id) {
-        try {
             transactionService.deleteTransaction(id);
             printer.printSuccess("Транзакция успешно удалена.");
-        } catch (TransactionNotFoundException e) {
-            printer.printError("Ошибка: " + e.getMessage());
-        }
     }
 
     @Override

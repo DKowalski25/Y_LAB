@@ -18,7 +18,7 @@ public class AdminMenu {
             printer.printPrompt("3. Удалить пользователя");
             printer.printPrompt("4. Выйти из аккаунта");
 
-            int choice = printer.readInt("Выберите номер действие:");
+            int choice = printer.readIntMenu("Выберите номер действие:");
 
             switch (choice) {
                 case 1:
