@@ -1,3 +1,5 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
     java
     jacoco
@@ -19,18 +21,33 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("org.apache.commons:commons-compress:1.26.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    testImplementation(platform(Testing.junit.bom))
+    testImplementation(Testing.junit.jupiter)
 
-    testCompileOnly("org.projectlombok:lombok:1.18.30")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation("org.projectlombok:lombok:_")
+    annotationProcessor("org.projectlombok:lombok:_")
 
-    testImplementation ("org.mockito:mockito-core:5.5.0")
+    implementation("org.projectlombok:lombok:_")
+    testAnnotationProcessor("org.projectlombok:lombok:_")
 
-    testImplementation ("org.assertj:assertj-core:3.24.2")
+    testImplementation(Testing.mockito.core)
+
+    testImplementation(Testing.assertj.core)
+
+    implementation("io.github.cdimascio:dotenv-java:_")
+
+    implementation("org.postgresql:postgresql:_")
+
+    implementation("org.liquibase:liquibase-core:_")
+
+    testImplementation("org.testcontainers:testcontainers:_")
+    testImplementation("org.testcontainers:postgresql:_")
+    testImplementation(Testing.junit.jupiter.api)
+    testRuntimeOnly(Testing.junit.jupiter.engine)
+
+    implementation("org.yaml:snakeyaml:2.0")
 }
 
 jacoco {
@@ -46,8 +63,28 @@ tasks.test {
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
-        xml.required = false
-        csv.required = false
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+        xml.required.set(false)
+        csv.required.set(false)
+        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
+}
+
+// Конфигурация задачи dependencyUpdates
+tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(candidate.version)
+    }
+}
+
+tasks.register("runLiquibase", JavaExec::class) {
+    mainClass.set("dev.personal.financial.tracker.db.LiquibaseRunner")
+    classpath = sourceSets.main.get().runtimeClasspath
+}
+
+
+// Функция для определения нестабильных версий
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+$".toRegex()
+    return !stableKeyword && !regex.matches(version)
 }
