@@ -1,6 +1,8 @@
 plugins {
     java
     jacoco
+    id("com.github.ben-manes.versions") // Плагин для проверки обновлений
+    id("org.owasp.dependencycheck") version "8.4.0"
 }
 
 group = "org.example"
