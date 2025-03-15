@@ -1,6 +1,10 @@
 package dev.personal.financial.tracker.dto.budget;
 
 import dev.personal.financial.tracker.model.Budget;
+import dev.personal.financial.tracker.model.Notification;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class BudgetMapper {
 
@@ -22,5 +26,13 @@ public class BudgetMapper {
 
     public static void updateEntity(Budget budget, BudgetIn budgetIn) {
         budget.setMonthlyBudget(budgetIn.getMonthlyBudget());
+    }
+
+    public static Budget mapRowToBudget(ResultSet resultSet) throws SQLException {
+        return new Budget(
+                resultSet.getInt("id"),
+                resultSet.getInt("user_id"),
+                resultSet.getBigDecimal("monthly_budget")
+        );
     }
 }
