@@ -2,7 +2,6 @@ package dev.personal.financial.tracker.repository.budget;
 
 
 import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
-import dev.personal.financial.tracker.exception.budget.BudgetAlreadyExistsException;
 import dev.personal.financial.tracker.model.Budget;
 
 /**
@@ -10,11 +9,11 @@ import dev.personal.financial.tracker.model.Budget;
  * Предоставляет методы для сохранения, поиска, обновления и удаления бюджетов.
  */
 public interface BudgetRepository {
+
     /**
      * Сохраняет бюджет.
      *
      * @param budget бюджет для сохранения
-     * @throws BudgetAlreadyExistsException если бюджет для пользователя уже существует
      */
     void save(Budget budget);
 
