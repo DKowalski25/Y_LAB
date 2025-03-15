@@ -1,6 +1,5 @@
 package dev.personal.financial.tracker.repository.goal;
 
-import dev.personal.financial.tracker.exception.goal.GoalAlreadyExistsException;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.model.Goal;
 
@@ -11,11 +10,11 @@ import java.math.BigDecimal;
  * Предоставляет методы для сохранения, поиска, обновления и удаления целей.
  */
 public interface GoalRepository {
+
     /**
      * Сохраняет цель.
      *
      * @param goal цель для сохранения
-     * @throws GoalAlreadyExistsException если цель с таким ID уже существует
      */
     void save(Goal goal);
 
