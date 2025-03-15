@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+    <changeSet id="002-add_cascade-delete-to-goals" author="dkowalski25">
+        <dropForeignKeyConstraint baseTableName="goals" constraintName="fk_goals_user"/>
+        <addForeignKeyConstraint baseTableName="goals"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_goals_user"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>
