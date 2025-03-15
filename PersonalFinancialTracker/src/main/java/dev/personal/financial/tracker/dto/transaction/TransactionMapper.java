@@ -2,6 +2,8 @@ package dev.personal.financial.tracker.dto.transaction;
 
 import dev.personal.financial.tracker.model.Transaction;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
 
 public class TransactionMapper {
@@ -36,5 +38,17 @@ public class TransactionMapper {
         transaction.setDate(transactionIn.getDate());
         transaction.setDescription(transactionIn.getDescription());
         transaction.setIncome(transactionIn.isIncome());
+    }
+
+    public static Transaction mapRowToTransaction(ResultSet resultSet) throws SQLException {
+        return new Transaction(
+                resultSet.getInt("id"),
+                resultSet.getInt("user_id"),
+                resultSet.getBigDecimal("amount"),
+                resultSet.getString("category"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getString("description"),
+                resultSet.getBoolean("is_income")
+        );
     }
 }
