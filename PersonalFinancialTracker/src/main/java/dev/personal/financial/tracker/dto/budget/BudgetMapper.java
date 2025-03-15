@@ -1,7 +1,6 @@
 package dev.personal.financial.tracker.dto.budget;
 
 import dev.personal.financial.tracker.model.Budget;
-import dev.personal.financial.tracker.model.Notification;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
