@@ -5,10 +5,11 @@ plugins {
     jacoco
     id("com.github.ben-manes.versions") // Плагин для проверки обновлений
     id("org.owasp.dependencycheck") version "8.4.0"
+    application
 }
 
 group = "org.example"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 java {
     toolchain {
@@ -49,6 +50,21 @@ dependencies {
     implementation("org.yaml:snakeyaml:2.0")
 }
 
+application {
+    mainClass.set("dev.personal.financial.tracker.Main")
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Main-Class" to application.mainClass.get()
+        )
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 jacoco {
     toolVersion = "0.8.12"
     reportsDirectory.set(layout.buildDirectory.dir("customJacocoReportDir"))
@@ -75,7 +91,7 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
     }
 }
 
-tasks.register("runLiquibase", JavaExec::class) {
+tasks.register("applyMigrations", JavaExec::class) {
     mainClass.set("dev.personal.financial.tracker.db.LiquibaseRunner")
     classpath = sourceSets.main.get().runtimeClasspath
 }
