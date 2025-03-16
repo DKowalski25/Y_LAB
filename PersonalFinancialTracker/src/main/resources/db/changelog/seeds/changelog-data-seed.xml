@@ -4,9 +4,8 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
-
     <changeSet id="seed-admin-user" author="dkowalki25">
-        <insert tableName="users">
+        <insert schemaName="app" tableName="users">
             <column name="name" value="Admin"/>
             <column name="email" value="admin@example.com"/>
             <column name="password" value="admin123"/>
@@ -16,14 +15,14 @@
     </changeSet>
 
     <changeSet id="seed-regular-users" author="dkowalki25">
-        <insert tableName="users">
+        <insert schemaName="app" tableName="users">
             <column name="name" value="User1"/>
             <column name="email" value="user1@example.com"/>
             <column name="password" value="user123"/>
             <column name="role" value="USER"/>
             <column name="is_blocked" value="false"/>
         </insert>
-        <insert tableName="users">
+        <insert schemaName="app" tableName="users">
             <column name="name" value="User2"/>
             <column name="email" value="user2@example.com"/>
             <column name="password" value="user123"/>
@@ -33,16 +32,16 @@
     </changeSet>
 
     <changeSet id="seed-transactions" author="dkowalki25">
-        <insert tableName="transactions">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user1@example.com')"/>
+        <insert schemaName="app" tableName="transactions">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user1@example.com')"/>
             <column name="amount" value="100.00"/>
             <column name="category" value="Food"/>
             <column name="date" value="2023-10-01"/>
             <column name="description" value="Lunch at cafe"/>
             <column name="is_income" value="false"/>
         </insert>
-        <insert tableName="transactions">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user1@example.com')"/>
+        <insert schemaName="app" tableName="transactions">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user1@example.com')"/>
             <column name="amount" value="500.00"/>
             <column name="category" value="Salary"/>
             <column name="date" value="2023-10-05"/>
@@ -50,8 +49,8 @@
             <column name="is_income" value="true"/>
         </insert>
 
-        <insert tableName="transactions">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user2@example.com')"/>
+        <insert schemaName="app" tableName="transactions">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user2@example.com')"/>
             <column name="amount" value="50.00"/>
             <column name="category" value="Transport"/>
             <column name="date" value="2023-10-02"/>
@@ -61,16 +60,16 @@
     </changeSet>
 
     <changeSet id="seed-goals" author="dkowalki25">
-        <insert tableName="goals">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user1@example.com')"/>
+        <insert schemaName="app" tableName="goals">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user1@example.com')"/>
             <column name="goal_name" value="Buy a car"/>
             <column name="goal_amount" value="10000.00"/>
             <column name="current_amount" value="2000.00"/>
             <column name="saved_amount" value="2000.00"/>
         </insert>
 
-        <insert tableName="goals">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user2@example.com')"/>
+        <insert schemaName="app" tableName="goals">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user2@example.com')"/>
             <column name="goal_name" value="Vacation"/>
             <column name="goal_amount" value="5000.00"/>
             <column name="current_amount" value="1000.00"/>
@@ -79,27 +78,27 @@
     </changeSet>
 
     <changeSet id="seed-notifications" author="dkowalki25">
-        <insert tableName="notifications">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user1@example.com')"/>
+        <insert schemaName="app" tableName="notifications">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user1@example.com')"/>
             <column name="message" value="Your transaction of $100.00 was successful."/>
             <column name="created_at" value="2023-10-01 12:00:00"/>
         </insert>
 
-        <insert tableName="notifications">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user2@example.com')"/>
+        <insert schemaName="app" tableName="notifications">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user2@example.com')"/>
             <column name="message" value="Your transaction of $50.00 was successful."/>
             <column name="created_at" value="2023-10-02 14:30:00"/>
         </insert>
     </changeSet>
 
     <changeSet id="seed-budgets" author="dkowalki25">
-        <insert tableName="budgets">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user1@example.com')"/>
+        <insert schemaName="app" tableName="budgets">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user1@example.com')"/>
             <column name="monthly_budget" value="2000.00"/>
         </insert>
 
-        <insert tableName="budgets">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email = 'user2@example.com')"/>
+        <insert schemaName="app" tableName="budgets">
+            <column name="user_id" valueComputed="(SELECT id FROM app.users WHERE email = 'user2@example.com')"/>
             <column name="monthly_budget" value="1500.00"/>
         </insert>
     </changeSet>
