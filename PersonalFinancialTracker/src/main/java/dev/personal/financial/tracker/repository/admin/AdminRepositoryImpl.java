@@ -22,7 +22,7 @@ public class AdminRepositoryImpl implements AdminRepository {
     @Override
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM app.users";
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
@@ -36,7 +36,7 @@ public class AdminRepositoryImpl implements AdminRepository {
 
     @Override
     public void blockUser(int userId) throws UserNotFoundException, UserAlreadyBlockedException {
-        String sql = "UPDATE users SET is_blocked = true WHERE id = ?";
+        String sql = "UPDATE app.users SET is_blocked = true WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             int rowsUpdated = statement.executeUpdate();
@@ -50,12 +50,12 @@ public class AdminRepositoryImpl implements AdminRepository {
 
     @Override
     public void deleteUser(int userId) throws UserNotFoundException {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM app.users WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             int rowsDeleted = statement.executeUpdate();
             if (rowsDeleted == 0) {
-                throw new UserNotFoundException("User with ID " + userId + " not found.");
+                throw new UserNotFoundException(userId);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to delete user", e);

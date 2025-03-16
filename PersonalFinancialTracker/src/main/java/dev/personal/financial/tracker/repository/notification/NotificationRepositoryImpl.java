@@ -14,7 +14,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     private final Connection connection;
 
     public void save(Notification notification) {
-        String sql = "INSERT INTO notifications (user_id, message, created_at) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO app.notifications (user_id, message, created_at) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, notification.getUserId());
             statement.setString(2, notification.getMessage());
@@ -35,7 +35,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
     @Override
     public List<Notification> findByUserId(int userId) {
         List<Notification> notifications = new ArrayList<>();
-        String sql = "SELECT * FROM notifications WHERE user_id = ?";
+        String sql = "SELECT * FROM app.notifications WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
 
@@ -52,7 +52,7 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM notifications WHERE id = ?";
+        String sql = "DELETE FROM app.notifications WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             statement.executeUpdate();

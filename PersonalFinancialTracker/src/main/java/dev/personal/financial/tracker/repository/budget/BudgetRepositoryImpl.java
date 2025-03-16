@@ -14,7 +14,7 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 
     @Override
     public void save(Budget budget){
-        String sql = "INSERT INTO budgets (user_id, monthly_budget) VALUES (?, ?)";
+        String sql = "INSERT INTO app.budgets (user_id, monthly_budget) VALUES (?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, budget.getUserId());
             statement.setBigDecimal(2, budget.getMonthlyBudget());
@@ -32,7 +32,7 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 
     @Override
     public Budget findByUserId(int userId) throws BudgetNotFoundException {
-        String sql = "SELECT * FROM budgets WHERE user_id = ?";
+        String sql = "SELECT * FROM app.budgets WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -49,7 +49,7 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 
     @Override
     public void update(Budget budget) {
-        String sql = "UPDATE budgets SET monthly_budget = ? WHERE user_id = ?";
+        String sql = "UPDATE app.budgets SET monthly_budget = ? WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBigDecimal(1, budget.getMonthlyBudget());
             statement.setInt(2, budget.getUserId());
@@ -61,7 +61,7 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 
     @Override
     public void delete(int userId) {
-        String sql = "DELETE FROM budgets WHERE user_id = ?";
+        String sql = "DELETE FROM app.budgets WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             statement.executeUpdate();

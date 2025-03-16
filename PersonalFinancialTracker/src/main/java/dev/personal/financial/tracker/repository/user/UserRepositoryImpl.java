@@ -17,7 +17,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User user) {
-        String s = "INSERT INTO users (name, email, password, role, is_blocked) VALUES (?, ?, ?, ?, ?)";
+        String s = "INSERT INTO app.users (name, email, password, role, is_blocked) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(s, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
@@ -39,7 +39,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findById(int id) throws UserNotFoundException {
-        String sql = "SELECT * FROM users WHERE id = ?";
+        String sql = "SELECT * FROM app.users WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
 
@@ -58,7 +58,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM app.users";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
@@ -76,7 +76,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ?";
+        String sql = "SELECT * FROM app.users WHERE email = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
 
@@ -94,7 +94,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        String sql = "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?";
+        String sql = "UPDATE app.users SET name = ?, email = ?, password = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
@@ -108,7 +108,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM app.users WHERE email = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, email);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -124,7 +124,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM users WHERE id = ?";
+        String sql = "DELETE FROM app.users WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             statement.executeUpdate();

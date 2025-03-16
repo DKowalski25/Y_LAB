@@ -15,7 +15,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public void save(Goal goal) {
-        String sql = "INSERT INTO goals (user_id, goal_name, goal_amount, current_amount, saved_amount) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO app.goals (user_id, goal_name, goal_amount, current_amount, saved_amount) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, goal.getUserId());
             statement.setString(2, goal.getGoalName());
@@ -36,7 +36,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public Goal findById(int id) throws GoalNotFoundException {
-        String sql = "SELECT * FROM goals WHERE id = ?";
+        String sql = "SELECT * FROM app.goals WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -53,7 +53,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public Goal findByUserId(int userId) {
-        String sql = "SELECT * FROM goals WHERE user_id = ?";
+        String sql = "SELECT * FROM app.goals WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -69,7 +69,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public void update(Goal goal) {
-        String sql = "UPDATE goals SET goal_name = ?, goal_amount = ?, current_amount = ?, saved_amount = ? WHERE id = ?";
+        String sql = "UPDATE app.goals SET goal_name = ?, goal_amount = ?, current_amount = ?, saved_amount = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, goal.getGoalName());
             statement.setBigDecimal(2, goal.getGoalAmount());
@@ -84,7 +84,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public void deleteByUserId(int userId) throws GoalNotFoundException {
-        String sql = "DELETE FROM goals WHERE user_id = ?";
+        String sql = "DELETE FROM app.goals WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
             int rowsDeleted = statement.executeUpdate();
@@ -98,7 +98,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public void updateSavedAmount(int goalId, BigDecimal amount) throws GoalNotFoundException {
-        String sql = "UPDATE goals SET saved_amount = saved_amount + ? WHERE id = ?";
+        String sql = "UPDATE app.goals SET saved_amount = saved_amount + ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBigDecimal(1, amount);
             statement.setInt(2, goalId);
@@ -113,7 +113,7 @@ public class GoalRepositoryImpl implements GoalRepository {
 
     @Override
     public BigDecimal getSavedAmount(int goalId) throws GoalNotFoundException {
-        String sql = "SELECT saved_amount FROM goals WHERE id = ?";
+        String sql = "SELECT saved_amount FROM app.goals WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, goalId);
             try (ResultSet resultSet = statement.executeQuery()) {
