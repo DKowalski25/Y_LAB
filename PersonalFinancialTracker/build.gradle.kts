@@ -29,9 +29,6 @@ dependencies {
     implementation("org.projectlombok:lombok:_")
     annotationProcessor("org.projectlombok:lombok:_")
 
-    implementation("org.projectlombok:lombok:_")
-    testAnnotationProcessor("org.projectlombok:lombok:_")
-
     testImplementation(Testing.mockito.core)
 
     testImplementation(Testing.assertj.core)
@@ -43,9 +40,11 @@ dependencies {
     implementation("org.liquibase:liquibase-core:_")
 
     testImplementation("org.testcontainers:testcontainers:_")
+    testImplementation ("org.testcontainers:junit-jupiter:_")
     testImplementation("org.testcontainers:postgresql:_")
-    testImplementation(Testing.junit.jupiter.api)
+
     testRuntimeOnly(Testing.junit.jupiter.engine)
+    testImplementation("org.junit.platform:junit-platform-launcher")
 
     implementation("org.yaml:snakeyaml:2.0")
 }
