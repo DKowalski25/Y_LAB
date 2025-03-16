@@ -5,9 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
 
-
-    <changeSet id="001-create-users-table" author="dkowalki25">
-        <createTable tableName="users">
+    <changeSet id="create-users-table-v1" author="dkowalki25">
+        <createTable tableName="users" schemaName="app">
             <column name="id" type="BIGINT" defaultValueComputed="nextval('universal_id_seq')">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
