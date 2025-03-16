@@ -7,8 +7,6 @@ import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.controller.user.UserController;
-import dev.personal.financial.tracker.model.User;
-import dev.personal.financial.tracker.model.UserRole;
 import dev.personal.financial.tracker.repository.admin.AdminRepository;
 import dev.personal.financial.tracker.repository.budget.BudgetRepository;
 import dev.personal.financial.tracker.repository.goal.GoalRepository;
@@ -69,16 +67,6 @@ public class Application {
                     adminController
             );
 
-//            User admin = new User(
-//                    9999,
-//                    "Admin",
-//                    "a@admin.com",
-//                    "123456",
-//                    UserRole.ADMIN,
-//                    false
-//            );
-//
-//            userRepository.save(admin);
             consoleInterface.run();
         } catch (SQLException e) {
             System.err.println("Failed to establish database connection: " + e.getMessage());

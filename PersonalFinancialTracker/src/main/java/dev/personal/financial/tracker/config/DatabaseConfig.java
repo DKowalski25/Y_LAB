@@ -18,10 +18,6 @@ public class DatabaseConfig {
             throw new RuntimeException("Не удалось найти необходимые параметры в конфигурационном файле.");
         }
 
-        System.out.println("URL: " + url);
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
-
         return DriverManager.getConnection(url, username, password);
     }
 
