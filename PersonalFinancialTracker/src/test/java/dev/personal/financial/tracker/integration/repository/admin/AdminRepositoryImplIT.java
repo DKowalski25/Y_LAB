@@ -46,7 +46,7 @@ public class AdminRepositoryImplIT {
 
     @BeforeEach
     void cleanUp() throws SQLException {
-        PostgresTestContainer.executeSql("TRUNCATE TABLE app.users RESTART IDENTITY CASCADE");;
+        PostgresTestContainer.executeSql("TRUNCATE TABLE app.users RESTART IDENTITY CASCADE");
     }
 
 
