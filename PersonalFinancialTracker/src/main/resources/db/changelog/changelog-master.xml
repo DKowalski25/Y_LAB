@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <include file="db/changelog/changelog-create-schemas.xml"/>
+    <include file="changelog-universal-sequence.xml" relativeToChangelogFile="true"/>
+
+    <include file="db/changelog/user/changelog-users-v1.xml"/>
+    <include file="db/changelog/transaction/changelog-transaction-v1.xml"/>
+    <include file="db/changelog/notification/changelog-notification-v1.xml"/>
+    <include file="db/changelog/budget/changelog-budget-v1.xml"/>
+    <include file="db/changelog//goal/changelog-goal-v1.xml"/>
+
+
+    <include file="db/changelog/seeds/changelog-data-seed.xml"/>
+</databaseChangeLog>

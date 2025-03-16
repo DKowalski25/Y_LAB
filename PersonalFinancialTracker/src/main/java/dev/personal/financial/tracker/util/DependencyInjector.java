@@ -31,10 +31,17 @@ import dev.personal.financial.tracker.service.transaction.TransactionServiceImpl
 import dev.personal.financial.tracker.service.user.UserService;
 import dev.personal.financial.tracker.service.user.UserServiceImpl;
 
+import lombok.RequiredArgsConstructor;
+
+import java.sql.Connection;
+
+@RequiredArgsConstructor
 public class DependencyInjector {
 
+    private final Connection connection;
+
     public UserRepository createUserRepository() {
-        return new UserRepositoryImpl();
+        return new UserRepositoryImpl(connection);
     }
 
     public UserService createUserService(UserRepository userRepository) {
@@ -46,7 +53,7 @@ public class DependencyInjector {
     }
 
     public TransactionRepository createTransactionRepository() {
-        return new TransactionRepositoryImpl();
+        return new TransactionRepositoryImpl(connection);
     }
 
     public TransactionService createTransactionService(TransactionRepository transactionRepository) {
@@ -58,7 +65,7 @@ public class DependencyInjector {
     }
 
     public GoalRepository createGoalRepository() {
-        return new GoalRepositoryImpl();
+        return new GoalRepositoryImpl(connection);
     }
 
     public GoalService createGoalService(GoalRepository goalRepository) {
@@ -70,7 +77,7 @@ public class DependencyInjector {
     }
 
     public BudgetRepository createBudgetRepository() {
-        return new BudgetRepositoryImpl();
+        return new BudgetRepositoryImpl(connection);
     }
 
     public BudgetService createBudgetService(BudgetRepository budgetRepository) {
@@ -81,8 +88,8 @@ public class DependencyInjector {
         return new BudgetControllerImpl(budgetService, consolePrinter);
     }
 
-    public AdminRepository createAdminRepository(UserRepository userRepository) {
-        return new AdminRepositoryImpl(userRepository);
+    public AdminRepository createAdminRepository() {
+        return new AdminRepositoryImpl(connection);
     }
 
     public AdminService createAdminService(AdminRepository adminRepository) {

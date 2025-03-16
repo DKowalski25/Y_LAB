@@ -1,92 +1,204 @@
 package dev.personal.financial.tracker.repository.transaction;
 
+import dev.personal.financial.tracker.dto.transaction.TransactionMapper;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.model.Transaction;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
-/**
- * Реализация интерфейса {@link TransactionRepository}.
- * Хранит транзакции в памяти с использованием HashMap.
- */
+import java.math.BigDecimal;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@RequiredArgsConstructor
 public class TransactionRepositoryImpl implements TransactionRepository {
-    private final Map<Integer, Transaction> transactions = new HashMap<>();
+
+    private final Connection connection;
 
     @Override
     public void save(Transaction transaction) {
-        transactions.put(transaction.getId(), transaction);
+        String sql = "INSERT INTO transactions (user_id, amount, category, date, description, is_income)" +
+                " VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, transaction.getUserId());
+            statement.setBigDecimal(2, transaction.getAmount());
+            statement.setString(3, transaction.getCategory());
+            statement.setDate(4, java.sql.Date.valueOf(transaction.getDate()));
+            statement.setString(5, transaction.getDescription());
+            statement.setBoolean(6, transaction.isIncome());
+            statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    transaction.setId(generatedKeys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save transaction", e);
+        }
     }
 
     @Override
     public List<Transaction> findByUserId(int userId) {
-        return transactions.values().stream()
-                .filter(t -> t.getUserId() == (userId))
-                .collect(Collectors.toList());
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transactions.add(TransactionMapper.mapRowToTransaction(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve transactions from the database", e);
+        }
+        return transactions;
     }
 
     @Override
-    public Transaction findById(int id) {
-        Transaction transaction = transactions.get(id);
-        if (transaction == null) {
-            throw new TransactionNotFoundException(id);
+    public Transaction findById(int id) throws TransactionNotFoundException {
+        String sql = "SELECT * FROM transactions WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return TransactionMapper.mapRowToTransaction(resultSet);
+                } else {
+                    throw new TransactionNotFoundException(id);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve transaction from the database", e);
         }
-        return transaction;
     }
 
     @Override
     public void update(Transaction transaction) {
-        transactions.put(transaction.getId(), transaction);
+        String sql = "UPDATE transactions SET amount = ?, category = ?, date = ?, description = ?, is_income = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, transaction.getAmount());
+            statement.setString(2, transaction.getCategory());
+            statement.setDate(3, Date.valueOf(transaction.getDate()));
+            statement.setString(4, transaction.getDescription());
+            statement.setBoolean(5, transaction.isIncome());
+            statement.setInt(6, transaction.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update transaction", e);
+        }
     }
 
     @Override
     public void delete(int id) {
-        transactions.remove(id);
+        String sql = "DELETE FROM transactions WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete transaction", e);
+        }
+
     }
 
     @Override
     public List<Transaction> findByUserIdAndCategory(int userId, String category) {
-        return transactions.values().stream()
-                .filter(transaction -> transaction.getUserId() == (userId))
-                .filter(transaction -> transaction.getCategory().equals(category))
-                .collect(Collectors.toList());
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE user_id = ? AND category = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setString(2, category);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transactions.add(TransactionMapper.mapRowToTransaction(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve transactions from the database", e);
+        }
+        return transactions;
     }
 
     @Override
     public List<Transaction> findByUserIdAndDate(int userId, LocalDate date) {
-        return transactions.values().stream()
-                .filter(transaction -> transaction.getUserId() == (userId))
-                .filter(transaction -> transaction.getDate().equals(date))
-                .collect(Collectors.toList());
+        List<Transaction> transactions = new ArrayList<>();
+        String sql ="SELECT * FROM transactions WHERE user_id = ? AND date = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setDate(2, Date.valueOf(date));
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transactions.add(TransactionMapper.mapRowToTransaction(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve transactions from the database", e);
+        }
+        return transactions;
     }
 
     @Override
     public List<Transaction> findByUserIdAndType(int userId, boolean isIncome) {
-        return transactions.values().stream()
-                .filter(transaction -> transaction.getUserId() == (userId))
-                .filter(transaction -> transaction.isIncome() == isIncome)
-                .collect(Collectors.toList());
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE user_id = ? AND is_income = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setBoolean(2, isIncome);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transactions.add(TransactionMapper.mapRowToTransaction(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve transactions from the database", e);
+        }
+        return transactions;
     }
 
     @Override
     public BigDecimal getTotalExpensesForCurrentMonth(int userId) {
-        LocalDate now = LocalDate.now();
-        return transactions.values().stream()
-                .filter(transaction -> transaction.getUserId() ==(userId))
-                .filter(transaction -> !transaction.isIncome())
-                .filter(transaction -> transaction.getDate().getMonth() == now.getMonth())
-                .filter(transaction -> transaction.getDate().getYear() == now.getYear())
-                .map(Transaction::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        String sql = "SELECT SUM(amount) FROM transactions WHERE user_id = ? AND is_income = false AND date >= ? AND date <= ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            LocalDate now = LocalDate.now();
+            LocalDate startOfMonth = now.withDayOfMonth(1);
+            LocalDate endOfMonth = now.withDayOfMonth(now.lengthOfMonth());
+
+            statement.setInt(1, userId);
+            statement.setDate(2, Date.valueOf(startOfMonth));
+            statement.setDate(3, Date.valueOf(endOfMonth));
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBigDecimal(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get total expenses for current month", e);
+        }
+        return BigDecimal.ZERO;
     }
 
     @Override
     public List<Transaction> findByUserIdAndDateRange(int userId, LocalDate startDate, LocalDate endDate) {
-        return transactions.values().stream()
-                .filter(t -> t.getUserId() == (userId))
-                .filter(t -> !t.getDate().isBefore(startDate) && !t.getDate().isAfter(endDate))
-                .collect(Collectors.toList());
+        List<Transaction> transactions = new ArrayList<>();
+        String sql = "SELECT * FROM transactions WHERE user_id = ? AND date >= ? AND date <= ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setDate(2, Date.valueOf(startDate));
+            statement.setDate(3, Date.valueOf(endDate));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    transactions.add(TransactionMapper.mapRowToTransaction(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find transactions by user ID and date range", e);
+        }
+        return transactions;
     }
 }

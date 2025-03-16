@@ -1,41 +1,63 @@
 package dev.personal.financial.tracker.repository.notification;
 
-import dev.personal.financial.tracker.exception.notification.NotificationAlreadyExistsException;
-import dev.personal.financial.tracker.exception.notification.NotificationNotFoundException;
+import dev.personal.financial.tracker.dto.notification.NotificationMapper;
 import dev.personal.financial.tracker.model.Notification;
+import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-/**
- * Реализация интерфейса {@link NotificationRepository}.
- * Хранит уведомления в памяти с использованием HashMap.
- */
+@RequiredArgsConstructor
 public class NotificationRepositoryImpl implements NotificationRepository {
-    private final Map<Integer, Notification> notifications = new HashMap<>();
 
-    @Override
+    private final Connection connection;
+
     public void save(Notification notification) {
-        if (notifications.containsKey(notification.getId())) {
-            throw new NotificationAlreadyExistsException(notification.getId());
+        String sql = "INSERT INTO notifications (user_id, message, created_at) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, notification.getUserId());
+            statement.setString(2, notification.getMessage());
+            statement.setTimestamp(3, Timestamp.valueOf(notification.getCreatedAt()));
+
+            statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    notification.setId(generatedKeys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save notification", e);
         }
-        notifications.put(notification.getId(), notification);
     }
 
     @Override
     public List<Notification> findByUserId(int userId) {
-        return notifications.values().stream()
-                .filter(notification -> notification.getUserId() == (userId))
-                .collect(Collectors.toList());
+        List<Notification> notifications = new ArrayList<>();
+        String sql = "SELECT * FROM notifications WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    notifications.add(NotificationMapper.mapRowToNotification(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to retrieve notifications from the database", e);
+        }
+        return notifications;
     }
 
     @Override
     public void delete(int id) {
-        if (!notifications.containsKey(id)) {
-            throw new NotificationNotFoundException(id);
+        String sql = "DELETE FROM notifications WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete notification", e);
         }
-        notifications.remove(id);
     }
 }
