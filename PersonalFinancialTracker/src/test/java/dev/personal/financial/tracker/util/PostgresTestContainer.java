@@ -38,6 +38,7 @@ public class PostgresTestContainer {
         String password = postgres.getPassword();
 
         connection = DriverManager.getConnection(jdbcUrl, username, password);
+        executeSql("CREATE SCHEMA IF NOT EXISTS app");
     }
 
     public static void tearDownDatabase() throws SQLException {
@@ -48,7 +49,7 @@ public class PostgresTestContainer {
 
     public static void cleanUpDatabase() throws SQLException {
         try (var statement = connection.createStatement()) {
-            statement.execute("DELETE FROM users");
+            statement.execute("DELETE FROM app.users");
         }
     }
 
@@ -60,7 +61,7 @@ public class PostgresTestContainer {
 
     public static void createUserTable() throws SQLException {
         executeSql("""
-                    CREATE TABLE users (
+                    CREATE TABLE app.users (
                         id SERIAL PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         email VARCHAR(255) NOT NULL UNIQUE,
@@ -73,7 +74,7 @@ public class PostgresTestContainer {
 
     public static void createTransactionTable() throws SQLException {
         executeSql("""
-                    CREATE TABLE transactions (
+                    CREATE TABLE app.transactions (
                         id SERIAL PRIMARY KEY,
                         user_id INT NOT NULL,
                         amount DECIMAL(19, 2) NOT NULL,
@@ -87,7 +88,7 @@ public class PostgresTestContainer {
 
     public static void createNotificationTable() throws SQLException {
         executeSql("""
-                    CREATE TABLE notifications (
+                    CREATE TABLE app.notifications (
                         id SERIAL PRIMARY KEY,
                         user_id INT NOT NULL,
                         message TEXT NOT NULL,
@@ -98,7 +99,7 @@ public class PostgresTestContainer {
 
     public static void createGoalTable() throws SQLException {
         executeSql("""
-                    CREATE TABLE goals (
+                    CREATE TABLE app.goals (
                         id SERIAL PRIMARY KEY,
                         user_id INT NOT NULL,
                         goal_name VARCHAR(255) NOT NULL,
@@ -111,7 +112,7 @@ public class PostgresTestContainer {
 
     public static void createBudgetTable() throws SQLException {
         executeSql("""
-                    CREATE TABLE budgets (
+                    CREATE TABLE app.budgets (
                         id SERIAL PRIMARY KEY,
                         user_id INT NOT NULL,
                         monthly_budget DECIMAL(19, 2) NOT NULL

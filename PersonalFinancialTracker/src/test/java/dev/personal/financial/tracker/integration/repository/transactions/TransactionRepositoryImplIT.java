@@ -41,7 +41,7 @@ public class TransactionRepositoryImplIT {
 
     @AfterEach
     void cleanUp() throws SQLException {
-        PostgresTestContainer.executeSql("DELETE FROM transactions");
+        PostgresTestContainer.executeSql("DELETE FROM app.transactions");
     }
 
     @Test

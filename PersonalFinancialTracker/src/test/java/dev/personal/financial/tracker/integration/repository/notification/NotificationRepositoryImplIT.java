@@ -40,7 +40,7 @@ public class NotificationRepositoryImplIT {
 
     @AfterEach
     void cleanUp() throws SQLException {
-        PostgresTestContainer.executeSql("DELETE FROM notifications");
+        PostgresTestContainer.executeSql("DELETE FROM app.notifications");
     }
 
     @Test

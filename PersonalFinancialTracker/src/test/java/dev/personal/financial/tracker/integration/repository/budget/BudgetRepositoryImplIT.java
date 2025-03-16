@@ -6,10 +6,12 @@ import dev.personal.financial.tracker.model.Budget;
 import dev.personal.financial.tracker.repository.budget.BudgetRepository;
 import dev.personal.financial.tracker.repository.budget.BudgetRepositoryImpl;
 import dev.personal.financial.tracker.util.PostgresTestContainer;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.math.BigDecimal;
@@ -40,7 +42,7 @@ public class BudgetRepositoryImplIT {
 
     @AfterEach
     void cleanUp() throws SQLException {
-        PostgresTestContainer.executeSql("DELETE FROM budgets");
+        PostgresTestContainer.executeSql("DELETE FROM app.budgets");
     }
 
     @Test

@@ -1,7 +1,7 @@
 package dev.personal.financial.tracker.db;
 
 import dev.personal.financial.tracker.config.DatabaseConfig;
-import dev.personal.financial.tracker.util.EnvLoader;
+
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;

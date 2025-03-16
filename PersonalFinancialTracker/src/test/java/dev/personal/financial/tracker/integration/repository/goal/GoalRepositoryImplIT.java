@@ -42,7 +42,7 @@ public class GoalRepositoryImplIT {
 
     @AfterEach
     void cleanUp() throws SQLException {
-        PostgresTestContainer.executeSql("DELETE FROM goals");
+        PostgresTestContainer.executeSql("DELETE FROM app.goals");
     }
 
     @Test

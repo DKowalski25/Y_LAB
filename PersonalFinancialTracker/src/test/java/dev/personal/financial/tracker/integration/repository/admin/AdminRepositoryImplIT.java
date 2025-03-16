@@ -10,9 +10,7 @@ import dev.personal.financial.tracker.repository.user.UserRepository;
 import dev.personal.financial.tracker.repository.user.UserRepositoryImpl;
 import dev.personal.financial.tracker.util.PostgresTestContainer;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -23,13 +21,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
-class AdminRepositoryImplTest {
+public class AdminRepositoryImplIT {
 
-    private AdminRepositoryImpl adminRepository;
-    private UserRepository userRepository;
+    private static AdminRepositoryImpl adminRepository;
+    private static UserRepository userRepository;
 
-    @BeforeEach
-    void setUp() throws SQLException {
+    @BeforeAll
+    static void setUp() throws SQLException {
         PostgresTestContainer.start();
         PostgresTestContainer.setUpDatabase();
         PostgresTestContainer.createUserTable();
@@ -39,12 +37,20 @@ class AdminRepositoryImplTest {
         adminRepository = new AdminRepositoryImpl(PostgresTestContainer.getConnection());
     }
 
-    @AfterEach
-    void tearDown() throws SQLException {
+    @AfterAll
+    static void tearDown() throws SQLException {
         PostgresTestContainer.cleanUpDatabase();
         PostgresTestContainer.tearDownDatabase();
         PostgresTestContainer.stop();
     }
+
+    @BeforeEach
+    void cleanUp() throws SQLException {
+        PostgresTestContainer.executeSql("TRUNCATE TABLE app.users RESTART IDENTITY CASCADE");;
+    }
+
+
+
 
     @Test
     void getAllUsers_ShouldReturnAllUsers() throws SQLException {
