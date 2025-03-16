@@ -13,13 +13,14 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     private final Connection connection;
 
-    @Override
     public void save(Notification notification) {
-        String sql = "INSERT INTO notifications (user_id, message, date) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO notifications (user_id, message, created_at) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setInt(1, notification.getId());
+            statement.setInt(1, notification.getUserId());
             statement.setString(2, notification.getMessage());
-            statement.setDate(3, Date.valueOf(String.valueOf(notification.getCreatedAt())));
+            statement.setTimestamp(3, Timestamp.valueOf(notification.getCreatedAt()));
+
+            statement.executeUpdate();
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
