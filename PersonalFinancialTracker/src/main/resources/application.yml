@@ -4,5 +4,8 @@ datasource:
   password: ${DB_PASSWORD}
 
 #liquibase:
-#  change-log: classpath:db/changelog/changelog-master.xml
-#  enabled: true
+#  change-log: db/changelog/changelog-master.xml
+#  contexts: dev
+#  default-schema-name: app
+#  liquibase-schema-name: service
+#  search-path: src/main/resources
