@@ -25,7 +25,7 @@
 3. Выполните команду для клонирования репозитория:
 
    ```bash
-   [git clone https://github.com/ваш-username/ваш-репозиторий.git](https://github.com/DKowalski25/Y_LAB.git)
+  https://github.com/DKowalski25/Y_LAB.git 
    ```
 
 4. Перейдите в директорию проекта:
