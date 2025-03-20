@@ -7,6 +7,7 @@ import dev.personal.financial.tracker.dto.goal.GoalOut;
 import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
+import dev.personal.financial.tracker.model.TransactionCategory;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 
@@ -39,7 +40,7 @@ public class TransactionHandler {
             return;
         }
 
-        String category = printer.readNonEmptyString("Введите категорию транзакции:");
+        TransactionCategory category = printer.readTransactionCategory("Введите категорию транзакции:");
         if (category == null) {
             printer.printInfo("Добавление транзакции отменено.");
             return;
@@ -104,7 +105,7 @@ public class TransactionHandler {
             return;
         }
 
-        String category = printer.readNonEmptyString("Введите категорию транзакции:");
+        TransactionCategory category = printer.readTransactionCategory("Введите категорию транзакции:");
         if (category == null) {
             printer.printInfo("Редактирование транзакции отменено.");
             return;

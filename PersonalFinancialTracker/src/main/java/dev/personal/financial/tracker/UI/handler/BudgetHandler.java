@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.UI.handler;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
+import dev.personal.financial.tracker.model.TransactionCategory;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.dto.budget.BudgetIn;
@@ -129,7 +130,7 @@ public class BudgetHandler {
 
         List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
 
-        Map<String, BigDecimal> expensesByCategory = expenses.stream()
+        Map<TransactionCategory, BigDecimal> expensesByCategory = expenses.stream()
                 .collect(Collectors.groupingBy(
                         TransactionOut::getCategory,
                         Collectors.reducing(BigDecimal.ZERO, TransactionOut::getAmount, BigDecimal::add)));
@@ -167,7 +168,7 @@ public class BudgetHandler {
 
             List<TransactionOut> expenses = transactionController.getTransactionsByUserIdAndType(user.getId(), false);
 
-            Map<String, BigDecimal> expensesByCategory = expenses.stream()
+            Map<TransactionCategory, BigDecimal> expensesByCategory = expenses.stream()
                     .collect(Collectors.groupingBy(
                             TransactionOut::getCategory,
                             Collectors.reducing(BigDecimal.ZERO,TransactionOut::getAmount, BigDecimal::add)

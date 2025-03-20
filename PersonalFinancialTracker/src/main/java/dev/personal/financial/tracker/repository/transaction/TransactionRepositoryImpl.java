@@ -24,7 +24,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, transaction.getUserId());
             statement.setBigDecimal(2, transaction.getAmount());
-            statement.setString(3, transaction.getCategory());
+            statement.setString(3, transaction.getCategory().toString());
             statement.setDate(4, java.sql.Date.valueOf(transaction.getDate()));
             statement.setString(5, transaction.getDescription());
             statement.setBoolean(6, transaction.isIncome());
@@ -80,7 +80,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         String sql = "UPDATE app.transactions SET amount = ?, category = ?, date = ?, description = ?, is_income = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setBigDecimal(1, transaction.getAmount());
-            statement.setString(2, transaction.getCategory());
+            statement.setString(2, transaction.getCategory().toString());
             statement.setDate(3, Date.valueOf(transaction.getDate()));
             statement.setString(4, transaction.getDescription());
             statement.setBoolean(5, transaction.isIncome());

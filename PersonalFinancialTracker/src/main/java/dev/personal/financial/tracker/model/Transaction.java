@@ -12,7 +12,7 @@ public class Transaction {
     private int id;
     private int userId;
     private BigDecimal amount;
-    private String category;
+    private TransactionCategory category;
     private LocalDate date;
     private String description;
     private boolean isIncome;

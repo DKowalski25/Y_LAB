@@ -1,6 +1,7 @@
 package dev.personal.financial.tracker.dto.transaction;
 
 import dev.personal.financial.tracker.model.Transaction;
+import dev.personal.financial.tracker.model.TransactionCategory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +46,7 @@ public class TransactionMapper {
                 resultSet.getInt("id"),
                 resultSet.getInt("user_id"),
                 resultSet.getBigDecimal("amount"),
-                resultSet.getString("category"),
+                TransactionCategory.valueOf(resultSet.getString("category")),
                 resultSet.getDate("date").toLocalDate(),
                 resultSet.getString("description"),
                 resultSet.getBoolean("is_income")
