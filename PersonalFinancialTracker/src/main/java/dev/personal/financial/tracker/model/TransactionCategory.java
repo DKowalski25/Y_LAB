@@ -11,5 +11,5 @@ public enum TransactionCategory {
     APPLIANCES,
     PET,
     SUBSCRIPTIONS,
-    OTHER;
+    OTHER
 }

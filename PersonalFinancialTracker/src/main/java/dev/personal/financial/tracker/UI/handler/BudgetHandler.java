@@ -109,12 +109,12 @@ public class BudgetHandler {
         BigDecimal totalIncome = transactions.stream()
                 .filter(TransactionOut::isIncome)
                 .map(TransactionOut::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);;
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalExpenses = transactions.stream()
                 .filter(t -> !t.isIncome())
                 .map(TransactionOut::getAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);;
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         printer.printWithDivider("Суммарные доходы и расходы за период:");
         printer.printInfo("Доходы: " + totalIncome);
