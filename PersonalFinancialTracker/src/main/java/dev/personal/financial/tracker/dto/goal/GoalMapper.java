@@ -3,6 +3,8 @@ package dev.personal.financial.tracker.dto.goal;
 import dev.personal.financial.tracker.model.Goal;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class GoalMapper {
 
@@ -31,5 +33,16 @@ public class GoalMapper {
     public static void updateEntity(Goal goal, GoalIn goalIn) {
         goal.setGoalName(goalIn.getGoalName());
         goal.setGoalAmount(goalIn.getGoalAmount());
+    }
+
+    public static Goal mapRowToGoal(ResultSet resultSet) throws SQLException {
+        return new Goal(
+                resultSet.getInt("id"),
+                resultSet.getInt("user_id"),
+                resultSet.getString("goal_name"),
+                resultSet.getBigDecimal("goal_amount"),
+                resultSet.getBigDecimal("current_amount"),
+                resultSet.getBigDecimal("saved_amount")
+        );
     }
 }

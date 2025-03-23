@@ -1,6 +1,5 @@
 package dev.personal.financial.tracker.repository.user;
 
-import dev.personal.financial.tracker.exception.user.UserAlreadyExistsException;
 import dev.personal.financial.tracker.exception.user.UserNotFoundException;
 import dev.personal.financial.tracker.model.User;
 
@@ -14,7 +13,6 @@ public interface UserRepository {
      * Сохраняет пользователя в хранилище.
      *
      * @param user объект пользователя
-     * @throws UserAlreadyExistsException если пользователь с таким email уже существует
      */
     void save(User user);
 

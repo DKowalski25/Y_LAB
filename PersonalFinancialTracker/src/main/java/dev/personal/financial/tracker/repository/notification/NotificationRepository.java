@@ -1,6 +1,5 @@
 package dev.personal.financial.tracker.repository.notification;
 
-import dev.personal.financial.tracker.exception.notification.NotificationAlreadyExistsException;
 import dev.personal.financial.tracker.exception.notification.NotificationNotFoundException;
 import dev.personal.financial.tracker.model.Notification;
 
@@ -11,11 +10,11 @@ import java.util.List;
  * Предоставляет методы для сохранения, поиска и удаления уведомлений.
  */
 public interface NotificationRepository {
+
     /**
      * Сохраняет уведомление.
      *
      * @param notification уведомление для сохранения
-     * @throws NotificationAlreadyExistsException если уведомление с таким ID уже существует
      */
     void save(Notification notification);
 

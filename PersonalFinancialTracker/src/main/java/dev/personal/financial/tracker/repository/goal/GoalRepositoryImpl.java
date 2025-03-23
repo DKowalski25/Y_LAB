@@ -1,65 +1,130 @@
 package dev.personal.financial.tracker.repository.goal;
 
-import dev.personal.financial.tracker.exception.goal.GoalAlreadyExistsException;
+import dev.personal.financial.tracker.dto.goal.GoalMapper;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 import dev.personal.financial.tracker.model.Goal;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.*;
 
-/**
- * Реализация интерфейса {@link GoalRepository}.
- * Хранит цели в памяти с использованием HashMap.
- */
+@RequiredArgsConstructor
 public class GoalRepositoryImpl implements GoalRepository {
-    private final Map<Integer, Goal> goals = new HashMap<>();
+
+    private final Connection connection;
 
     @Override
     public void save(Goal goal) {
-        if (goals.containsKey(goal.getId())) {
-            throw new GoalAlreadyExistsException(goal.getId());
+        String sql = "INSERT INTO app.goals (user_id, goal_name, goal_amount, current_amount, saved_amount) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, goal.getUserId());
+            statement.setString(2, goal.getGoalName());
+            statement.setBigDecimal(3, goal.getGoalAmount());
+            statement.setBigDecimal(4, goal.getCurrentAmount());
+            statement.setBigDecimal(5, goal.getSavedAmount());
+            statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    goal.setId(generatedKeys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save goal", e);
         }
-        goals.put(goal.getId(), goal);
     }
 
     @Override
-    public Goal findById(int id) {
-        Goal goal = goals.get(id);
-        if (goal == null) {
-            throw new GoalNotFoundException();
+    public Goal findById(int id) throws GoalNotFoundException {
+        String sql = "SELECT * FROM app.goals WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return GoalMapper.mapRowToGoal(resultSet);
+                } else {
+                    throw new GoalNotFoundException();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find goal by ID", e);
         }
-        return goal;
     }
 
     @Override
     public Goal findByUserId(int userId) {
-        return goals.values().stream()
-                .filter(g -> g.getUserId() == (userId))
-                .findFirst()
-                .orElse(null);
+        String sql = "SELECT * FROM app.goals WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return GoalMapper.mapRowToGoal(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find goal by user ID", e);
+        }
+        return null;
     }
 
     @Override
     public void update(Goal goal) {
-        goals.put(goal.getId(), goal);
+        String sql = "UPDATE app.goals SET goal_name = ?, goal_amount = ?, current_amount = ?, saved_amount = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, goal.getGoalName());
+            statement.setBigDecimal(2, goal.getGoalAmount());
+            statement.setBigDecimal(3, goal.getCurrentAmount());
+            statement.setBigDecimal(4, goal.getSavedAmount());
+            statement.setInt(5, goal.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update goal", e);
+        }
     }
 
     @Override
-    public void deleteByUserId(int userId) {
-        goals.values().removeIf(g -> g.getUserId() == (userId));
+    public void deleteByUserId(int userId) throws GoalNotFoundException {
+        String sql = "DELETE FROM app.goals WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted == 0) {
+                throw new GoalNotFoundException();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete goal by user ID", e);
+        }
     }
 
     @Override
-    public void updateSavedAmount(int goalId, BigDecimal amount) {
-        Goal goal = findById(goalId);
-        goal.setSavedAmount(goal.getSavedAmount().add(amount));
-        update(goal);
+    public void updateSavedAmount(int goalId, BigDecimal amount) throws GoalNotFoundException {
+        String sql = "UPDATE app.goals SET saved_amount = saved_amount + ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, amount);
+            statement.setInt(2, goalId);
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new GoalNotFoundException();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update saved amount for goal", e);
+        }
     }
 
     @Override
-    public BigDecimal getSavedAmount(int goalId) {
-        Goal goal = findById(goalId);
-        return goal.getSavedAmount();
+    public BigDecimal getSavedAmount(int goalId) throws GoalNotFoundException {
+        String sql = "SELECT saved_amount FROM app.goals WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, goalId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBigDecimal("saved_amount");
+                } else {
+                    throw new GoalNotFoundException();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to get saved amount for goal", e);
+        }
     }
 }

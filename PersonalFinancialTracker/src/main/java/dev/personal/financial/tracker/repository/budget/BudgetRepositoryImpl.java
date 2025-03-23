@@ -1,43 +1,72 @@
 package dev.personal.financial.tracker.repository.budget;
 
-import dev.personal.financial.tracker.exception.budget.BudgetAlreadyExistsException;
+import dev.personal.financial.tracker.dto.budget.BudgetMapper;
 import dev.personal.financial.tracker.exception.budget.BudgetNotFoundException;
 import dev.personal.financial.tracker.model.Budget;
+import lombok.RequiredArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.*;
 
-/**
- * Реализация интерфейса {@link BudgetRepository}.
- * Хранит бюджеты в памяти с использованием HashMap.
- */
+@RequiredArgsConstructor
 public class BudgetRepositoryImpl implements BudgetRepository {
-    private final Map<Integer, Budget> budgets = new HashMap<>();
+
+    private final Connection connection;
 
     @Override
-    public void save(Budget budget) {
-        if (budgets.containsKey(budget.getUserId())) {
-            throw new BudgetAlreadyExistsException(budget.getUserId());
+    public void save(Budget budget){
+        String sql = "INSERT INTO app.budgets (user_id, monthly_budget) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, budget.getUserId());
+            statement.setBigDecimal(2, budget.getMonthlyBudget());
+            statement.executeUpdate();
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    budget.setId(generatedKeys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to save budget", e);
         }
-        budgets.put(budget.getUserId(), budget);
     }
 
     @Override
-    public Budget findByUserId(int userId) {
-        Budget budget = budgets.get(userId);
-        if (budget == null) {
-            throw new BudgetNotFoundException(userId);
+    public Budget findByUserId(int userId) throws BudgetNotFoundException {
+        String sql = "SELECT * FROM app.budgets WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return BudgetMapper.mapRowToBudget(resultSet);
+                } else {
+                    throw new BudgetNotFoundException(userId);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to find budget by user ID", e);
         }
-        return budget;
     }
 
     @Override
     public void update(Budget budget) {
-        budgets.put(budget.getUserId(), budget);
+        String sql = "UPDATE app.budgets SET monthly_budget = ? WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setBigDecimal(1, budget.getMonthlyBudget());
+            statement.setInt(2, budget.getUserId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to update budget", e);
+        }
     }
 
     @Override
     public void delete(int userId) {
-        budgets.remove(userId);
+        String sql = "DELETE FROM app.budgets WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to delete budget", e);
+        }
     }
 }

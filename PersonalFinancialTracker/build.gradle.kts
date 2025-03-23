@@ -1,10 +1,15 @@
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+
 plugins {
     java
     jacoco
+    id("com.github.ben-manes.versions") // Плагин для проверки обновлений
+    id("org.owasp.dependencycheck") version "8.4.0"
+    application
 }
 
 group = "org.example"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 java {
     toolchain {
@@ -17,18 +22,47 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation("org.apache.commons:commons-compress:1.26.0")
 
-    compileOnly("org.projectlombok:lombok:1.18.30")
-    annotationProcessor("org.projectlombok:lombok:1.18.30")
+    testImplementation(platform(Testing.junit.bom))
+    testImplementation(Testing.junit.jupiter)
 
-    testCompileOnly("org.projectlombok:lombok:1.18.30")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation("org.projectlombok:lombok:_")
+    annotationProcessor("org.projectlombok:lombok:_")
 
-    testImplementation ("org.mockito:mockito-core:5.5.0")
+    testImplementation(Testing.mockito.core)
 
-    testImplementation ("org.assertj:assertj-core:3.24.2")
+    testImplementation(Testing.assertj.core)
+
+    implementation("io.github.cdimascio:dotenv-java:_")
+
+    implementation("org.postgresql:postgresql:_")
+
+    implementation("org.liquibase:liquibase-core:_")
+
+    testImplementation("org.testcontainers:testcontainers:_")
+    testImplementation ("org.testcontainers:junit-jupiter:_")
+    testImplementation("org.testcontainers:postgresql:_")
+
+    testRuntimeOnly(Testing.junit.jupiter.engine)
+    testImplementation("org.junit.platform:junit-platform-launcher")
+
+    implementation("org.yaml:snakeyaml:2.0")
+}
+
+application {
+    mainClass.set("dev.personal.financial.tracker.Main")
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Main-Class" to application.mainClass.get()
+        )
+    }
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 jacoco {
@@ -48,4 +82,24 @@ tasks.jacocoTestReport {
         csv.required.set(false)
         html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
+}
+
+// Конфигурация задачи dependencyUpdates
+tasks.named<DependencyUpdatesTask>("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(candidate.version)
+    }
+}
+
+tasks.register("applyMigrations", JavaExec::class) {
+    mainClass.set("dev.personal.financial.tracker.db.LiquibaseRunner")
+    classpath = sourceSets.main.get().runtimeClasspath
+}
+
+
+// Функция для определения нестабильных версий
+fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.uppercase().contains(it) }
+    val regex = "^[0-9,.v-]+$".toRegex()
+    return !stableKeyword && !regex.matches(version)
 }
