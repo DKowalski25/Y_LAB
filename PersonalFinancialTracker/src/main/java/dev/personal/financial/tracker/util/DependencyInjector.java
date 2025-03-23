@@ -12,6 +12,8 @@ import dev.personal.financial.tracker.controller.transaction.servlet.handlers.Tr
 import dev.personal.financial.tracker.controller.transaction.servlet.handlers.TransactionRetrievalHandler;
 import dev.personal.financial.tracker.controller.user.UserController;
 import dev.personal.financial.tracker.controller.user.UserControllerImpl;
+import dev.personal.financial.tracker.controller.user.servlet.handlers.UserRequestRouter;
+import dev.personal.financial.tracker.controller.user.servlet.handlers.UserRetrievalHandler;
 import dev.personal.financial.tracker.repository.admin.AdminRepository;
 import dev.personal.financial.tracker.repository.admin.AdminRepositoryImpl;
 import dev.personal.financial.tracker.repository.budget.BudgetRepository;
@@ -82,6 +84,14 @@ public class DependencyInjector {
 
     public TransactionController createTransactionController(TransactionService transactionService, ConsolePrinter consolePrinter) {
         return new TransactionControllerImpl(transactionService, consolePrinter);
+    }
+
+    public TransactionRetrievalHandler createTransactionRetrievalHandler(TransactionService transactionService) {
+        return new TransactionRetrievalHandler(transactionService);
+    }
+
+    public TransactionRequestRouter createTransactionRequestRouter(TransactionRetrievalHandler retrievalHandler) {
+        return new TransactionRequestRouter(retrievalHandler);
     }
 
     public GoalRepository createGoalRepository() {
