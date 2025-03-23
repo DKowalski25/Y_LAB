@@ -8,6 +8,8 @@ import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.controller.goal.GoalControllerImpl;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.controller.transaction.TransactionControllerImpl;
+import dev.personal.financial.tracker.controller.transaction.servlet.handlers.TransactionRequestRouter;
+import dev.personal.financial.tracker.controller.transaction.servlet.handlers.TransactionRetrievalHandler;
 import dev.personal.financial.tracker.controller.user.UserController;
 import dev.personal.financial.tracker.controller.user.UserControllerImpl;
 import dev.personal.financial.tracker.repository.admin.AdminRepository;
@@ -30,6 +32,10 @@ import dev.personal.financial.tracker.service.transaction.TransactionService;
 import dev.personal.financial.tracker.service.transaction.TransactionServiceImpl;
 import dev.personal.financial.tracker.service.user.UserService;
 import dev.personal.financial.tracker.service.user.UserServiceImpl;
+
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,6 +62,14 @@ public class DependencyInjector {
 
     public UserController createUserController(UserService userService, ConsolePrinter consolePrinter) {
         return new UserControllerImpl(userService, consolePrinter);
+    }
+
+    public UserRetrievalHandler createUserRetrievalHandler(UserService userService) {
+        return new UserRetrievalHandler(userService);
+    }
+
+    public UserRequestRouter createUserRequestRouter(UserRetrievalHandler retrievalHandler) {
+        return new UserRequestRouter(retrievalHandler);
     }
 
     public TransactionRepository createTransactionRepository() {
