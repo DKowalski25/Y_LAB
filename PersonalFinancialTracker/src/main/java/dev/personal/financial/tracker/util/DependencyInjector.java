@@ -40,6 +40,12 @@ public class DependencyInjector {
 
     private final Connection connection;
 
+    public Validator createValidator() {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            return factory.getValidator();
+        }
+    }
+
     public UserRepository createUserRepository() {
         return new UserRepositoryImpl(connection);
     }
