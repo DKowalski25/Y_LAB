@@ -7,6 +7,7 @@ plugins {
     id("com.github.ben-manes.versions") // Плагин для проверки обновлений
     id("org.owasp.dependencycheck") version "8.4.0"
     application
+    war
 }
 
 group = "org.example"
@@ -66,6 +67,12 @@ application {
     mainClass.set("dev.personal.financial.tracker.Main")
 }
 
+
+
+tasks.war {
+    archiveFileName.set("PersonalFinancialTracker.war")
+}
+
 tasks.jar {
     manifest {
         attributes(
@@ -107,7 +114,6 @@ tasks.register("applyMigrations", JavaExec::class) {
     mainClass.set("dev.personal.financial.tracker.db.LiquibaseRunner")
     classpath = sourceSets.main.get().runtimeClasspath
 }
-
 
 // Функция для определения нестабильных версий
 fun isNonStable(version: String): Boolean {
