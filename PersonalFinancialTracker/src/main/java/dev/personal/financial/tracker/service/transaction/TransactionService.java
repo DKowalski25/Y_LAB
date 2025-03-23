@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.service.transaction;
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
+import dev.personal.financial.tracker.model.TransactionCategory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
  * Предоставляет методы для добавления, поиска, обновления и удаления транзакций.
  */
 public interface TransactionService {
+
     /**
      * Добавляет новую транзакцию.
      *
@@ -61,7 +63,7 @@ public interface TransactionService {
      * @param category категория транзакции
      * @return список транзакций
      */
-    List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, String category);
+    List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, TransactionCategory category);
 
     /**
      * Возвращает список транзакций пользователя по дате.

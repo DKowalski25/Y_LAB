@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.controller.transaction;
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
+import dev.personal.financial.tracker.model.TransactionCategory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -58,7 +59,7 @@ public interface TransactionController {
      * @param category категория транзакции
      * @return список транзакций
      */
-    List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, String category);
+    List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, TransactionCategory category);
 
     /**
      * Возвращает список транзакций пользователя по дате.

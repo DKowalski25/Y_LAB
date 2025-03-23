@@ -15,5 +15,5 @@ public class Transaction {
     private TransactionCategory category;
     private LocalDate date;
     private String description;
-    private boolean isIncome;
+    private boolean income;
 }

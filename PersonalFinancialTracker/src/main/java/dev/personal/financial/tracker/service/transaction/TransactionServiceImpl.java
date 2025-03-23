@@ -4,6 +4,7 @@ import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionMapper;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.model.Transaction;
+import dev.personal.financial.tracker.model.TransactionCategory;
 import dev.personal.financial.tracker.repository.transaction.TransactionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,8 +55,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, String category) {
-        List<Transaction> transactions = transactionRepository.findByUserIdAndCategory(userId, category);
+    public List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, TransactionCategory category) {
+        List<Transaction> transactions = transactionRepository.findByUserIdAndCategory(userId, category.toString());
         return transactions.stream()
                 .map(TransactionMapper::toDto)
                 .collect(Collectors.toList());

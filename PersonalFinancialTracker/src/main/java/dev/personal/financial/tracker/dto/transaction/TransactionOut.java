@@ -16,5 +16,5 @@ public class TransactionOut {
     private TransactionCategory category;
     private LocalDate date;
     private String description;
-    private boolean isIncome;
+    private boolean income;
 }
