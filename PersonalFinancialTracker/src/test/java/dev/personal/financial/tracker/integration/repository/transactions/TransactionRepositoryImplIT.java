@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.integration.repository.transactions;
 import dev.personal.financial.tracker.data.ModelFactory;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.model.Transaction;
+import dev.personal.financial.tracker.model.TransactionCategory;
 import dev.personal.financial.tracker.repository.transaction.TransactionRepositoryImpl;
 import dev.personal.financial.tracker.util.PostgresTestContainer;
 import org.junit.jupiter.api.AfterAll;
@@ -80,13 +81,13 @@ public class TransactionRepositoryImplIT {
         transactionRepository.save(transaction);
 
         transaction.setAmount(new BigDecimal("200.00"));
-        transaction.setCategory("Updated Category");
+        transaction.setCategory(TransactionCategory.TRANSPORT);
         transactionRepository.update(transaction);
 
         Transaction updatedTransaction = transactionRepository.findById(transaction.getId());
 
         assertEquals(new BigDecimal("200.00"), updatedTransaction.getAmount());
-        assertEquals("Updated Category", updatedTransaction.getCategory());
+        assertEquals(TransactionCategory.TRANSPORT, updatedTransaction.getCategory());
     }
 
     @Test
@@ -106,7 +107,7 @@ public class TransactionRepositoryImplIT {
 
         transactionRepository.save(transaction);
 
-        List<Transaction> transactions = transactionRepository.findByUserIdAndCategory(transaction.getUserId(), transaction.getCategory());
+        List<Transaction> transactions = transactionRepository.findByUserIdAndCategory(transaction.getUserId(), transaction.getCategory().toString());
 
         assertEquals(1, transactions.size());
         assertEquals(transaction.getId(), transactions.get(0).getId());
@@ -142,7 +143,7 @@ public class TransactionRepositoryImplIT {
                 0,
                 1,
                 new BigDecimal("100.00"),
-                "Food",
+                TransactionCategory.FOOD,
                 LocalDate.now(),
                 "Lunch",
                 false

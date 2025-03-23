@@ -8,8 +8,12 @@ import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.controller.goal.GoalControllerImpl;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.controller.transaction.TransactionControllerImpl;
+import dev.personal.financial.tracker.controller.transaction.servlet.handlers.TransactionRequestRouter;
+import dev.personal.financial.tracker.controller.transaction.servlet.handlers.TransactionRetrievalHandler;
 import dev.personal.financial.tracker.controller.user.UserController;
 import dev.personal.financial.tracker.controller.user.UserControllerImpl;
+import dev.personal.financial.tracker.controller.user.servlet.handlers.UserRequestRouter;
+import dev.personal.financial.tracker.controller.user.servlet.handlers.UserRetrievalHandler;
 import dev.personal.financial.tracker.repository.admin.AdminRepository;
 import dev.personal.financial.tracker.repository.admin.AdminRepositoryImpl;
 import dev.personal.financial.tracker.repository.budget.BudgetRepository;
@@ -31,6 +35,10 @@ import dev.personal.financial.tracker.service.transaction.TransactionServiceImpl
 import dev.personal.financial.tracker.service.user.UserService;
 import dev.personal.financial.tracker.service.user.UserServiceImpl;
 
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
 import lombok.RequiredArgsConstructor;
 
 import java.sql.Connection;
@@ -39,6 +47,12 @@ import java.sql.Connection;
 public class DependencyInjector {
 
     private final Connection connection;
+
+    public Validator createValidator() {
+        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
+            return factory.getValidator();
+        }
+    }
 
     public UserRepository createUserRepository() {
         return new UserRepositoryImpl(connection);
@@ -52,6 +66,14 @@ public class DependencyInjector {
         return new UserControllerImpl(userService, consolePrinter);
     }
 
+    public UserRetrievalHandler createUserRetrievalHandler(UserService userService) {
+        return new UserRetrievalHandler(userService);
+    }
+
+    public UserRequestRouter createUserRequestRouter(UserRetrievalHandler retrievalHandler) {
+        return new UserRequestRouter(retrievalHandler);
+    }
+
     public TransactionRepository createTransactionRepository() {
         return new TransactionRepositoryImpl(connection);
     }
@@ -62,6 +84,14 @@ public class DependencyInjector {
 
     public TransactionController createTransactionController(TransactionService transactionService, ConsolePrinter consolePrinter) {
         return new TransactionControllerImpl(transactionService, consolePrinter);
+    }
+
+    public TransactionRetrievalHandler createTransactionRetrievalHandler(TransactionService transactionService) {
+        return new TransactionRetrievalHandler(transactionService);
+    }
+
+    public TransactionRequestRouter createTransactionRequestRouter(TransactionRetrievalHandler retrievalHandler) {
+        return new TransactionRequestRouter(retrievalHandler);
     }
 
     public GoalRepository createGoalRepository() {

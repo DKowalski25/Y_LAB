@@ -1,9 +1,11 @@
 package dev.personal.financial.tracker.util;
 
+import dev.personal.financial.tracker.model.TransactionCategory;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -172,5 +174,21 @@ public class ConsolePrinter {
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return Pattern.compile(emailRegex).matcher(email).matches();
+    }
+
+    public TransactionCategory readTransactionCategory(String prompt) {
+        while (true) {
+            printPrompt(prompt + " (или введите 'q' для выхода):");
+            printPrompt("Доступные категории: " + Arrays.toString(TransactionCategory.values()));
+            String input = sc.nextLine();
+            if (input.equalsIgnoreCase("q")) {
+                return null;
+            }
+            try {
+                return TransactionCategory.valueOf(input.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                printError("Неверная категория. Пожалуйста, выберите категорию из списка.");
+            }
+        }
     }
 }

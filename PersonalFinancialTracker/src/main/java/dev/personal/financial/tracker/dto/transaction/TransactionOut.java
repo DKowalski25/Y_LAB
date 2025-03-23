@@ -1,5 +1,6 @@
 package dev.personal.financial.tracker.dto.transaction;
 
+import dev.personal.financial.tracker.model.TransactionCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,8 +13,8 @@ public class TransactionOut {
     private int id;
     private int userId;
     private BigDecimal amount;
-    private String category;
+    private TransactionCategory category;
     private LocalDate date;
     private String description;
-    private boolean isIncome;
+    private boolean income;
 }
