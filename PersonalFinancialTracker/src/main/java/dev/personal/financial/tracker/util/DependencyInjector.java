@@ -118,6 +118,14 @@ public class DependencyInjector {
         return new BudgetControllerImpl(budgetService, consolePrinter);
     }
 
+    public BudgetRetrievalHandler createBudgetRetrievalHandler(BudgetService budgetService) {
+        return new BudgetRetrievalHandler(budgetService);
+    }
+
+    public BudgetRequestRouter createBudgetRequestRouter(BudgetRetrievalHandler retrievalHandler) {
+        return new BudgetRequestRouter(retrievalHandler);
+    }
+
     public AdminRepository createAdminRepository() {
         return new AdminRepositoryImpl(connection);
     }
