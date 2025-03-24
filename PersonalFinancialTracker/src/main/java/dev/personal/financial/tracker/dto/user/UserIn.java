@@ -1,10 +1,7 @@
 package dev.personal.financial.tracker.dto.user;
 
-import dev.personal.financial.tracker.model.UserRole;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
