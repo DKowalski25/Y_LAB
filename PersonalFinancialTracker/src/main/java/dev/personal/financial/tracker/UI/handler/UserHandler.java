@@ -6,7 +6,6 @@ import dev.personal.financial.tracker.controller.user.UserController;
 import dev.personal.financial.tracker.dto.user.UserIn;
 import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.model.User;
-import dev.personal.financial.tracker.model.UserRole;
 import dev.personal.financial.tracker.repository.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
