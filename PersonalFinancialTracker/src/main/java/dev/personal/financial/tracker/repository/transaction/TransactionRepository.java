@@ -12,6 +12,7 @@ import java.util.List;
  * Предоставляет методы для сохранения, поиска, обновления и удаления транзакций.
  */
 public interface TransactionRepository {
+
     /**
      * Сохраняет транзакцию.
      *

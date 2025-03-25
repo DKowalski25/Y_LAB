@@ -3,6 +3,7 @@ package dev.personal.financial.tracker.controller.transaction;
 import dev.personal.financial.tracker.dto.transaction.TransactionIn;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
+import dev.personal.financial.tracker.model.TransactionCategory;
 import dev.personal.financial.tracker.service.transaction.TransactionService;
 import dev.personal.financial.tracker.util.ConsolePrinter;
 
@@ -62,7 +63,7 @@ public class TransactionControllerImpl implements TransactionController {
     }
 
     @Override
-    public List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, String category) {
+    public List<TransactionOut> getTransactionsByUserIdAndCategory(int userId, TransactionCategory category) {
         return transactionService.getTransactionsByUserIdAndCategory(userId, category);
     }
 

@@ -7,6 +7,7 @@ import dev.personal.financial.tracker.dto.user.UserOut;
  * Контроллер для работы с пользователями.
  */
 public interface UserController {
+
     /**
      * Регистрирует пользователя.
      *

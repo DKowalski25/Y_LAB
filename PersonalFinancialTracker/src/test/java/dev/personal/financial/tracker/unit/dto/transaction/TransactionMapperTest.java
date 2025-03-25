@@ -5,6 +5,7 @@ import dev.personal.financial.tracker.dto.transaction.TransactionMapper;
 import dev.personal.financial.tracker.dto.transaction.TransactionOut;
 import dev.personal.financial.tracker.model.Transaction;
 
+import dev.personal.financial.tracker.model.TransactionCategory;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ class TransactionMapperTest {
         TransactionIn transactionIn = new TransactionIn(
                 ID,
                 BigDecimal.valueOf(100.0),
-                "Food",
+                TransactionCategory.FOOD,
                 LocalDate.now(),
                 "Lunch",
                 true
@@ -35,7 +36,7 @@ class TransactionMapperTest {
         assertThat(transaction.getId()).isNotZero();
         assertThat(transaction.getUserId()).isEqualTo(ID);
         assertThat(transaction.getAmount()).isEqualTo(BigDecimal.valueOf(100.0));
-        assertThat(transaction.getCategory()).isEqualTo("Food");
+        assertThat(transaction.getCategory()).isEqualTo(TransactionCategory.FOOD);
         assertThat(transaction.getDate()).isEqualTo(LocalDate.now());
         assertThat(transaction.getDescription()).isEqualTo("Lunch");
         assertThat(transaction.isIncome()).isTrue();
@@ -47,7 +48,7 @@ class TransactionMapperTest {
                 ID,
                 USER_ID,
                 BigDecimal.valueOf(100.0),
-                "Food",
+                TransactionCategory.FOOD,
                 LocalDate.now(),
                 "Lunch",
                 true
@@ -58,7 +59,7 @@ class TransactionMapperTest {
         assertThat(transactionOut.getId()).isEqualTo(transaction.getId());
         assertThat(transactionOut.getUserId()).isEqualTo(USER_ID);
         assertThat(transactionOut.getAmount()).isEqualTo(BigDecimal.valueOf(100.0));
-        assertThat(transactionOut.getCategory()).isEqualTo("Food");
+        assertThat(transactionOut.getCategory()).isEqualTo(TransactionCategory.FOOD);
         assertThat(transactionOut.getDate()).isEqualTo(LocalDate.now());
         assertThat(transactionOut.getDescription()).isEqualTo("Lunch");
         assertThat(transactionOut.isIncome()).isTrue();
@@ -70,7 +71,7 @@ class TransactionMapperTest {
                 ID,
                 USER_ID,
                 BigDecimal.valueOf(100.0),
-                "Food",
+                TransactionCategory.FOOD,
                 LocalDate.now(),
                 "Lunch",
                 true
@@ -78,7 +79,7 @@ class TransactionMapperTest {
         TransactionIn transactionIn = new TransactionIn(
                 USER_ID,
                 BigDecimal.valueOf(200.0),
-                "Transport",
+                TransactionCategory.TRANSPORT,
                 LocalDate.now().plusDays(1),
                 "Taxi",
                 false
@@ -87,7 +88,7 @@ class TransactionMapperTest {
         TransactionMapper.updateTransaction(transaction, transactionIn);
 
         assertThat(transaction.getAmount()).isEqualTo(BigDecimal.valueOf(200.0));
-        assertThat(transaction.getCategory()).isEqualTo("Transport");
+        assertThat(transaction.getCategory()).isEqualTo(TransactionCategory.TRANSPORT);
         assertThat(transaction.getDate()).isEqualTo(LocalDate.now().plusDays(1));
         assertThat(transaction.getDescription()).isEqualTo("Taxi");
         assertThat(transaction.isIncome()).isFalse();

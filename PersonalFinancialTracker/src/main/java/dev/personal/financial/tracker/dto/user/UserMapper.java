@@ -14,7 +14,7 @@ public class UserMapper {
                 userIn.getName(),
                 userIn.getEmail(),
                 userIn.getPassword(),
-                userIn.getRole(),
+                UserRole.USER,
                 false
         );
     }
@@ -33,7 +33,7 @@ public class UserMapper {
         user.setName(userIn.getName());
         user.setEmail(userIn.getEmail());
         user.setPassword(userIn.getPassword());
-        user.setRole(userIn.getRole());
+//        user.setRole(userIn.getRole());
     }
 
     public static User mapRowToUser(ResultSet resultSet) throws SQLException {

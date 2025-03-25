@@ -58,18 +58,17 @@ public class ModelFactory {
                 0,
                 "John Doe",
                 "john@example.com",
-                "password",
-                UserRole.USER
+                "password"
+//                UserRole.USER
         );
     }
 
-    public static UserIn createUserIn(int id, String name, String email, String password, UserRole role) {
+    public static UserIn createUserIn(int id, String name, String email, String password) {
         return new UserIn(
                 id,
                 name,
                 email,
-                password,
-                role
+                password
         );
     }
 
@@ -88,7 +87,7 @@ public class ModelFactory {
                 0,
                 1,
                 new BigDecimal("100.00"),
-                "Category",
+                TransactionCategory.FOOD,
                 LocalDate.of(2023, 6, 1),
                 "Description",
                 true

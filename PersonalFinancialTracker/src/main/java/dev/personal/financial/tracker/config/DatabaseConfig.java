@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class DatabaseConfig {
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
         Map<String, Object> config = ConfigReader.readConfig("application.yml");
 
         String url = getProperty(config, "datasource.url");
@@ -18,6 +18,7 @@ public class DatabaseConfig {
             throw new RuntimeException("Не удалось найти необходимые параметры в конфигурационном файле.");
         }
 
+        Class.forName("org.postgresql.Driver");
         return DriverManager.getConnection(url, username, password);
     }
 
