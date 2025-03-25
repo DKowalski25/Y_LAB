@@ -64,7 +64,7 @@ public class BudgetServlet extends BaseServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            String userIdParam = req.getParameter("userID");
+            String userIdParam = req.getParameter("userId");
             if (userIdParam == null) {
                 sendResponse(resp, Map.of("error", "Missing parameter: userId"), HttpServletResponse.SC_BAD_REQUEST);
             }
