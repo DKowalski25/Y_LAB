@@ -1,7 +1,6 @@
 package dev.personal.financial.tracker.controller.transaction.servlet.handlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import dev.personal.financial.tracker.controller.BaseServlet;
 import dev.personal.financial.tracker.exception.transaction.TransactionNotFoundException;
 import dev.personal.financial.tracker.model.TransactionCategory;
 
@@ -27,7 +26,7 @@ public class TransactionRequestRouter {
             int transactionId = Integer.parseInt(transactionIdParam);
             retrievalHandler.handleGetTransactionById(transactionId, resp);
         } else {
-            sendResponse(resp, Map.of("error", "Missing parameter: id"), HttpServletResponse.SC_BAD_REQUEST);
+            BaseServlet.sendResponse(resp, Map.of("error", "Missing parameter: id"), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
@@ -35,7 +34,7 @@ public class TransactionRequestRouter {
             throws IOException {
         String[] parts = pathInfo.split("/");
         if (parts.length < 3) {
-            sendResponse(resp, Map.of("error", "Invalid URL"), HttpServletResponse.SC_BAD_REQUEST);
+            BaseServlet.sendResponse(resp, Map.of("error", "Invalid URL"), HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
@@ -49,7 +48,7 @@ public class TransactionRequestRouter {
                 TransactionCategory category = TransactionCategory.valueOf(categoryStr.toUpperCase());
                 retrievalHandler.handleGetTransactionsByUserIdAndCategory(userId, category, resp);
             } catch (IllegalArgumentException e) {
-                sendResponse(resp, Map.of("error", "Invalid category: " + categoryStr), HttpServletResponse.SC_BAD_REQUEST);
+                BaseServlet.sendResponse(resp, Map.of("error", "Invalid category: " + categoryStr), HttpServletResponse.SC_BAD_REQUEST);
             }
         } else if (parts.length == 5 && parts[3].equals("date")) {
             LocalDate date = LocalDate.parse(parts[4], DateTimeFormatter.ISO_DATE);
@@ -62,7 +61,7 @@ public class TransactionRequestRouter {
             LocalDate endDate = LocalDate.parse(parts[5], DateTimeFormatter.ISO_DATE);
             retrievalHandler.handleGetTransactionsByUserIdAndDateRange(userId, startDate, endDate, resp);
         } else {
-            sendResponse(resp, Map.of("error", "Invalid URL"), HttpServletResponse.SC_BAD_REQUEST);
+            BaseServlet.sendResponse(resp, Map.of("error", "Invalid URL"), HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
@@ -70,17 +69,11 @@ public class TransactionRequestRouter {
             throws IOException {
         String[] parts = pathInfo.split("/");
         if (parts.length != 3) {
-            sendResponse(resp, Map.of("error", "Invalid URL"), HttpServletResponse.SC_BAD_REQUEST);
+            BaseServlet.sendResponse(resp, Map.of("error", "Invalid URL"), HttpServletResponse.SC_BAD_REQUEST);
             return;
         }
 
         int userId = Integer.parseInt(parts[2]);
         retrievalHandler.handleGetTotalExpensesForCurrentMonth(userId, resp);
-    }
-
-    private void sendResponse(HttpServletResponse resp, Object data, int statusCode) throws IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(statusCode);
-        new ObjectMapper().writeValue(resp.getWriter(), data);
     }
 }
