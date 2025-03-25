@@ -2,10 +2,16 @@ package dev.personal.financial.tracker.util;
 
 import dev.personal.financial.tracker.controller.admin.AdminController;
 import dev.personal.financial.tracker.controller.admin.AdminControllerImpl;
+import dev.personal.financial.tracker.controller.admin.servlet.handlers.AdminRequestRouter;
+import dev.personal.financial.tracker.controller.admin.servlet.handlers.AdminRetrievalHandler;
 import dev.personal.financial.tracker.controller.budget.BudgetController;
 import dev.personal.financial.tracker.controller.budget.BudgetControllerImpl;
+import dev.personal.financial.tracker.controller.budget.servlet.handlers.BudgetRequestRouter;
+import dev.personal.financial.tracker.controller.budget.servlet.handlers.BudgetRetrievalHandler;
 import dev.personal.financial.tracker.controller.goal.GoalController;
 import dev.personal.financial.tracker.controller.goal.GoalControllerImpl;
+import dev.personal.financial.tracker.controller.goal.servlet.handlers.GoalRequestRouter;
+import dev.personal.financial.tracker.controller.goal.servlet.handlers.GoalRetrievalHandler;
 import dev.personal.financial.tracker.controller.transaction.TransactionController;
 import dev.personal.financial.tracker.controller.transaction.TransactionControllerImpl;
 import dev.personal.financial.tracker.controller.transaction.servlet.handlers.TransactionRequestRouter;
@@ -106,6 +112,14 @@ public class DependencyInjector {
         return new GoalControllerImpl(goalService, consolePrinter);
     }
 
+    public GoalRetrievalHandler createGoalRetrievalHandler(GoalService goalService) {
+        return new GoalRetrievalHandler(goalService);
+    }
+
+    public GoalRequestRouter createGoalRequestRouter(GoalRetrievalHandler retrievalHandler) {
+        return new GoalRequestRouter(retrievalHandler);
+    }
+
     public BudgetRepository createBudgetRepository() {
         return new BudgetRepositoryImpl(connection);
     }
@@ -118,6 +132,14 @@ public class DependencyInjector {
         return new BudgetControllerImpl(budgetService, consolePrinter);
     }
 
+    public BudgetRetrievalHandler createBudgetRetrievalHandler(BudgetService budgetService) {
+        return new BudgetRetrievalHandler(budgetService);
+    }
+
+    public BudgetRequestRouter createBudgetRequestRouter(BudgetRetrievalHandler retrievalHandler) {
+        return new BudgetRequestRouter(retrievalHandler);
+    }
+
     public AdminRepository createAdminRepository() {
         return new AdminRepositoryImpl(connection);
     }
@@ -128,5 +150,13 @@ public class DependencyInjector {
 
     public AdminController createAdminController(AdminService adminService, ConsolePrinter consolePrinter) {
         return new AdminControllerImpl(adminService, consolePrinter);
+    }
+
+    public AdminRetrievalHandler createAdminRetrievalHandler(AdminService adminService) {
+        return new AdminRetrievalHandler(adminService);
+    }
+
+    public AdminRequestRouter createAdminRequestRouter(AdminRetrievalHandler retrievalHandler) {
+        return new AdminRequestRouter(retrievalHandler);
     }
 }

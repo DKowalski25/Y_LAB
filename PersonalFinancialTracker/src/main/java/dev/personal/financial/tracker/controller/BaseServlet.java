@@ -2,6 +2,7 @@ package dev.personal.financial.tracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,11 +10,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public abstract class BaseServlet extends HttpServlet {
-    protected final ObjectMapper objectMapper;
+    protected static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public BaseServlet() {
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.registerModule(new JavaTimeModule());
+    static {
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     /**
@@ -24,7 +24,7 @@ public abstract class BaseServlet extends HttpServlet {
      * @param statusCode HTTP-статус код
      * @throws IOException если произошла ошибка при записи в ответ
      */
-    protected void sendResponse(HttpServletResponse response, Object data, int statusCode) throws IOException {
+    public static void sendResponse(HttpServletResponse response, Object data, int statusCode) throws IOException {
         response.setContentType("application/json");
         response.setStatus(statusCode);
         objectMapper.writeValue(response.getWriter(), data);
