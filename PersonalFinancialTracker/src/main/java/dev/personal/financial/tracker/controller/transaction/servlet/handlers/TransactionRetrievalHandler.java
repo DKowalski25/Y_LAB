@@ -61,6 +61,11 @@ public class TransactionRetrievalHandler {
 
     public void handleGetTotalExpensesForCurrentMonth(int userId, HttpServletResponse resp) throws IOException {
         BigDecimal totalExpenses = transactionService.getTotalExpensesForCurrentMonth(userId);
-        sendResponse(resp, Map.of("totalExpenses", totalExpenses), HttpServletResponse.SC_OK);
+
+        if (totalExpenses == null) {
+            totalExpenses = BigDecimal.ZERO;
+        }
+
+        BaseServlet.sendResponse(resp, Map.of("totalExpenses", totalExpenses), HttpServletResponse.SC_OK);
     }
 }
