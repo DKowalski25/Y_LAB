@@ -1,7 +1,6 @@
 package dev.personal.financial.tracker.controller.admin.servlet.handlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import dev.personal.financial.tracker.controller.BaseServlet;
 import dev.personal.financial.tracker.dto.user.UserOut;
 import dev.personal.financial.tracker.service.admin.AdminService;
 
@@ -19,12 +18,6 @@ public class AdminRetrievalHandler {
 
     public  void handleGetAllUsers(HttpServletResponse resp) throws IOException {
         List<UserOut> users = adminService.getAllUsers();
-        sendResponse(resp, users, HttpServletResponse.SC_OK);
-    }
-
-    private void sendResponse(HttpServletResponse resp, Object data, int statusCode) throws IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(statusCode);
-        new ObjectMapper().writeValue(resp.getWriter(), data);
+        BaseServlet.sendResponse(resp, users, HttpServletResponse.SC_OK);
     }
 }

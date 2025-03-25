@@ -1,6 +1,6 @@
 package dev.personal.financial.tracker.controller.goal.servlet.handlers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.personal.financial.tracker.controller.BaseServlet;
 import dev.personal.financial.tracker.exception.goal.GoalNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,16 +27,10 @@ public class GoalRequestRouter {
             int userId = Integer.parseInt(userIdParam);
             retrievalHandler.handleGetGoalByUserId(userId, resp);
         } else {
-            sendResponse(resp, Map.of(
+            BaseServlet.sendResponse(resp, Map.of(
                     "error",
                     "Missing required parameters"),
                     HttpServletResponse.SC_BAD_REQUEST);
         }
-    }
-
-    private void sendResponse(HttpServletResponse resp, Object data, int statusCode) throws IOException {
-        resp.setContentType("application/json");
-        resp.setStatus(statusCode);
-        new ObjectMapper().writeValue(resp.getWriter(), data);
     }
 }
