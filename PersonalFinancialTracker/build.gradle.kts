@@ -61,6 +61,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4.2")
     implementation ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:_")
 
+    implementation ("org.aspectj:aspectjrt:_")
+
 }
 
 application {
