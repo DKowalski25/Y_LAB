@@ -8,6 +8,7 @@ plugins {
     id("org.owasp.dependencycheck") version "8.4.0"
     application
     war
+    id("io.freefair.aspectj.post-compile-weaving") version "6.6.1"
 }
 
 group = "org.example"
